@@ -1,404 +1,974 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="html-tag">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#020617">
-    <link rel="icon" type="image/png" href="icon.png">
-    <title>Spy Game</title>
+    <title>Deception - خادع ومخدوع</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@400;700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #020617; color: #f8fafc; user-select: none; overflow-x: hidden; transition: 0.3s; }
-        .glass-card { background: rgba(30, 41, 59, 0.7); border: 2px solid #0ea5e9; border-radius: 25px; box-shadow: 0 0 20px rgba(14, 165, 233, 0.2); backdrop-filter: blur(10px); }
-        .btn-neon { background: linear-gradient(45deg, #0ea5e9, #2563eb); color: white; font-weight: 900; transition: 0.2s; border: none; cursor: pointer; }
-        .btn-neon:active { transform: scale(0.95); box-shadow: 0 0 15px #0ea5e9; }
-        .hidden { display: none !important; }
-        input { background: #0f172a; border: 1px solid #334155; color: white; padding: 12px; border-radius: 12px; width: 100%; text-align: center; font-size: 1.1rem; outline: none; transition: 0.3s; font-weight: bold; }
-        input:focus { border-color: #0ea5e9; background: #1e293b; box-shadow: 0 0 10px rgba(14,165,233,0.3); }
-        .category-btn { background: #1e293b; border: 1px solid #334155; border-radius: 20px; padding: 15px; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; }
-        .category-btn:active { border-color: #0ea5e9; background: #0f172a; transform: scale(0.95); }
-        .clear-image { width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 10px 15px rgba(14, 165, 233, 0.4)); margin-bottom: 1.5rem; }
-        .spy-avatar-container { position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 1.5rem; }
-        .spy-glow { position: absolute; width: 140px; height: 140px; background: #ef4444; border-radius: 50%; filter: blur(35px); opacity: 0.6; animation: pulse 2s infinite; }
-        .spy-icon-solid { font-size: 140px; color: #0f172a; position: relative; z-index: 10; filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.8)); }
-        @keyframes pulse { 0% { transform: scale(0.9); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.8; } 100% { transform: scale(0.9); opacity: 0.5; } }
-        .lang-btn { background: #1e293b; border: 2px solid #334155; padding: 10px; border-radius: 12px; font-weight: bold; transition: 0.2s; }
-        .lang-btn.active { border-color: #0ea5e9; background: #0ea5e9; color: #000; }
-        #settings-modal { background: rgba(2, 6, 23, 0.9); backdrop-filter: blur(5px); }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        
+        body { font-family: 'Cairo', sans-serif; background-color: #030712; color: white; overflow: hidden; }
+
+        .cyber-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: linear-gradient(to bottom, #030712, #0f172a); z-index: -3; }
+        .grid-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-image: linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px); background-size: 40px 40px; z-index: -2; animation: grid-move 30s linear infinite; }
+        .glow-orb { position: fixed; top: 50%; left: 50%; width: 80vw; height: 80vw; background: radial-gradient(circle, rgba(14, 165, 233, 0.1) 0%, transparent 60%); transform: translate(-50%, -50%); z-index: -1; animation: pulse-bg 5s infinite alternate ease-in-out; }
+        
+        @keyframes grid-move { 0% { transform: translateY(0); } 100% { transform: translateY(40px); } }
+        @keyframes pulse-bg { 0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; } 100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; } }
+
+        /* البطاقة */
+        .flip-card { background-color: transparent; width: 100%; height: 380px; perspective: 1000px; cursor: pointer; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg) scale(1.05); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 1.5rem; box-shadow: 0 15px 35px rgba(0,0,0,0.6); overflow: hidden; }
+        .flip-card-front { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #334155; }
+        .flip-card-back { background: linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%); transform: rotateY(180deg); border: 2px solid #7dd3fc; }
+        .spy-card-back { background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%) !important; border: 2px solid #fca5a5 !important; }
+
+        .hidden-screen { display: none !important; }
+        ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
+
+        /* إطار الصور والأيقونات الأصلية */
+        .image-container { width: 160px; height: 160px; border-radius: 24px; position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 1rem; }
+        
+        /* تأثيرات خاصة بصور التطبيقات لتبدو كاللوجو الأصلي */
+        .app-logo-frame { width: 85%; height: 85%; object-fit: contain; border-radius: 20px; position: absolute; z-index: 10; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); animation: float-img 3s ease-in-out infinite; }
+        
+        /* تأثيرات باقي الصور */
+        .real-image-frame { width: 95%; height: 95%; object-fit: contain; position: absolute; z-index: 10; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.6)); animation: float-img 3s ease-in-out infinite; }
+        
+        @keyframes float-img { 0% { transform: translateY(0px); } 50% { transform: translateY(-8px); } 100% { transform: translateY(0px); } }
+        
+        .spinner { width: 50px; height: 50px; border: 5px solid rgba(255, 255, 255, 0.1); border-top: 5px solid #38bdf8; border-radius: 50%; animation: spin 1s linear infinite; position: absolute; z-index: 5; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* عجلة الحظ */
+        .slot-machine { background: #0f172a; border: 2px solid #38bdf8; border-radius: 12px; padding: 10px; font-size: 1.3rem; font-weight: 900; text-align: center; overflow: hidden; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }
+        .slot-text { animation: blur-spin 0.08s linear infinite; }
+        .slot-stopped { animation: none; text-shadow: 0 0 10px #38bdf8; color: #38bdf8; transform: scale(1.05); transition: 0.3s; }
+        @keyframes blur-spin { 0% { filter: blur(2px); transform: translateY(-5px); opacity: 0.5;} 50% { filter: blur(4px); transform: translateY(0); opacity: 1;} 100% { filter: blur(2px); transform: translateY(5px); opacity: 0.5;} }
+
+        /* مدخل الأسماء (معدل لسهولة الكتابة) */
+        .name-input { width: 100%; background: #1e293b; border: 1px solid #334155; color: white; padding: 12px; border-radius: 12px; font-weight: bold; outline: none; transition: 0.3s; text-align: center;}
+        .name-input:focus { border-color: #38bdf8; box-shadow: 0 0 10px rgba(56,189,248,0.5); }
+        .name-input::placeholder { color: #64748b; font-weight: normal; }
+        
+        /* شاشة التحميل المسبق */
+        #loadingScreen { position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(3,7,18,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 sm:p-8">
+<body class="w-screen h-screen flex flex-col items-center justify-center p-4">
 
-    <button onclick="toggleSettings()" class="absolute top-6 right-6 text-slate-400 hover:text-sky-400 text-3xl transition-colors z-50">
-        <i class="fa-solid fa-gear"></i>
-    </button>
+    <div class="cyber-bg"></div>
+    <div class="grid-overlay"></div>
+    <div class="glow-orb"></div>
 
-    <div id="settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card p-6 w-full max-w-sm sm:max-w-lg text-center">
-            <h2 class="text-2xl font-black mb-6 text-sky-400" data-i18n="settingsTitle">إعدادات اللغة</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-                <button onclick="setLang('ar')" id="l-ar" class="lang-btn active">العربية 🇸🇦</button>
-                <button onclick="setLang('en')" id="l-en" class="lang-btn">English 🇬🇧</button>
-                <button onclick="setLang('es')" id="l-es" class="lang-btn">Español 🇪🇸</button>
-                <button onclick="setLang('fr')" id="l-fr" class="lang-btn">Français 🇫🇷</button>
+    <!-- شاشة التحميل السريعة -->
+    <div id="loadingScreen" class="hidden-screen">
+        <div class="spinner w-16 h-16 border-t-sky-400 mb-6"></div>
+        <h2 class="text-3xl font-black text-sky-400 animate-pulse">جاري تجهيز الصورة...</h2>
+    </div>
+
+    <!-- 1. القائمة الرئيسية -->
+    <div id="mainMenu" class="w-full max-w-md flex flex-col items-center gap-6 z-10">
+        <h1 class="text-6xl font-black mb-1 tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500 text-center drop-shadow-2xl">
+            Deception
+        </h1>
+        <p class="text-sky-400 text-sm mb-6 font-bold">الإصدار المكتمل | أيقونات أصلية وسرعة فائقة</p>
+
+        <button onclick="navTo('setupScreen')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-6 rounded-2xl text-xl shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all transform hover:scale-105 active:scale-95">
+            لعب على جهاز واحد 📱
+        </button>
+
+        <button onclick="showToast('قريباً جداً...')" class="w-full bg-slate-800/80 text-gray-400 border border-slate-700 font-bold py-4 px-6 rounded-2xl text-xl transition-all active:scale-95 relative overflow-hidden backdrop-blur-sm">
+            لعب جماعي أونلاين 🌐
+            <span class="absolute top-0 right-0 bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg font-bold">قريباً</span>
+        </button>
+
+        <div class="flex gap-4 w-full mt-2">
+            <button onclick="openTutorial()" class="flex-1 bg-slate-800/80 hover:bg-slate-700 text-white py-3 rounded-xl font-bold transition-all border border-slate-600">التعليمات 📖</button>
+            <button onclick="openSettings()" class="flex-1 bg-slate-800/80 hover:bg-slate-700 text-white py-3 rounded-xl font-bold transition-all border border-slate-600">الإعدادات ⚙️</button>
+        </div>
+    </div>
+
+    <!-- 2. التعليمات -->
+    <div id="tutorialModal" class="hidden-screen fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 w-full max-w-md max-h-[85vh] overflow-y-auto">
+            <h2 id="t_tutTitle" class="text-3xl font-black mb-4 text-blue-400 text-center">تعليمات اللعبة 🕵️</h2>
+            <div class="space-y-4 text-gray-300 text-sm leading-relaxed">
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                    <h3 id="t_tut1" class="font-bold text-white mb-2 text-lg">🎯 الهدف الأساسي:</h3>
+                    <p id="t_tut1_desc">اللعبة ستختار كلمة سرية وستعرض لك <strong>صورة دقيقة</strong> لها. المواطنون يعرفون الكلمة، والجاسوس لا يعرفها! اسألوا بعضكم لكشف الجاسوس.</p>
+                </div>
+                <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
+                    <h3 class="font-bold text-yellow-400 mb-2 text-lg">⭐ الإضافات الجديدة:</h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>أقسام شاملة ومتنوعة.</li>
+                        <li>عجلة حظ ذكية لا تكرر الشخص السائل لتضمن العدل.</li>
+                        <li>زر "احتاج إلى سؤال" للمساعدة.</li>
+                        <li>التصويت المتعدد لطرد أكثر من جاسوس.</li>
+                    </ul>
+                </div>
+                <div class="bg-purple-900/30 border border-purple-800/50 p-4 rounded-xl">
+                    <h3 id="t_tut3" class="font-bold text-purple-400 mb-2 text-lg">🤯 جنون الارتياب (Paranoia):</h3>
+                    <p id="t_tut3_desc">أحياناً اللعبة تكذب ولا تضع جاسوساً! صوتوا بـ "لا يوجد جاسوس" للفوز معاً.</p>
+                </div>
             </div>
-            <button onclick="toggleSettings()" class="btn-neon w-full py-3 rounded-xl text-lg" data-i18n="close">إغلاق</button>
+            <button onclick="closeTutorial()" id="t_tutGotIt" class="mt-6 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl shadow-lg">فهمت، جاهز للعب! 👍</button>
         </div>
     </div>
 
-    <div id="s-setup" class="w-full max-w-lg glass-card p-6 sm:p-10 text-center relative">
-        <i class="fa-solid fa-user-secret text-6xl mb-4 text-[#0ea5e9] drop-shadow-[0_0_15px_rgba(14,165,233,0.5)]"></i>
-        <h1 class="text-4xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600" data-i18n="title">الجاسوس</h1>
+    <!-- 3. الإعدادات -->
+    <div id="settingsModal" class="hidden-screen fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl p-6 w-full max-w-md">
+            <h2 class="text-3xl font-black mb-6 text-center text-white">الإعدادات ⚙️</h2>
+            <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700 mb-6">
+                <label id="t_setLang" class="block text-white font-bold text-lg mb-3">لغة اللعبة (Language)</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="setLanguage('ar')" class="bg-slate-700 hover:bg-blue-600 text-white py-3 rounded-lg font-bold border border-slate-600 transition-colors">العربية 🇸🇦</button>
+                    <button onclick="setLanguage('en')" class="bg-slate-700 hover:bg-blue-600 text-white py-3 rounded-lg font-bold border border-slate-600 transition-colors">English 🇬🇧</button>
+                </div>
+            </div>
+            <button onclick="closeSettings()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-all active:scale-95">إغلاق</button>
+        </div>
+    </div>
 
-        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl mb-4 border border-slate-800">
-            <p class="text-sm sm:text-base font-bold text-sky-400 mb-3" data-i18n="players">عدد اللاعبين (3 - 20)</p>
-            <div class="flex justify-center items-center gap-6">
-                <button onclick="changeC('p', -1)" class="w-12 h-12 bg-slate-800 rounded-lg text-2xl font-bold">-</button>
-                <span id="p-val" class="text-3xl font-black w-8">4</span>
-                <button onclick="changeC('p', 1)" class="w-12 h-12 bg-slate-800 rounded-lg text-2xl font-bold">+</button>
+    <!-- 4. الإعداد قبل اللعب -->
+    <div id="setupScreen" class="hidden-screen w-full max-w-md flex flex-col gap-4 z-10">
+        <div class="flex justify-between items-center mb-2">
+            <h2 id="t_setupTitle" class="text-2xl font-black">إعداد الجولة</h2>
+            <button onclick="navTo('mainMenu')" class="text-gray-400 hover:text-white bg-slate-800 px-3 py-1 rounded-lg text-sm font-bold">عودة 🏠</button>
+        </div>
+        <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
+            <label class="block text-gray-300 mb-2 font-bold">القسم (نوع الكلمة)</label>
+            <select id="categorySelect" class="w-full bg-slate-900 text-white font-bold text-lg p-3 rounded-xl border border-slate-600 outline-none">
+                <option value="random">🎲 عشوائي (الكل)</option>
+                <option value="places">🌍 أماكن</option>
+                <option value="food">🍔 أطعمة ومشروبات</option>
+                <option value="animals">🦁 حيوانات</option>
+                <option value="jobs">👨‍⚕️ وظائف ومهن</option>
+                <option value="sports">⚽ رياضة</option>
+                <option value="objects">📦 أشياء وأدوات</option>
+                <option value="apps">📱 تطبيقات ومواقع</option>
+                <option value="transport">🚗 وسائل مواصلات</option>
+                <option value="nature">🌲 طبيعة وظواهر</option>
+                <option value="clothes">👕 ملابس وأزياء</option>
+            </select>
+        </div>
+        <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
+            <label class="block text-gray-300 mb-2 font-bold">عدد اللاعبين</label>
+            <div class="flex items-center justify-between bg-slate-900 rounded-xl p-2">
+                <button onclick="adjust('players', -1)" class="w-12 h-10 bg-slate-700 rounded-lg font-bold text-2xl">-</button>
+                <span id="playerCount" class="text-3xl font-black text-blue-400">4</span>
+                <button onclick="adjust('players', 1)" class="w-12 h-10 bg-slate-700 rounded-lg font-bold text-2xl">+</button>
             </div>
         </div>
-
-        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl mb-4 border border-slate-800">
-            <p class="text-sm sm:text-base font-bold text-sky-400 mb-3" data-i18n="spies">عدد الجواسيس (1 - 3)</p>
-            <div class="flex justify-center items-center gap-6">
-                <button onclick="changeC('s', -1)" class="w-12 h-12 bg-slate-800 rounded-lg text-2xl font-bold">-</button>
-                <span id="s-val" class="text-3xl font-black w-8">1</span>
-                <button onclick="changeC('s', 1)" class="w-12 h-12 bg-slate-800 rounded-lg text-2xl font-bold">+</button>
+        <div class="flex gap-4">
+            <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 flex-1">
+                <label class="block text-gray-300 mb-2 font-bold text-sm">الجواسيس</label>
+                <div class="flex items-center justify-between bg-slate-900 rounded-xl p-1">
+                    <button onclick="adjust('spies', -1)" class="w-8 h-8 bg-slate-700 rounded-lg font-bold text-xl">-</button>
+                    <span id="spyCount" class="text-xl font-black text-red-400">1</span>
+                    <button onclick="adjust('spies', 1)" class="w-8 h-8 bg-slate-700 rounded-lg font-bold text-xl">+</button>
+                </div>
+            </div>
+            <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700 flex-1">
+                <label class="block text-gray-300 mb-2 font-bold text-sm">الوقت (د)</label>
+                <div class="flex items-center justify-between bg-slate-900 rounded-xl p-1">
+                    <button onclick="adjust('time', -1)" class="w-8 h-8 bg-slate-700 rounded-lg font-bold text-xl">-</button>
+                    <span id="timeCount" class="text-xl font-black text-yellow-400">5</span>
+                    <button onclick="adjust('time', 1)" class="w-8 h-8 bg-slate-700 rounded-lg font-bold text-xl">+</button>
+                </div>
             </div>
         </div>
+        <button onclick="goToNamesSetup()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl text-xl mt-2 transition-all active:scale-95 shadow-[0_0_15px_rgba(37,99,235,0.5)]">التالي (إدخال الأسماء) ➡️</button>
+    </div>
 
-        <div class="bg-slate-900 p-4 sm:p-5 rounded-2xl mb-6 border border-slate-800">
-            <p class="text-sm sm:text-base font-bold text-sky-400 mb-3" data-i18n="time">وقت الجولة</p>
-            <div class="grid grid-cols-4 gap-2 sm:gap-4">
-                <button onclick="setT(3)" id="t3" class="bg-slate-800 py-3 rounded-lg font-bold text-lg">3</button>
-                <button onclick="setT(5)" id="t5" class="bg-sky-600 text-white py-3 rounded-lg font-bold text-lg">5</button>
-                <button onclick="setT(7)" id="t7" class="bg-slate-800 py-3 rounded-lg font-bold text-lg">7</button>
-                <button onclick="setT(10)" id="t10" class="bg-slate-800 py-3 rounded-lg font-bold text-lg">10</button>
-            </div>
+    <!-- شاشة إدخال الأسماء -->
+    <div id="namesScreen" class="hidden-screen w-full max-w-md flex flex-col gap-4 z-10 h-full max-h-screen overflow-y-auto pb-10">
+        <div class="flex justify-between items-center mb-2 mt-4">
+            <h2 id="t_namesTitle" class="text-2xl font-black">أسماء اللاعبين ✍️</h2>
+            <button onclick="navTo('setupScreen')" id="t_namesBack" class="text-gray-400 hover:text-white bg-slate-800 px-3 py-1 rounded-lg text-sm font-bold">عودة 🔙</button>
         </div>
-        <button onclick="goNames()" class="btn-neon w-full py-4 rounded-2xl text-xl sm:text-2xl font-black" data-i18n="enterNames">إدخال الأسماء</button>
-    </div>
-
-    <div id="s-names" class="w-full max-w-lg glass-card p-6 sm:p-10 text-center hidden">
-        <h2 class="text-2xl sm:text-3xl font-black mb-6 text-sky-400" data-i18n="whoPlays">من يشارك في اللعبة؟</h2>
-        <div id="names-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto mb-6 p-2"></div>
-        <button onclick="goCats()" class="btn-neon w-full py-4 rounded-2xl text-xl sm:text-2xl font-black" data-i18n="chooseMission">اختيار المهمة</button>
-    </div>
-
-    <div id="s-cats" class="w-full max-w-lg glass-card p-6 sm:p-10 text-center hidden">
-        <h2 class="text-2xl sm:text-3xl font-black mb-4 text-sky-400" data-i18n="chooseCards">اختر البطاقات</h2>
-        <div id="score-board" class="flex flex-wrap justify-center gap-2 mb-4 text-sm font-bold empty:hidden"></div>
-        <button onclick="start('عشوائي')" class="w-full py-4 mb-4 rounded-2xl bg-gradient-to-r from-purple-600 to-sky-600 font-black text-xl border border-white/20 text-white" data-i18n="random">🎲 عشوائي شامل</button>
-        <div id="cats-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[400px] overflow-y-auto p-1"></div>
-    </div>
-
-    <div id="s-pass" class="w-full max-w-lg text-center hidden flex-col justify-center min-h-[400px] sm:min-h-[500px]">
-        <h3 class="text-2xl sm:text-3xl font-bold text-sky-400 mb-3" data-i18n="turnFor">الدور الآن على...</h3>
-        <h2 id="p-name" class="text-6xl sm:text-7xl font-black text-white mb-12 drop-shadow-lg"></h2>
-        <button onclick="showCard()" class="btn-neon w-full py-6 rounded-3xl text-3xl sm:text-4xl font-black shadow-[0_0_20px_rgba(14,165,233,0.4)]" data-i18n="showCard">رؤية بطاقتي</button>
-    </div>
-
-    <div id="s-card" class="w-full max-w-lg hidden">
-        <div id="card-box" class="min-h-[400px] sm:min-h-[450px] flex flex-col items-center justify-center glass-card p-6 sm:p-10 text-center mb-8"></div>
-        <button onclick="nextP()" class="btn-neon w-full py-5 rounded-2xl text-2xl sm:text-3xl font-black" data-i18n="hidePass">حفظت (أخفِ ومرر)</button>
-    </div>
-
-    <div id="s-play" class="w-full max-w-lg glass-card p-8 sm:p-10 text-center hidden">
-        <div class="bg-slate-900 p-5 rounded-3xl mb-8 border border-slate-800 shadow-inner">
-            <p class="text-sm sm:text-base text-slate-400 font-bold mb-2" data-i18n="firstAsk">المحقق الذي يبدأ السؤال:</p>
-            <h2 id="starter" class="text-4xl sm:text-5xl font-black text-sky-400 drop-shadow-md"></h2>
-        </div>
-        <div id="timer" class="text-8xl sm:text-9xl font-black mb-12 font-mono text-white tracking-widest drop-shadow-lg">05:00</div>
-        <div class="grid grid-cols-2 gap-4">
-            <button onclick="toggleP()" id="pause-btn" class="bg-slate-800 p-4 rounded-2xl font-bold text-xl sm:text-2xl" data-i18n="pause">إيقاف ⏸️</button>
-            <button onclick="goVote()" class="bg-red-600 text-white p-4 rounded-2xl font-black text-xl sm:text-2xl shadow-[0_0_15px_rgba(220,38,38,0.5)]" data-i18n="vote">تصويت 🗳️</button>
-        </div>
-    </div>
-
-    <div id="s-vote" class="w-full max-w-lg glass-card p-6 sm:p-10 text-center hidden">
-        <h2 class="text-3xl sm:text-4xl font-black mb-2 text-red-500" data-i18n="whoIsSpy">من هو الجاسوس؟</h2>
-        <p class="text-sm sm:text-base text-slate-400 mb-6 font-bold" data-i18n="voteDesc">اضغط على اسم الشخص المشتبه به</p>
-        <div id="vote-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[400px] overflow-y-auto p-1"></div>
-    </div>
-
-    <div id="s-res" class="w-full max-w-lg glass-card p-6 sm:p-10 text-center hidden">
-        <div id="res-icon" class="mb-4"></div>
-        <h2 id="res-title" class="text-4xl sm:text-5xl font-black mb-5"></h2>
-        <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 mb-6 shadow-inner">
-            <p class="text-sm sm:text-base text-slate-400 mb-4 font-bold" data-i18n="secretWas">الكلمة السرية كانت:</p>
-            <div id="res-word-img-container" class="flex justify-center mb-4"></div>
-            <h3 id="res-word-text" class="text-3xl sm:text-4xl font-black text-white"></h3>
-        </div>
+        <p id="t_namesDesc" class="text-gray-400 text-sm mb-2 text-center">أدخل أسماء أصدقائك لسهولة اللعب</p>
         
-        <div class="grid grid-cols-2 gap-3">
-            <button onclick="location.reload()" class="bg-slate-800 text-white py-4 rounded-2xl text-lg sm:text-xl font-bold border border-slate-700" data-i18n="mainMenu">القائمة الرئيسية 🏠</button>
-            <button onclick="newRound()" class="btn-neon py-4 rounded-2xl text-lg sm:text-xl font-black" data-i18n="newRound">جولة جديدة 🔄</button>
+        <div id="namesContainer" class="flex flex-col gap-3">
+            <!-- سيتم توليد حقول الأسماء هنا -->
+        </div>
+
+        <button onclick="prepareGameAndImages()" id="t_namesStart" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-2xl text-xl mt-4 transition-all active:scale-95 shadow-[0_0_15px_rgba(22,163,74,0.5)]">تجهيز البطاقات وبدء اللعب ✔️</button>
+    </div>
+
+    <!-- 5. شاشة البطاقة مع نظام التحميل السريع جداً -->
+    <div id="passPhoneScreen" class="hidden-screen w-full max-w-md flex flex-col items-center gap-4 z-10">
+        <h2 id="t_passTo" class="text-lg font-bold text-gray-300 mb-[-5px]">أعطِ الهاتف إلى:</h2>
+        <h2 id="currentPlayerTitle" class="text-4xl font-black text-white bg-blue-900/50 px-8 py-2 rounded-full border border-blue-500 shadow-lg">اللاعب 1</h2>
+        <p id="t_tapToRevealDesc" class="text-sm text-gray-400 font-bold mb-2">انقر على البطاقة لكشف هويتك سراً</p>
+
+        <div class="flip-card" id="identityCard" onclick="flipCard()">
+            <div class="flip-card-inner">
+                <!-- الغطاء -->
+                <div class="flip-card-front">
+                    <div class="w-24 h-24 rounded-full border-4 border-slate-600 flex items-center justify-center mb-6 bg-slate-800 shadow-inner">
+                        <i class="fa-solid fa-fingerprint text-[4rem] text-slate-400"></i>
+                    </div>
+                    <span id="t_tapToReveal" class="font-black text-3xl text-blue-200">اضغط للكشف</span>
+                </div>
+                
+                <!-- الوجه الخلفي (الصور تظهر فوراً) -->
+                <div class="flip-card-back relative" id="cardBackFace">
+                    <div class="image-container mt-6">
+                        <div id="imageLoader" class="spinner hidden"></div>
+                        <!-- الصورة الأصلية أو الأيقونة -->
+                        <img id="realImage" src="" class="real-image-frame hidden" alt="Icon">
+                        <!-- أيقونة بديلة للحماية -->
+                        <div id="fallbackIconWrapper" class="hidden absolute inset-0 flex items-center justify-center bg-slate-800 rounded-3xl border-2 border-slate-600 shadow-inner">
+                            <i id="fallbackIcon" class="fa-solid fa-star text-[5rem] drop-shadow-lg text-sky-400"></i>
+                        </div>
+                    </div>
+
+                    <h3 id="roleTitle" class="text-xl font-bold text-gray-300 z-10 uppercase tracking-widest mb-1 mt-2">...</h3>
+                    
+                    <div id="roleWordContainer" class="z-10 w-11/12 flex justify-center items-center mt-1 mb-4 bg-slate-900/80 border-l-4 border-sky-400 rounded-xl shadow-lg py-4">
+                        <p id="roleWord" class="text-4xl font-black text-sky-300 text-center">الكلمة</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="nextPlayerBtn" onclick="nextPlayer()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-2xl text-xl transition-all active:scale-95 hidden mt-2 shadow-[0_0_15px_rgba(22,163,74,0.5)]">التالي 📱</button>
+    </div>
+
+    <!-- 6. اللعب (عجلة الحظ والمساعدة) -->
+    <div id="gameScreen" class="hidden-screen w-full max-w-md flex flex-col items-center gap-5 z-10">
+        
+        <div class="w-full bg-slate-800/80 p-4 rounded-2xl border border-slate-700 shadow-lg mb-1">
+            <p id="t_wheelTitle" class="text-center text-sm text-gray-400 font-bold mb-2">من سيسأل من؟</p>
+            <div class="slot-machine"><span id="wheelResult" class="slot-text text-white">...</span></div>
+            <button onclick="runWheel()" id="t_spinWheelBtn" class="mt-3 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl shadow-md border border-blue-500 transition-all active:scale-95">أدر العجلة 🎲</button>
+        </div>
+
+        <div class="relative w-48 h-48 flex items-center justify-center rounded-full border-8 border-slate-800 bg-slate-900 shadow-[0_0_40px_rgba(0,0,0,0.6)]">
+            <span id="timerDisplay" class="text-5xl font-black font-mono tracking-wider text-blue-400">05:00</span>
+            <div id="timerAlert" class="absolute inset-0 rounded-full border-8 border-red-500 opacity-0 pointer-events-none transition-opacity duration-200"></div>
+        </div>
+
+        <!-- زر المساعدة البسيط -->
+        <button onclick="getAIHint()" id="hintBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl border border-amber-400 shadow-lg flex justify-between px-4 items-center transition-all active:scale-95">
+            <span id="t_hintBtn">احتاج إلى سؤال 💡</span>
+            <span id="hintsLeft" class="bg-amber-900 px-2 py-1 rounded text-sm font-mono">3</span>
+        </button>
+        
+        <div class="flex w-full gap-3 mt-1">
+            <button onclick="toggleTimer()" id="pauseBtn" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-all active:scale-95">إيقاف ⏸️</button>
+            <button onclick="cancelRound()" id="t_cancelRound" class="bg-slate-800 hover:bg-red-900 text-gray-300 hover:text-white font-bold py-3 px-4 rounded-xl transition-all active:scale-95">إلغاء 🔙</button>
+        </div>
+        <button onclick="goToVoting()" id="t_endRound" class="w-full bg-red-600 hover:bg-red-500 text-white font-black py-4 rounded-2xl text-xl mt-1 shadow-[0_0_15px_rgba(220,38,38,0.5)] transition-all active:scale-95">انتهى النقاش 🛑</button>
+    </div>
+
+    <!-- نافذة سؤال المساعدة -->
+    <div id="aiHintModal" class="hidden-screen fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-slate-900 border border-amber-500 rounded-3xl p-6 w-full max-w-md text-center">
+            <div class="text-5xl mb-4 drop-shadow-lg">💡</div>
+            <h3 class="text-xl font-bold text-amber-400 mb-4">سؤال التشتيت المتاح لك:</h3>
+            <p id="aiHintText" class="text-2xl font-black text-white mb-6 leading-relaxed bg-slate-800 p-4 rounded-xl border border-slate-700">...</p>
+            <button onclick="closeHint()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-xl transition-all active:scale-95">حسناً، إغلاق</button>
         </div>
     </div>
+
+    <!-- 7. التصويت المتعدد -->
+    <div id="votingScreen" class="hidden-screen w-full max-w-md flex flex-col gap-4 z-10 h-full max-h-screen overflow-y-auto pb-10 pt-4">
+        <h2 id="t_voteTitle" class="text-3xl font-black text-center text-rose-500 mb-1">وقت التصويت!</h2>
+        <p id="votingInstructions" class="text-center text-gray-300 text-sm mb-4">اختاروا الجاسوس</p>
+        
+        <div id="votingButtons" class="flex flex-col gap-3"></div>
+        
+        <button id="confirmVoteBtn" onclick="confirmMultipleVotes()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-xl text-lg hidden shadow-lg mt-2 transition-all active:scale-95">تأكيد الطرد ✔️</button>
+
+        <div class="w-full h-px bg-slate-700 my-2"></div>
+        <button onclick="castParanoiaVote()" id="t_voteParanoia" class="w-full bg-purple-700 hover:bg-purple-600 text-white font-bold py-4 rounded-xl text-lg shadow-lg border border-purple-500 transition-all active:scale-95">لا يوجد جواسيس أساساً! 🤯</button>
+    </div>
+
+    <!-- 8. النتائج -->
+    <div id="resultScreen" class="hidden-screen w-full max-w-md flex flex-col items-center gap-4 z-10 h-full max-h-screen overflow-y-auto pb-6 pt-4">
+        <h2 id="resultTitle" class="text-4xl font-black mb-1 drop-shadow-lg">النتيجة</h2>
+        <p id="resultSubTitle" class="text-lg font-bold text-gray-300 mb-2 text-center">وصف النتيجة</p>
+        
+        <div class="bg-slate-800 w-full p-4 rounded-2xl border border-slate-700 shadow-lg flex flex-col items-center">
+            <p id="t_resWord" class="text-gray-400 mb-2 text-sm font-bold">الكلمة كانت:</p>
+            
+            <div class="relative w-28 h-28 mb-3 flex items-center justify-center">
+                <img id="resImage" src="" class="w-full h-full object-contain drop-shadow-lg hidden" alt="">
+                <div id="resFallbackWrapper" class="hidden absolute inset-0 flex items-center justify-center bg-slate-700 rounded-full border-4 border-sky-400 shadow-lg">
+                    <i id="resFallbackIcon" class="fa-solid fa-star text-4xl text-white"></i>
+                </div>
+            </div>
+            
+            <p id="resultWord" class="text-3xl font-black text-blue-400 drop-shadow-md mb-4">الكلمة</p>
+            
+            <p id="t_resSpies" class="text-gray-400 mb-2 text-sm font-bold text-center">الجواسيس:</p>
+            <div id="spiesList" class="flex flex-wrap justify-center gap-2"></div>
+        </div>
+        <div class="w-full bg-slate-900 border border-slate-700 p-4 rounded-2xl mt-2">
+            <h3 id="t_scoreboard" class="text-xl font-bold text-white text-center mb-3">نقاط اللاعبين 🏆</h3>
+            <div id="scoreboardList" class="flex flex-col gap-2"></div>
+        </div>
+        <button onclick="navTo('setupScreen')" id="t_resHome" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl text-xl mt-4 transition-all active:scale-95">تجهيز جولة جديدة ⚙️</button>
+    </div>
+
+    <!-- الإشعارات -->
+    <div id="toast" class="fixed bottom-10 bg-slate-800 text-white px-6 py-3 rounded-full opacity-0 pointer-events-none border border-slate-600 z-50 font-bold text-center transition-opacity duration-300 shadow-2xl"></div>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js?v=' + new Date().getTime()).catch(console.error);
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            if (toast) { toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => toast.style.opacity = '0', 3000); }
         }
 
-        const uiTrans = {
-            ar: { settingsTitle: "إعدادات اللغة", close: "إغلاق", title: "الجاسوس", players: "عدد اللاعبين (3 - 20)", spies: "عدد الجواسيس (1 - 3)", time: "وقت الجولة (دقائق)", enterNames: "إدخال الأسماء", whoPlays: "من يشارك في اللعبة؟", chooseMission: "اختيار المهمة", chooseCards: "اختر نوع البطاقات", random: "🎲 عشوائي شامل", turnFor: "الدور الآن على...", showCard: "رؤية بطاقتي", youAreSpy: "أنت الجاسوس!", spyDesc: "العبها بذكاء وحاول كشف الكلمة!", missionIs: "المهمة هي:", hidePass: "حفظت (أخفِ ومرر)", firstAsk: "المحقق الذي يبدأ السؤال:", pause: "إيقاف ⏸️", resume: "استئناف ▶️", vote: "تصويت 🗳️", whoIsSpy: "من هو الجاسوس؟", voteDesc: "اضغط على اسم الشخص المشتبه به", citWin: "فاز المواطنون!", spyWin: "فاز الجاسوس!", secretWas: "الكلمة السرية كانت:", newRound: "جولة جديدة 🔄", mainMenu: "القائمة الرئيسية 🏠", pName: "اللاعب" },
-            en: { settingsTitle: "Language Settings", close: "Close", title: "Spy Game", players: "Players (3 - 20)", spies: "Spies (1 - 3)", time: "Round Time (Mins)", enterNames: "Enter Names", whoPlays: "Who is playing?", chooseMission: "Choose Mission", chooseCards: "Select Category", random: "🎲 Random All", turnFor: "Turn for...", showCard: "Show My Card", youAreSpy: "You are the SPY!", spyDesc: "Play smart and guess the word!", missionIs: "The location is:", hidePass: "Got it (Hide & Pass)", firstAsk: "First to ask:", pause: "Pause ⏸️", resume: "Resume ▶️", vote: "Vote 🗳️", whoIsSpy: "Who is the Spy?", voteDesc: "Tap on the suspect's name", citWin: "Citizens Win!", spyWin: "Spy Wins!", secretWas: "The secret word was:", newRound: "New Round 🔄", mainMenu: "Main Menu 🏠", pName: "Player" },
-            es: { settingsTitle: "Idioma", close: "Cerrar", title: "Juego de Espías", players: "Jugadores (3 - 20)", spies: "Espías (1 - 3)", time: "Tiempo (Min)", enterNames: "Nombres", whoPlays: "¿Quién juega?", chooseMission: "Elegir Misión", chooseCards: "Categorías", random: "🎲 Aleatorio", turnFor: "Turno de...", showCard: "Ver mi tarjeta", youAreSpy: "¡Eres el ESPÍA!", spyDesc: "¡Sé inteligente y adivina la palabra!", missionIs: "La misión es:", hidePass: "Ocultar y Pasar", firstAsk: "Empieza a preguntar:", pause: "Pausa ⏸️", resume: "Reanudar ▶️", vote: "Votar 🗳️", whoIsSpy: "¿Quién es el espía?", voteDesc: "Toca el nombre del sospechoso", citWin: "¡Ciudadanos Ganan!", spyWin: "¡El Espía Gana!", secretWas: "La palabra secreta era:", newRound: "Nueva Ronda 🔄", mainMenu: "Menú Principal 🏠", pName: "Jugador" },
-            fr: { settingsTitle: "Langue", close: "Fermer", title: "Jeu d'Espion", players: "Joueurs (3 - 20)", spies: "Espions (1 - 3)", time: "Temps (Min)", enterNames: "Noms", whoPlays: "Qui joue ?", chooseMission: "Choisir Mission", chooseCards: "Catégories", random: "🎲 Aléatoire", turnFor: "Tour de...", showCard: "Voir ma carte", youAreSpy: "Vous êtes l'ESPION!", spyDesc: "Soyez malin et devinez le mot!", missionIs: "La mission est :", hidePass: "Cacher et Passer", firstAsk: "Premier à demander :", pause: "Pause ⏸️", resume: "Reprendre ▶️", vote: "Voter 🗳️", whoIsSpy: "Qui est l'espion ?", voteDesc: "Appuyez sur le nom", citWin: "Les Citoyens Gagnent!", spyWin: "L'Espion Gagne!", secretWas: "Le mot secret était :", newRound: "Nouveau Tour 🔄", mainMenu: "Menu Principal 🏠", pName: "Joueur" }
+        // --- 🎵 أصوات النقر وتيك توك 🎵 ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        function initAudio() { if(!audioCtx) audioCtx = new AudioContext(); if(audioCtx.state === 'suspended') audioCtx.resume(); }
+        
+        function playClickSound() {
+            if(!audioCtx || audioCtx.state === 'suspended') return;
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'sine'; osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        function playTick(isTick) {
+            if(!audioCtx || audioCtx.state === 'suspended') return;
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.type = 'sine'; osc.frequency.setValueAtTime(isTick ? 800 : 600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+        }
+
+        document.addEventListener('click', function(e) { initAudio(); if(e.target.closest('button') || e.target.closest('.flip-card')) playClickSound(); });
+
+        // --- 📚 قاعدة البيانات ---
+        const db = {
+            places: [
+                {w:"مستشفى", k:"hospital", i:"fa-hospital"},{w:"مطار", k:"airport", i:"fa-plane"},{w:"مدرسة", k:"school", i:"fa-school"},{w:"جامعة", k:"university", i:"fa-building-columns"},{w:"بنك", k:"bank", i:"fa-building-columns"},{w:"مطعم", k:"restaurant", i:"fa-utensils"},{w:"مقهى", k:"cafe", i:"fa-mug-hot"},{w:"فندق", k:"hotel", i:"fa-hotel"},{w:"شاطئ", k:"beach", i:"fa-umbrella-beach"},{w:"حديقة عامة", k:"park", i:"fa-tree"},{w:"سينما", k:"cinema", i:"fa-film"},{w:"مسرح", k:"theater", i:"fa-masks-theater"},{w:"ملعب", k:"stadium", i:"fa-futbol"},{w:"صالة رياضية", k:"gym", i:"fa-dumbbell"},{w:"سوبر ماركت", k:"supermarket", i:"fa-cart-shopping"},{w:"مخبز", k:"bakery", i:"fa-bread-slice"},{w:"صيدلية", k:"pharmacy", i:"fa-pills"},{w:"مكتبة", k:"library", i:"fa-book"},{w:"متحف", k:"museum", i:"fa-building-columns"},{w:"معرض فنون", k:"art-gallery", i:"fa-image"},{w:"سجن", k:"prison", i:"fa-border-all"},{w:"مركز شرطة", k:"police-station", i:"fa-building-shield"},{w:"محطة إطفاء", k:"fire-station", i:"fa-fire-extinguisher"},{w:"محطة قطار", k:"train-station", i:"fa-train"},{w:"محطة وقود", k:"gas-station", i:"fa-gas-pump"},{w:"قاعدة عسكرية", k:"military-base", i:"fa-shield-halved"},{w:"سفينة", k:"ship", i:"fa-ship"},{w:"مصنع", k:"factory", i:"fa-industry"},{w:"مزرعة", k:"farm", i:"fa-tractor"},{w:"حديقة حيوان", k:"zoo", i:"fa-paw"},{w:"مدينة ملاهي", k:"amusement-park", i:"fa-roller-coaster"},{w:"سيرك", k:"circus", i:"fa-tent"},{w:"مسجد", k:"mosque", i:"fa-mosque"},{w:"كنيسة", k:"church", i:"fa-church"},{w:"صالون حلاقة", k:"barbershop", i:"fa-scissors"},{w:"عيادة أسنان", k:"dentist", i:"fa-tooth"},{w:"مستشفى بيطري", k:"veterinary", i:"fa-cat"},{w:"سفارة", k:"embassy", i:"fa-passport"},{w:"محكمة", k:"courthouse", i:"fa-scale-balanced"},{w:"قصر", k:"palace", i:"fa-chess-rook"},{w:"ناطحة سحاب", k:"skyscraper", i:"fa-city"},{w:"مختبر", k:"laboratory", i:"fa-flask"},{w:"مرصد فلكي", k:"observatory", i:"fa-telescope"},{w:"منجم", k:"mine-cart", i:"fa-gem"},{w:"قارب", k:"boat", i:"fa-sailboat"},{w:"خيمة", k:"tent", i:"fa-campground"},{w:"كهف", k:"cave", i:"fa-mountain"},{w:"جزيرة", k:"island", i:"fa-umbrella-beach"},{w:"برج", k:"tower", i:"fa-tower-observation"},{w:"ملعب جولف", k:"golf", i:"fa-golf-ball-tee"},{w:"مسبح", k:"swimming-pool", i:"fa-water"},{w:"سوق", k:"marketplace", i:"fa-shop"},{w:"محطة فضاء", k:"space-station", i:"fa-rocket"},{w:"ميناء", k:"port", i:"fa-anchor"},{w:"منارة", k:"lighthouse", i:"fa-tower-broadcast"},{w:"قلعة", k:"castle", i:"fa-chess-rook"},{w:"مكتب بريد", k:"post-office", i:"fa-envelope"},{w:"دار أيتام", k:"orphanage", i:"fa-child-reaching"},{w:"ملعب تنس", k:"tennis-court", i:"fa-table-tennis-paddle-ball"},{w:"مقر شركة", k:"office-building", i:"fa-building"},{w:"مخيم", k:"camping", i:"fa-fire"},{w:"صالة بولينج", k:"bowling", i:"fa-bowling-ball"}
+            ],
+            food: [
+                {w:"بيتزا", k:"pizza", i:"fa-pizza-slice"},{w:"برجر", k:"hamburger", i:"fa-burger"},{w:"شاورما", k:"kebab", i:"fa-hotdog"},{w:"سوشي", k:"sushi", i:"fa-fish"},{w:"مكرونة", k:"spaghetti", i:"fa-bowl-food"},{w:"بطاطس مقلية", k:"french-fries", i:"fa-fries"},{w:"دجاج مقلي", k:"fried-chicken", i:"fa-drumstick-bite"},{w:"ستيك لحم", k:"steak", i:"fa-meat"},{w:"سمك مشوي", k:"fish-food", i:"fa-fish"},{w:"أرز", k:"rice-bowl", i:"fa-bowl-rice"},{w:"سلطة", k:"salad", i:"fa-leaf"},{w:"شوربة", k:"soup-plate", i:"fa-bowl-food"},{w:"بيض مقلي", k:"fried-egg", i:"fa-egg"},{w:"خبز", k:"bread", i:"fa-bread-slice"},{w:"جبنة", k:"cheese", i:"fa-cheese"},{w:"تفاح", k:"apple", i:"fa-apple-whole"},{w:"موز", k:"banana", i:"fa-lemon"},{w:"برتقال", k:"orange", i:"fa-orange"},{w:"عنب", k:"grapes", i:"fa-circle-nodes"},{w:"بطيخ", k:"watermelon", i:"fa-watermelon"},{w:"فراولة", k:"strawberry", i:"fa-strawberry"},{w:"كرز", k:"cherry", i:"fa-cherry"},{w:"مانجو", k:"mango", i:"fa-lemon"},{w:"أناناس", k:"pineapple", i:"fa-apple-whole"},{w:"جزر", k:"carrot", i:"fa-carrot"},{w:"طماطم", k:"tomato", i:"fa-apple-whole"},{w:"خيار", k:"cucumber", i:"fa-carrot"},{w:"بصل", k:"onion", i:"fa-circle"},{w:"ثوم", k:"garlic", i:"fa-garlic"},{w:"فلفل حار", k:"chili-pepper", i:"fa-pepper-hot"},{w:"شوكولاتة", k:"chocolate-bar", i:"fa-cookie"},{w:"آيس كريم", k:"ice-cream-cone", i:"fa-ice-cream"},{w:"كيك", k:"cake", i:"fa-cake-candles"},{w:"دونات", k:"doughnut", i:"fa-circle-notch"},{w:"بسكويت", k:"cookie", i:"fa-cookie-bite"},{w:"قهوة", k:"cafe", i:"fa-mug-hot"},{w:"شاي", k:"tea", i:"fa-mug-hot"},{w:"عصير", k:"orange-juice", i:"fa-glass-water"},{w:"حليب", k:"milk", i:"fa-bottle-water"},{w:"عسل", k:"honey", i:"fa-jar"},{w:"زيتون", k:"olive", i:"fa-circle"},{w:"فلافل", k:"falafel", i:"fa-circle"},{w:"حمص", k:"hummus", i:"fa-bowl-food"},{w:"كبسة", k:"rice-bowl", i:"fa-bowl-rice"},{w:"برياني", k:"rice-bowl", i:"fa-bowl-rice"},{w:"فطيرة", k:"pie", i:"fa-chart-pie"},{w:"كرواسون", k:"croissant", i:"fa-bread-slice"},{w:"بان كيك", k:"pancake", i:"fa-pancakes"},{w:"وافل", k:"waffle", i:"fa-border-all"},{w:"نقانق", k:"sausage", i:"fa-hotdog"},{w:"تاكو", k:"taco", i:"fa-burger"},{w:"بوريتو", k:"burrito", i:"fa-hotdog"},{w:"باذنجان", k:"eggplant", i:"fa-leaf"},{w:"بروكلي", k:"broccoli", i:"fa-tree"},{w:"ذرة", k:"corn", i:"fa-seedling"},{w:"أفوكادو", k:"avocado", i:"fa-circle"},{w:"كيوي", k:"kiwi", i:"fa-circle"},{w:"رمان", k:"pomegranate", i:"fa-apple-whole"},{w:"ليمون", k:"lemon", i:"fa-lemon"},{w:"مكسرات", k:"peanuts", i:"fa-seedling"},{w:"فشار", k:"popcorn", i:"fa-film"},{w:"جمبري", k:"shrimp", i:"fa-shrimp"}
+            ],
+            animals: [
+                {w:"أسد", k:"lion", i:"fa-paw"},{w:"نمر", k:"tiger", i:"fa-paw"},{w:"فهد", k:"leopard", i:"fa-paw"},{w:"فيل", k:"elephant", i:"fa-paw"},{w:"زرافة", k:"giraffe", i:"fa-paw"},{w:"حمار وحشي", k:"zebra", i:"fa-paw"},{w:"قرد", k:"monkey", i:"fa-paw"},{w:"غوريلا", k:"gorilla", i:"fa-paw"},{w:"دب", k:"bear", i:"fa-paw"},{w:"دب قطبي", k:"polar-bear", i:"fa-paw"},{w:"ذئب", k:"wolf", i:"fa-paw"},{w:"ثعلب", k:"fox", i:"fa-paw"},{w:"كلب", k:"dog", i:"fa-dog"},{w:"قطة", k:"cat", i:"fa-cat"},{w:"أرنب", k:"rabbit", i:"fa-paw"},{w:"حصان", k:"horse", i:"fa-horse"},{w:"بقرة", k:"cow", i:"fa-cow"},{w:"خروف", k:"sheep", i:"fa-paw"},{w:"ماعز", k:"goat", i:"fa-paw"},{w:"خنزير", k:"pig", i:"fa-paw"},{w:"غزال", k:"deer", i:"fa-paw"},{w:"جمل", k:"camel", i:"fa-paw"},{w:"فأر", k:"mouse", i:"fa-paw"},{w:"خفاش", k:"bat", i:"fa-paw"},{w:"نسر", k:"eagle", i:"fa-crow"},{w:"بومة", k:"owl", i:"fa-crow"},{w:"ببغاء", k:"parrot", i:"fa-crow"},{w:"طاووس", k:"peacock", i:"fa-crow"},{w:"نعامة", k:"ostrich", i:"fa-crow"},{w:"تمساح", k:"crocodile", i:"fa-staff-snake"},{w:"ثعبان", k:"snake", i:"fa-staff-snake"},{w:"سلحفاة", k:"turtle", i:"fa-paw"},{w:"ضفدع", k:"frog", i:"fa-frog"},{w:"قرش", k:"shark", i:"fa-fish-fins"},{w:"حوت", k:"whale", i:"fa-fish-fins"},{w:"دلفين", k:"dolphin", i:"fa-fish-fins"},{w:"أخطبوط", k:"octopus", i:"fa-spaghetti"},{w:"سلطعون", k:"crab", i:"fa-spider"},{w:"عنكبوت", k:"spider", i:"fa-spider"},{w:"عقرب", k:"scorpion", i:"fa-spider"},{w:"نملة", k:"ant", i:"fa-bug"},{w:"نحلة", k:"bee", i:"fa-bug"},{w:"فراشة", k:"butterfly", i:"fa-bug"},{w:"خنفساء", k:"ladybird", i:"fa-bug"},{w:"ذبابة", k:"fly-insect", i:"fa-bug"},{w:"دودة", k:"worm", i:"fa-worm"},{w:"حلزون", k:"snail", i:"fa-bug"},{w:"بطريق", k:"penguin", i:"fa-paw"},{w:"فقمة", k:"seal", i:"fa-paw"},{w:"فرس النهر", k:"hippopotamus", i:"fa-paw"},{w:"وحيد القرن", k:"rhinoceros", i:"fa-paw"},{w:"كنغر", k:"kangaroo", i:"fa-paw"},{w:"كوالا", k:"koala", i:"fa-paw"},{w:"سنجاب", k:"squirrel", i:"fa-paw"},{w:"قنفذ", k:"hedgehog", i:"fa-paw"},{w:"ديناصور", k:"dinosaur", i:"fa-dragon"},{w:"تنين", k:"dragon", i:"fa-dragon"},{w:"حمامة", k:"dove", i:"fa-dove"},{w:"دجاجة", k:"chicken", i:"fa-crow"},{w:"بطة", k:"duck", i:"fa-crow"},{w:"قنديل البحر", k:"jellyfish", i:"fa-water"}
+            ],
+            jobs: [
+                {w:"طبيب", k:"medical-doctor", i:"fa-user-doctor"},{w:"ممرض", k:"nurse", i:"fa-user-nurse"},{w:"مهندس", k:"engineer", i:"fa-helmet-safety"},{w:"معلم", k:"teacher", i:"fa-chalkboard-user"},{w:"طيار", k:"pilot", i:"fa-plane"},{w:"شرطي", k:"police-officer", i:"fa-user-shield"},{w:"إطفائي", k:"firefighter", i:"fa-fire-extinguisher"},{w:"محامي", k:"lawyer", i:"fa-scale-balanced"},{w:"قاضي", k:"judge", i:"fa-gavel"},{w:"طباخ", k:"chef", i:"fa-kitchen-set"},{w:"خباز", k:"baker", i:"fa-bread-slice"},{w:"نجار", k:"carpenter", i:"fa-hammer"},{w:"حداد", k:"blacksmith", i:"fa-hammer"},{w:"مزارع", k:"farmer", i:"fa-tractor"},{w:"صياد سمك", k:"fisherman", i:"fa-fish"},{w:"رائد فضاء", k:"astronaut", i:"fa-user-astronaut"},{w:"عالم", k:"scientist", i:"fa-microscope"},{w:"مبرمج", k:"programmer", i:"fa-laptop-code"},{w:"رسام", k:"painter", i:"fa-palette"},{w:"مغني", k:"singer", i:"fa-microphone"},{w:"ممثل", k:"actor", i:"fa-masks-theater"},{w:"مخرج", k:"director", i:"fa-clapperboard"},{w:"مصور", k:"photographer", i:"fa-camera"},{w:"صحفي", k:"journalist", i:"fa-newspaper"},{w:"مذيع", k:"news-reporter", i:"fa-tv"},{w:"رياضي", k:"athlete", i:"fa-person-running"},{w:"لاعب كرة قدم", k:"soccer-player", i:"fa-futbol"},{w:"جندي", k:"soldier", i:"fa-person-military-rifle"},{w:"بحار", k:"sailor", i:"fa-anchor"},{w:"سائق", k:"driver", i:"fa-car"},{w:"حلاق", k:"barber", i:"fa-scissors"},{w:"خياط", k:"tailor", i:"fa-shirt"},{w:"عامل نظافة", k:"cleaner", i:"fa-broom"},{w:"سباك", k:"plumber", i:"fa-wrench"},{w:"كهربائي", k:"electrician", i:"fa-bolt"},{w:"محاسب", k:"accountant", i:"fa-calculator"},{w:"رجل أعمال", k:"businessman", i:"fa-user-tie"},{w:"سياسي", k:"politician", i:"fa-podium"},{w:"ساعي بريد", k:"postman", i:"fa-envelope"},{w:"حارس أمن", k:"security-guard", i:"fa-shield-halved"},{w:"جراح", k:"surgeon", i:"fa-scalpel"},{w:"طبيب أسنان", k:"dentist", i:"fa-tooth"},{w:"طبيب بيطري", k:"veterinarian", i:"fa-dog"},{w:"صيدلي", k:"pharmacist", i:"fa-pills"},{w:"ميكانيكي", k:"mechanic", i:"fa-wrench"},{w:"جزار", k:"butcher", i:"fa-meat"},{w:"صائغ", k:"jeweler", i:"fa-gem"},{w:"عالم فلك", k:"astronomer", i:"fa-telescope"},{w:"كابتن سفينة", k:"ship-captain", i:"fa-ship"},{w:"مضيفة طيران", k:"flight-attendant", i:"fa-plane-up"},{w:"مترجم", k:"translator", i:"fa-language"},{w:"كاتب", k:"writer", i:"fa-pen"},{w:"مرشد سياحي", k:"tour-guide", i:"fa-map"},{w:"عامل منجم", k:"miner", i:"fa-helmet-safety"},{w:"مفتش", k:"inspector", i:"fa-magnifying-glass"},{w:"محقق", k:"detective", i:"fa-user-secret"},{w:"حارس شخصي", k:"bodyguard", i:"fa-user-shield"},{w:"مزارع نحل", k:"beekeeper", i:"fa-bug"},{w:"عالم آثار", k:"archaeologist", i:"fa-skull"},{w:"موسيقي", k:"musician", i:"fa-guitar"}
+            ],
+            sports: [
+                {w:"كرة قدم", k:"soccer", i:"fa-futbol"},{w:"كرة سلة", k:"basketball", i:"fa-basketball"},{w:"تنس", k:"tennis", i:"fa-table-tennis-paddle-ball"},{w:"كرة طائرة", k:"volleyball", i:"fa-volleyball"},{w:"بيسبول", k:"baseball", i:"fa-baseball"},{w:"جولف", k:"golf", i:"fa-golf-ball-tee"},{w:"ملاكمة", k:"boxing", i:"fa-hand-back-fist"},{w:"كاراتيه", k:"karate", i:"fa-user-ninja"},{w:"سباحة", k:"swimming", i:"fa-person-swimming"},{w:"غوص", k:"scuba-diving", i:"fa-mask"},{w:"تزلج", k:"skiing", i:"fa-person-skiing"},{w:"تزلج على الجليد", k:"ice-skating", i:"fa-person-skating"},{w:"تزلج على اللوح", k:"skateboarding", i:"fa-person-snowboarding"},{w:"ركوب الدراجات", k:"cycling", i:"fa-person-biking"},{w:"ركوب الخيل", k:"horseback-riding", i:"fa-horse"},{w:"جودو", k:"judo", i:"fa-user-ninja"},{w:"مصارعة", k:"wrestling", i:"fa-user-ninja"},{w:"رفع أثقال", k:"weightlifting", i:"fa-dumbbell"},{w:"جمباز", k:"gymnastics", i:"fa-person-running"},{w:"ركض", k:"running", i:"fa-person-running"},{w:"ماراثون", k:"marathon", i:"fa-person-running"},{w:"رماية", k:"archery", i:"fa-bullseye"},{w:"مبارزة", k:"fencing", i:"fa-khanda"},{w:"بولينج", k:"bowling", i:"fa-bowling-ball"},{w:"بلياردو", k:"billiards", i:"fa-circle"},{w:"تنس طاولة", k:"ping-pong", i:"fa-table-tennis-paddle-ball"},{w:"تنس الريشة", k:"badminton", i:"fa-table-tennis-paddle-ball"},{w:"كريكت", k:"cricket", i:"fa-baseball"},{w:"رجبي", k:"rugby", i:"fa-football"},{w:"كرة يد", k:"handball", i:"fa-baseball"},{w:"تزلج مائي", k:"water-skiing", i:"fa-water"},{w:"إبحار", k:"sailing", i:"fa-sailboat"},{w:"تسلق الجبال", k:"climbing", i:"fa-mountain"},{w:"قفز مظلي", k:"skydiving", i:"fa-parachute-box"},{w:"شطرنج", k:"chess", i:"fa-chess"},{w:"يوغا", k:"yoga", i:"fa-spa"},{w:"بيلاتس", k:"pilates", i:"fa-spa"},{w:"زومبا", k:"zumba", i:"fa-music"},{w:"كمال أجسام", k:"bodybuilding", i:"fa-dumbbell"},{w:"تايكوندو", k:"taekwondo", i:"fa-user-ninja"},{w:"كونغ فو", k:"kung-fu", i:"fa-user-ninja"},{w:"سومو", k:"sumo", i:"fa-user-ninja"},{w:"ركوب الأمواج", k:"surfing", i:"fa-water"},{w:"تزلج بعجلات", k:"roller-skates", i:"fa-shoe-prints"},{w:"وثب طويل", k:"long-jump", i:"fa-person-running"},{w:"وثب عالي", k:"high-jump", i:"fa-person-running"},{w:"رمي الرمح", k:"javelin-throw", i:"fa-arrow-up"},{w:"رمي القرص", k:"discus-throw", i:"fa-circle"},{w:"رمي الجلة", k:"shot-put", i:"fa-circle"},{w:"سباق تتابع", k:"relay-race", i:"fa-person-running"},{w:"كرة الماء", k:"water-polo", i:"fa-water"},{w:"سباحة إيقاعية", k:"synchronized-swimming", i:"fa-water"},{w:"تزلج فني", k:"figure-skating", i:"fa-person-skating"},{w:"هوكي الجليد", k:"ice-hockey", i:"fa-hockey-puck"},{w:"هوكي الحقل", k:"field-hockey", i:"fa-hockey-puck"},{w:"كروس فيت", k:"crossfit", i:"fa-dumbbell"},{w:"باركور", k:"parkour", i:"fa-person-running"},{w:"تجديف", k:"rowing", i:"fa-sailboat"},{w:"صيد سمك", k:"fishing", i:"fa-fish"},{w:"سكواش", k:"squash", i:"fa-baseball"},{w:"ترياتلون", k:"triathlon", i:"fa-person-swimming"}
+            ],
+            objects: [
+                {w:"كرسي", k:"chair", i:"fa-chair"},{w:"طاولة", k:"table", i:"fa-table"},{w:"سرير", k:"bed", i:"fa-bed"},{w:"أريكة", k:"sofa", i:"fa-couch"},{w:"باب", k:"door", i:"fa-door-closed"},{w:"نافذة", k:"window", i:"fa-border-all"},{w:"تلفزيون", k:"tv", i:"fa-tv"},{w:"ثلاجة", k:"fridge", i:"fa-snowflake"},{w:"غسالة", k:"washing-machine", i:"fa-shirt"},{w:"مكواة", k:"iron", i:"fa-shirt"},{w:"مكنسة", k:"broom", i:"fa-broom"},{w:"مصباح", k:"light-bulb", i:"fa-lightbulb"},{w:"ساعة", k:"clock", i:"fa-clock"},{w:"هاتف", k:"smartphone", i:"fa-mobile-screen"},{w:"كمبيوتر", k:"computer", i:"fa-desktop"},{w:"كاميرا", k:"camera", i:"fa-camera"},{w:"كتاب", k:"book", i:"fa-book"},{w:"دفتر", k:"notebook", i:"fa-book-open"},{w:"قلم", k:"pen", i:"fa-pen"},{w:"حقيبة", k:"backpack", i:"fa-briefcase"},{w:"نظارة", k:"glasses", i:"fa-glasses"},{w:"مفتاح", k:"key", i:"fa-key"},{w:"قفل", k:"padlock", i:"fa-lock"},{w:"مقص", k:"scissors", i:"fa-scissors"},{w:"سكين", k:"knife", i:"fa-utensils"},{w:"شوكة", k:"fork", i:"fa-utensils"},{w:"ملعقة", k:"spoon", i:"fa-utensils"},{w:"صحن", k:"plate", i:"fa-circle"},{w:"كوب", k:"cup", i:"fa-mug-hot"},{w:"إبريق", k:"teapot", i:"fa-mug-hot"},{w:"زجاجة", k:"bottle", i:"fa-bottle-water"},{w:"مرآة", k:"mirror", i:"fa-border-all"},{w:"مشط", k:"comb", i:"fa-bars"},{w:"فرشاة أسنان", k:"toothbrush", i:"fa-tooth"},{w:"صابون", k:"soap", i:"fa-soap"},{w:"منشفة", k:"towel", i:"fa-scroll"},{w:"مظلة", k:"umbrella", i:"fa-umbrella"},{w:"سلة مهملات", k:"trash-can", i:"fa-trash"},{w:"سجادة", k:"carpet", i:"fa-scroll"},{w:"ستارة", k:"curtain", i:"fa-person-booth"},{w:"وسادة", k:"pillow", i:"fa-bed"},{w:"بطانية", k:"blanket", i:"fa-bed"},{w:"خزانة", k:"wardrobe", i:"fa-box"},{w:"مروحة", k:"fan", i:"fa-fan"},{w:"مكيف", k:"air-conditioner", i:"fa-snowflake"},{w:"مدفأة", k:"fireplace", i:"fa-fire"},{w:"شمعة", k:"candle", i:"fa-fire-flame-simple"},{w:"ولاعة", k:"lighter", i:"fa-fire"},{w:"بطارية", k:"battery", i:"fa-battery-full"},{w:"شاحن", k:"charger", i:"fa-plug"},{w:"سماعات", k:"headphones", i:"fa-headphones"},{w:"ميكروفون", k:"microphone", i:"fa-microphone"},{w:"راديو", k:"radio", i:"fa-radio"},{w:"لوحة", k:"painting", i:"fa-image"},{w:"مزهرية", k:"vase", i:"fa-seedling"},{w:"صندوق", k:"box", i:"fa-box"},{w:"هدية", k:"gift", i:"fa-gift"},{w:"بالون", k:"balloon", i:"fa-circle"},{w:"لعبة", k:"teddy-bear", i:"fa-puzzle-piece"},{w:"دمية", k:"doll", i:"fa-child"},{w:"دراجة", k:"bicycle", i:"fa-bicycle"}
+            ],
+            apps: [
+                {w:"واتساب", domain:"whatsapp.com", i:"fa-whatsapp"},{w:"فيسبوك", domain:"facebook.com", i:"fa-facebook"},{w:"إنستغرام", domain:"instagram.com", i:"fa-instagram"},{w:"تيك توك", domain:"tiktok.com", i:"fa-tiktok"},{w:"يوتيوب", domain:"youtube.com", i:"fa-youtube"},{w:"تويتر", domain:"x.com", i:"fa-twitter"},{w:"سناب شات", domain:"snapchat.com", i:"fa-snapchat"},{w:"تليجرام", domain:"telegram.org", i:"fa-telegram"},{w:"ماسنجر", domain:"messenger.com", i:"fa-facebook-messenger"},{w:"لينكد إن", domain:"linkedin.com", i:"fa-linkedin"},{w:"ديسكورد", domain:"discord.com", i:"fa-discord"},{w:"زوم", domain:"zoom.us", i:"fa-video"},{w:"سكايب", domain:"skype.com", i:"fa-skype"},{w:"نتفليكس", domain:"netflix.com", i:"fa-film"},{w:"سبوتيفاي", domain:"spotify.com", i:"fa-spotify"},{w:"أبل ميوزك", domain:"apple.com/music", i:"fa-music"},{w:"جوجل ماب", domain:"maps.google.com", i:"fa-map-location-dot"},{w:"أوبر", domain:"uber.com", i:"fa-taxi"},{w:"أمازون", domain:"amazon.com", i:"fa-amazon"},{w:"جوجل كروم", domain:"google.com/chrome", i:"fa-chrome"},{w:"سفاري", domain:"apple.com/safari", i:"fa-safari"},{w:"جيميل", domain:"gmail.com", i:"fa-envelope"},{w:"جوجل درايف", domain:"drive.google.com", i:"fa-google-drive"},{w:"دروب بوكس", domain:"dropbox.com", i:"fa-dropbox"},{w:"بينتريست", domain:"pinterest.com", i:"fa-pinterest"},{w:"ريديت", domain:"reddit.com", i:"fa-reddit"},{w:"تويتش", domain:"twitch.tv", i:"fa-twitch"},{w:"ويكيبيديا", domain:"wikipedia.org", i:"fa-wikipedia-w"},{w:"باي بال", domain:"paypal.com", i:"fa-paypal"},{w:"دوولينجو", domain:"duolingo.com", i:"fa-language"},{w:"ببجي", domain:"pubg.com", i:"fa-gamepad"},{w:"فورتنايت", domain:"fortnite.com", i:"fa-gamepad"},{w:"ماين كرافت", domain:"minecraft.net", i:"fa-cube"},{w:"روبلوكس", domain:"roblox.com", i:"fa-gamepad"},{w:"كاب كات", domain:"capcut.com", i:"fa-video"},{w:"كانفا", domain:"canva.com", i:"fa-palette"}
+            ],
+            transport: [
+                {w:"سيارة", k:"car", i:"fa-car"},{w:"تاكسي", k:"taxi", i:"fa-taxi"},{w:"باص", k:"bus", i:"fa-bus"},{w:"شاحنة", k:"truck", i:"fa-truck"},{w:"عربة نقل", k:"van", i:"fa-truck-fast"},{w:"سيارة إسعاف", k:"ambulance", i:"fa-truck-medical"},{w:"سيارة شرطة", k:"police-car", i:"fa-car-on"},{w:"سيارة إطفاء", k:"fire-truck", i:"fa-truck"},{w:"دراجة هوائية", k:"bicycle", i:"fa-bicycle"},{w:"دراجة نارية", k:"motorcycle", i:"fa-motorcycle"},{w:"سكوتر", k:"scooter", i:"fa-motorcycle"},{w:"قطار", k:"train", i:"fa-train"},{w:"مترو أنفاق", k:"subway", i:"fa-train-subway"},{w:"ترام", k:"tram", i:"fa-train-tram"},{w:"طائرة", k:"airplane", i:"fa-plane"},{w:"طائرة مروحية", k:"helicopter", i:"fa-helicopter"},{w:"طائرة شراعية", k:"glider", i:"fa-plane"},{w:"منطاد", k:"air-balloon", i:"fa-earth-americas"},{w:"سفينة", k:"ship", i:"fa-ship"},{w:"قارب", k:"boat", i:"fa-sailboat"},{w:"يخت", k:"yacht", i:"fa-ship"},{w:"غواصة", k:"submarine", i:"fa-ship"},{w:"عبارة", k:"ferry", i:"fa-ship"},{w:"جرار", k:"tractor", i:"fa-tractor"},{w:"رافعة", k:"crane", i:"fa-truck"},{w:"جرافة", k:"bulldozer", i:"fa-truck"},{w:"عربة حصان", k:"carriage", i:"fa-horse"},{w:"جمل", k:"camel", i:"fa-paw"},{w:"حافلة مدرسية", k:"school-bus", i:"fa-bus"},{w:"سيارة سباق", k:"race-car", i:"fa-car"},{w:"دبابة", k:"tank", i:"fa-truck"},{w:"عربة تسوق", k:"shopping-cart", i:"fa-cart-shopping"},{w:"كرسي متحرك", k:"wheelchair", i:"fa-wheelchair"},{w:"عربة أطفال", k:"stroller", i:"fa-baby-carriage"},{w:"زلاجة", k:"sled", i:"fa-snowflake"},{w:"تلفريك", k:"cable-car", i:"fa-cable-car"},{w:"مكوك فضاء", k:"space-shuttle", i:"fa-shuttle-space"},{w:"قمر صناعي", k:"satellite", i:"fa-satellite"},{w:"لوح تزلج", k:"skateboard", i:"fa-person-snowboarding"},{w:"حوامة", k:"hovercraft", i:"fa-ship"},{w:"سيارة كلاسيكية", k:"classic-car", i:"fa-car"},{w:"سيارة كهربائية", k:"electric-car", i:"fa-car-battery"},{w:"قطار سريع", k:"bullet-train", i:"fa-train"},{w:"قطار بضائع", k:"freight-train", i:"fa-train"},{w:"زورق", k:"canoe", i:"fa-sailboat"},{w:"كاسحة جليد", k:"icebreaker", i:"fa-ship"},{w:"سفينة حربية", k:"battleship", i:"fa-ship"},{w:"سفينة قراصنة", k:"pirate-ship", i:"fa-skull-crossbones"},{w:"طائرة حربية", k:"fighter-jet", i:"fa-fighter-jet"},{w:"طائرة بدون طيار", k:"drone", i:"fa-helicopter"},{w:"عربة جولف", k:"golf-cart", i:"fa-car"},{w:"عربة ثلج", k:"snowmobile", i:"fa-snowflake"},{w:"عربة ريكشا", k:"rickshaw", i:"fa-motorcycle"},{w:"سيارة جيب", k:"jeep", i:"fa-car"},{w:"سيارة ليموزين", k:"limousine", i:"fa-car"},{w:"شاحنة قمامة", k:"garbage-truck", i:"fa-trash"},{w:"خلاط اسمنت", k:"cement-mixer", i:"fa-truck"},{w:"شاحنة تبريد", k:"refrigerated-truck", i:"fa-truck"},{w:"قطار ملاهي", k:"roller-coaster", i:"fa-train"},{w:"سيارة تصادمية", k:"bumper-car", i:"fa-car"}
+            ],
+            nature: [
+                {w:"شجرة", k:"tree", i:"fa-tree"},{w:"نخلة", k:"palm-tree", i:"fa-tree"},{w:"صبار", k:"cactus", i:"fa-tree"},{w:"وردة", k:"rose", i:"fa-seedling"},{w:"زهرة", k:"flower", i:"fa-seedling"},{w:"عشب", k:"grass", i:"fa-leaf"},{w:"ورقة شجر", k:"leaf", i:"fa-leaf"},{w:"جبل", k:"mountain", i:"fa-mountain"},{w:"بركان", k:"volcano", i:"fa-volcano"},{w:"تلة", k:"hill", i:"fa-mountain"},{w:"وادي", k:"valley", i:"fa-mountain"},{w:"صحراء", k:"desert", i:"fa-sun"},{w:"غابة", k:"forest", i:"fa-tree"},{w:"أدغال", k:"jungle", i:"fa-tree"},{w:"جزيرة", k:"island", i:"fa-umbrella-beach"},{w:"بحر", k:"sea", i:"fa-water"},{w:"محيط", k:"ocean", i:"fa-water"},{w:"نهر", k:"river", i:"fa-water"},{w:"بحيرة", k:"lake", i:"fa-water"},{w:"شلال", k:"waterfall", i:"fa-water"},{w:"ينبوع", k:"fountain", i:"fa-water"},{w:"شاطئ", k:"beach", i:"fa-umbrella-beach"},{w:"صخرة", k:"rock", i:"fa-mountain"},{w:"رمل", k:"sand", i:"fa-sun"},{w:"تراب", k:"soil", i:"fa-leaf"},{w:"طين", k:"mud", i:"fa-cloud-showers-heavy"},{w:"شمس", k:"sun", i:"fa-sun"},{w:"قمر", k:"moon", i:"fa-moon"},{w:"نجمة", k:"star", i:"fa-star"},{w:"كوكب", k:"planet", i:"fa-earth-americas"},{w:"مجرة", k:"galaxy", i:"fa-star"},{w:"سماء", k:"sky", i:"fa-cloud"},{w:"سحابة", k:"cloud", i:"fa-cloud"},{w:"مطر", k:"rain", i:"fa-cloud-rain"},{w:"ثلج", k:"snow", i:"fa-snowflake"},{w:"جليد", k:"ice", i:"fa-icicles"},{w:"عاصفة", k:"storm", i:"fa-bolt"},{w:"برق", k:"lightning", i:"fa-bolt"},{w:"رعد", k:"thunder", i:"fa-bolt"},{w:"رياح", k:"wind", i:"fa-wind"},{w:"إعصار", k:"tornado", i:"fa-tornado"},{w:"ضباب", k:"fog", i:"fa-smog"},{w:"قوس قزح", k:"rainbow", i:"fa-cloud-sun-rain"},{w:"ندى", k:"dew", i:"fa-droplet"},{w:"كسوف", k:"eclipse", i:"fa-moon"},{w:"خسوف", k:"lunar-eclipse", i:"fa-moon"},{w:"شهاب", k:"meteor", i:"fa-meteor"},{w:"مذنب", k:"comet", i:"fa-meteor"},{w:"نيزك", k:"asteroid", i:"fa-meteor"},{w:"فضاء", k:"space", i:"fa-user-astronaut"},{w:"شفق قطبي", k:"aurora", i:"fa-star"},{w:"سراب", k:"mirage", i:"fa-sun"},{w:"واحة", k:"oasis", i:"fa-tree"},{w:"كهف", k:"cave", i:"fa-mountain"},{w:"مغارة", k:"grotto", i:"fa-mountain"},{w:"مستنقع", k:"swamp", i:"fa-water"},{w:"شعاب مرجانية", k:"coral", i:"fa-water"},{w:"طحالب", k:"algae", i:"fa-leaf"},{w:"فطر", k:"mushroom", i:"fa-seedling"},{w:"نبات", k:"plant", i:"fa-seedling"},{w:"نار", k:"fire", i:"fa-fire"}
+            ],
+            clothes: [
+                {w:"قميص", k:"shirt", i:"fa-shirt"},{w:"تيشيرت", k:"t-shirt", i:"fa-shirt"},{w:"بنطلون", k:"trousers", i:"fa-socks"},{w:"جينز", k:"jeans", i:"fa-socks"},{w:"شورت", k:"shorts", i:"fa-socks"},{w:"تنورة", k:"skirt", i:"fa-person-dress"},{w:"فستان", k:"dress", i:"fa-person-dress"},{w:"بدلة", k:"suit", i:"fa-user-tie"},{w:"جاكيت", k:"jacket", i:"fa-shirt"},{w:"معطف", k:"coat", i:"fa-shirt"},{w:"سترة", k:"vest", i:"fa-shirt"},{w:"بلوفر", k:"sweater", i:"fa-shirt"},{w:"ملابس داخلية", k:"underwear", i:"fa-shirt"},{w:"بيجاما", k:"pajamas", i:"fa-bed"},{w:"ملابس سباحة", k:"swimsuit", i:"fa-person-swimming"},{w:"شورت سباحة", k:"swimming-trunks", i:"fa-person-swimming"},{w:"روب", k:"robe", i:"fa-shirt"},{w:"كيمونو", k:"kimono", i:"fa-shirt"},{w:"ساري", k:"sari", i:"fa-person-dress"},{w:"عباءة", k:"cloak", i:"fa-person-dress"},{w:"جلباب", k:"thobe", i:"fa-person-dress"},{w:"دشداشة", k:"thobe", i:"fa-person-dress"},{w:"شماغ", k:"keffiyeh", i:"fa-user"},{w:"عقال", k:"headband", i:"fa-circle"},{w:"طاقية", k:"cap", i:"fa-hat-cowboy"},{w:"قبعة", k:"hat", i:"fa-hat-cowboy"},{w:"خوذة", k:"helmet", i:"fa-helmet-safety"},{w:"حجاب", k:"hijab", i:"fa-user"},{w:"نقاب", k:"niqab", i:"fa-user"},{w:"قفازات", k:"gloves", i:"fa-mitten"},{w:"وشاح", k:"scarf", i:"fa-user"},{w:"كوفية", k:"keffiyeh", i:"fa-user"},{w:"جورب", k:"socks", i:"fa-socks"},{w:"حذاء", k:"shoes", i:"fa-shoe-prints"},{w:"حذاء رياضي", k:"sneakers", i:"fa-shoe-prints"},{w:"حذاء كعب", k:"high-heels", i:"fa-shoe-prints"},{w:"حذاء شتوي", k:"boots", i:"fa-shoe-prints"},{w:"صندل", k:"sandals", i:"fa-shoe-prints"},{w:"شبشب", k:"flip-flops", i:"fa-shoe-prints"},{w:"ربطة عنق", k:"tie", i:"fa-user-tie"},{w:"حزام", k:"belt", i:"fa-minus"},{w:"نظارة شمسية", k:"sunglasses", i:"fa-glasses"},{w:"نظارة طبية", k:"glasses", i:"fa-glasses"},{w:"ساعة يد", k:"watch", i:"fa-clock"},{w:"خاتم", k:"ring", i:"fa-ring"},{w:"عقد", k:"necklace", i:"fa-ring"},{w:"سوار", k:"bracelet", i:"fa-ring"},{w:"حلق", k:"earrings", i:"fa-ring"},{w:"حقيبة يد", k:"handbag", i:"fa-briefcase"},{w:"حقيبة ظهر", k:"backpack", i:"fa-briefcase"},{w:"محفظة", k:"wallet", i:"fa-wallet"},{w:"مظلة", k:"umbrella", i:"fa-umbrella"},{w:"عكاز", k:"crutch", i:"fa-cane"},{w:"مريلة", k:"apron", i:"fa-shirt"},{w:"زي مدرسي", k:"school-uniform", i:"fa-shirt"},{w:"زي عسكري", k:"military-uniform", i:"fa-shirt"},{w:"زي طباخ", k:"chef-uniform", i:"fa-shirt"},{w:"تاج", k:"crown", i:"fa-crown"},{w:"شعر مستعار", k:"wig", i:"fa-user"},{w:"قناع", k:"mask", i:"fa-mask"}
+            ]
         };
 
-        const dbRaw = {
-            "food": { i:"fa-burger", n:{ar:"طعام", en:"Food", es:"Comida", fr:"Nourriture"},
-                img: "🍕|🍔|🌭|🌮|🌯|🥗|🍞|🥐|🥖|🥨|🧀|🥚|🍳|🥞|🥓|🥩|🍗|🍖|🍟|🍚|🍛|🍜|🍝|🍣|🍤|🥡|🍦|🍧|🍨|🍩|🍪|🎂|🍰|🧁|🥧|🍫|🍬|🍭|🍮|🍯|🍼|☕|🍵|🧃|🧊|🍎|🍐|🍊|🍋|🍌|🍉|🍇|🍓|🍈|🍒|🍑|🥭|🍍|🥥|🥝|🍅|🍆|🥑|🥦|🥒|🌶️|🌽|🥕|🧄|🧅|🥔|🍠|🥟|🥠|🦞",
-                ar: "بيتزا|برجر|هوت دوج|تاكو|بوريتو|سلطة|خبز|كرواسون|رغيف|بريتزل|جبنة|بيضة|بيضة مقلية|بان كيك|لحم مقدد|شريحة لحم|دجاج|لحم بالعظم|بطاطس مقلية|أرز|كاري|نودلز|معكرونة|سوشي|روبيان|وجبة سريعة|آيس كريم|مثلجات|كأس مثلجات|دونات|كوكيز|كيك|شريحة كيك|كب كيك|فطيرة|شوكولاتة|حلوى|مصاصة|بودينغ|عسل|حليب|قهوة|شاي|عصير|مكعب ثلج|تفاح|كمثرى|برتقال|ليمون|موز|بطيخ|عنب|فراولة|شمام|كرز|خوخ|مانجو|أناناس|جوز هند|كيوي|طماطم|باذنجان|أفوكادو|بروكلي|خيار|فلفل|ذرة|جزر|ثوم|بصل|بطاطا|بطاطا حلوة|زلابية|بسكويت الحظ|كركند",
-                en: "Pizza|Burger|Hot Dog|Taco|Burrito|Salad|Bread|Croissant|Baguette|Pretzel|Cheese|Egg|Fried Egg|Pancakes|Bacon|Steak|Chicken|Meat|Fries|Rice|Curry|Noodles|Pasta|Sushi|Shrimp|Takeout|Ice Cream|Shaved Ice|Ice Cream Bowl|Donut|Cookie|Cake|Cake Slice|Cupcake|Pie|Chocolate|Candy|Lollipop|Pudding|Honey|Milk|Coffee|Tea|Juice|Ice Cube|Apple|Pear|Orange|Lemon|Banana|Watermelon|Grapes|Strawberry|Melon|Cherry|Peach|Mango|Pineapple|Coconut|Kiwi|Tomato|Eggplant|Avocado|Broccoli|Cucumber|Pepper|Corn|Carrot|Garlic|Onion|Potato|Sweet Potato|Dumpling|Fortune Cookie|Lobster",
-                es: "Pizza|Hamburguesa|Perrito Caliente|Taco|Burrito|Ensalada|Pan|Croissant|Baguette|Pretzel|Queso|Huevo|Huevo Frito|Tortitas|Tocino|Filete|Pollo|Carne|Papas Fritas|Arroz|Curry|Fideos|Pasta|Sushi|Camarón|Comida Rápida|Helado|Hielo Raspado|Copa de Helado|Dona|Galleta|Pastel|Trozo de Pastel|Cupcake|Tarta|Chocolate|Caramelo|Piruleta|Pudín|Miel|Leche|Café|Té|Jugo|Cubo de Hielo|Manzana|Pera|Naranja|Limón|Plátano|Sandía|Uvas|Fresa|Melón|Cereza|Melocotón|Mango|Piña|Coco|Kiwi|Tomate|Berenjena|Aguacate|Brócoli|Pepino|Pimiento|Maíz|Zanahoria|Ajo|Cebolla|Papa|Batata|Bola de Masa|Galleta Fortuna|Langosta",
-                fr: "Pizza|Burger|Hot-dog|Taco|Burrito|Salade|Pain|Croissant|Baguette|Bretzel|Fromage|Œuf|Œuf Plat|Crêpes|Bacon|Steak|Poulet|Viande|Frites|Riz|Curry|Nouilles|Pâtes|Sushi|Crevette|À Emporter|Glace|Glace Pilée|Coupe Glacée|Beignet|Biscuit|Gâteau|Part de Gâteau|Cupcake|Tarte|Chocolat|Bonbon|Sucette|Pudding|Miel|Lait|Café|Thé|Jus|Glaçon|Pomme|Poire|Orange|Citron|Banane|Pastèque|Raisins|Fraise|Melon|Cerise|Pêche|Mangue|Ananas|Noix Coco|Kiwi|Tomate|Aubergine|Avocat|Brocoli|Concombre|Poivron|Maïs|Carotte|Ail|Oignon|Pomme de Terre|Patate Douce|Ravioli|Biscuit Chinois|Homard" },
-            "animals": { i:"fa-paw", n:{ar:"حيوانات", en:"Animals", es:"Animales", fr:"Animaux"},
-                img: "🐶|🐱|🐭|🐹|🐰|🦊|🐻|🐼|🐨|🐯|🦁|🐮|🐷|🐽|🐸|🐵|🐒|🐔|🐧|🐦|🐤|🦆|🦅|🦉|🦇|🐺|🐗|🐴|🦄|🐝|🐛|🦋|🐌|🐞|🐜|🕷️|🦂|🐢|🐍|🦎|🦖|🦕|🐙|🦑|🦐|🦀|🐡|🐠|🐟|🐬|🐳|🦈|🦭|🐊|🐆|🦓|🐘|🦛|🦏|🐪|🐫|🦒|🦘|🐃|🐂|🐄|🐎|🐖|🐏|🐑|🐐|🦌|🦙|🦥|🦦",
-                ar: "كلب|قطة|فأر|هامستر|أرنب|ثعلب|دب|باندا|كوالا|نمر|أسد|بقرة|خنزير|أنف خنزير|ضفدع|قرد|سعدان|دجاجة|بطريق|عصفور|كتكوت|بطة|صقر|بومة|خفاش|ذئب|خنزير بري|حصان|وحيد القرن|نحلة|دودة|فراشة|حلزون|دعسوقة|نملة|عنكبوت|عقرب|سلحفاة|ثعبان|سحلية|تي ريكس|ديناصور|أخطبوط|حبار|روبيان|سرطان|سمكة منتفخة|سمكة استوائية|سمكة|دولفين|حوت|قرش|فقمة|تمساح|فهد|حمار وحشي|فيل|فرس النهر|كركدن|جمل|جمل ذو سنامين|زرافة|كنغر|جاموس|ثور|بقرة حلوب|فرس|خنزير مزرعة|كبش|خروف|ماعز|غزال|لاما|كسلان|قندس",
-                en: "Dog|Cat|Mouse|Hamster|Rabbit|Fox|Bear|Panda|Koala|Tiger|Lion|Cow|Pig|Pig Nose|Frog|Monkey|Ape|Chicken|Penguin|Bird|Chick|Duck|Eagle|Owl|Bat|Wolf|Boar|Horse|Unicorn|Bee|Worm|Butterfly|Snail|Ladybug|Ant|Spider|Scorpion|Turtle|Snake|Lizard|T-Rex|Dinosaur|Octopus|Squid|Shrimp|Crab|Blowfish|Tropical Fish|Fish|Dolphin|Whale|Shark|Seal|Crocodile|Leopard|Zebra|Elephant|Hippo|Rhino|Camel|Bactrian Camel|Giraffe|Kangaroo|Buffalo|Ox|Dairy Cow|Steed|Farm Pig|Ram|Sheep|Goat|Deer|Llama|Sloth|Otter",
-                es: "Perro|Gato|Ratón|Hámster|Conejo|Zorro|Oso|Panda|Koala|Tigre|León|Vaca|Cerdo|Hocico Cerdo|Rana|Mono|Simio|Gallina|Pingüino|Pájaro|Pollito|Pato|Águila|Búho|Murciélago|Lobo|Jabalí|Caballo|Unicornio|Abeja|Gusano|Mariposa|Caracol|Mariquita|Hormiga|Araña|Escorpión|Tortuga|Serpiente|Lagarto|T-Rex|Dinosaurio|Pulpo|Calamar|Camarón|Cangrejo|Pez Globo|Pez Tropical|Pez|Delfín|Ballena|Tiburón|Foca|Cocodrilo|Leopardo|Cebra|Elefante|Hipopótamo|Rinoceronte|Camello|Camello Bactriano|Jirafa|Canguro|Búfalo|Buey|Vaca Lechera|Corcel|Cerdo Granja|Carnero|Oveja|Cabra|Ciervo|Llama|Perezoso|Nutria",
-                fr: "Chien|Chat|Souris|Hamster|Lapin|Renard|Ours|Panda|Koala|Tigre|Lion|Vache|Cochon|Groin Cochon|Grenouille|Singe|Macaque|Poule|Pingouin|Oiseau|Poussin|Canard|Aigle|Hibou|Chauve-souris|Loup|Sanglier|Cheval|Licorne|Abeille|Ver|Papillon|Escargot|Coccinelle|Fourmi|Araignée|Scorpion|Tortue|Serpent|Lézard|T-Rex|Dinosaure|Pieuvre|Calmar|Crevette|Crabe|Poisson-globe|Poisson Tropical|Poisson|Dauphin|Baleine|Requin|Phoque|Crocodile|Léopard|Zèbre|Éléphant|Hippopotame|Rhinocéros|Chameau|Chameau Bactriane|Girafe|Kangourou|Buffle|Bœuf|Vache Laitière|Destrier|Cochon Ferme|Bélier|Mouton|Chèvre|Cerf|Lama|Paresseux|Loutre" },
-            "places": { i:"fa-map-location-dot", n:{ar:"أماكن", en:"Places", es:"Lugares", fr:"Lieux"},
-                img: "🏠|🏡|🏢|🏣|🏤|🏥|🏦|🏨|🏩|🏪|🏫|🏬|🏭|🏯|🏰|💒|🗼|🗽|⛪|🕌|🛕|🕍|⛩️|🕋|⛲|⛺|🏙️|🌄|🌅|🌆|🌇|🌉|♨️|🎠|🎡|🎢|💈|🎪|🏟️|🏖️|🏝️|🏜️|🏞️|⛰️|🏔️|🗻|🌋|🏕️|🛤️|🛣️|🗺️|🚂|🚉|🚏|🚥|🚧|⚓|✈️|🚁|🛶|🚢|🛸|🚀|🛰️|🏕️",
-                ar: "منزل|بيت|مبنى|مكتب بريد ياباني|مكتب بريد|مستشفى|بنك|فندق|فندق حب|متجر|مدرسة|سوق|مصنع|قلعة يابانية|قلعة|كنيسة زفاف|برج طوكيو|تمثال الحرية|كنيسة|مسجد|معبد هندوسي|كنيس يهودي|ضريح شنتو|الكعبة|نافورة|خيمة|مدينة|شروق الشمس|غروب الشمس|مدينة وقت الغسق|غروب المدينة|جسر|ينابيع حارة|دوامة خيل|عجلة فيريس|قطار الملاهي|صالون حلاقة|سيرك|ملعب|شاطئ|جزيرة|صحراء|حديقة وطنية|جبل|جبل ثلجي|جبل فوجي|بركان|تخييم|سكة حديد|طريق سريع|خريطة|قطار بخاري|محطة قطار|موقف حافلات|إشارة مرور|حاجز طريق|مرساة|طائرة|مروحية|زورق|سفينة|طبق طائر|صاروخ|قمر صناعي|مخيم",
-                en: "House|Home|Building|Japanese Post Office|Post Office|Hospital|Bank|Hotel|Love Hotel|Convenience Store|School|Department Store|Factory|Japanese Castle|Castle|Wedding Church|Tokyo Tower|Statue of Liberty|Church|Mosque|Hindu Temple|Synagogue|Shinto Shrine|Kaaba|Fountain|Tent|Cityscape|Sunrise|Sunset|Cityscape at Dusk|Sunset City|Bridge|Hot Springs|Carousel|Ferris Wheel|Roller Coaster|Barber Shop|Circus|Stadium|Beach|Island|Desert|National Park|Mountain|Snowy Mountain|Mount Fuji|Volcano|Camping|Railway|Highway|Map|Steam Train|Train Station|Bus Stop|Traffic Light|Roadblock|Anchor|Airplane|Helicopter|Canoe|Ship|Flying Saucer|Rocket|Satellite|Campsite",
-                es: "Casa|Hogar|Edificio|Oficina Correos JP|Oficina Correos|Hospital|Banco|Hotel|Hotel Amor|Tienda|Escuela|Gran Almacén|Fábrica|Castillo Japonés|Castillo|Iglesia Bodas|Torre Tokio|Estatua Libertad|Iglesia|Mezquita|Templo Hindú|Sinagoga|Santuario Shinto|Kaaba|Fuente|Tienda Campaña|Paisaje Urbano|Amanecer|Atardecer|Ciudad Crepúsculo|Ciudad Atardecer|Puente|Aguas Termales|Carrusel|Noria|Montaña Rusa|Barbería|Circo|Estadio|Playa|Isla|Desierto|Parque Nacional|Montaña|Montaña Nevada|Monte Fuji|Volcán|Camping|Ferrocarril|Autopista|Mapa|Tren Vapor|Estación Tren|Parada Autobús|Semáforo|Barricada|Ancla|Avión|Helicóptero|Canoa|Barco|Platillo Volador|Cohete|Satélite|Campamento",
-                fr: "Maison|Foyer|Bâtiment|Poste Japonaise|Bureau Poste|Hôpital|Banque|Hôtel|Hôtel Amour|Boutique|École|Grand Magasin|Usine|Château Japonais|Château|Église Mariage|Tour Tokyo|Statue Liberté|Église|Mosquée|Temple Hindou|Synagogue|Sanctuaire Shinto|Kaaba|Fontaine|Tente|Paysage Urbain|Lever Soleil|Coucher Soleil|Ville Crépuscule|Ville Coucher Soleil|Pont|Sources Chaudes|Carrousel|Grande Roue|Montagnes Russes|Salon Coiffure|Cirque|Stade|Plage|Île|Désert|Parc National|Montagne|Montagne Enneigée|Mont Fuji|Volcan|Camping|Chemin de Fer|Autoroute|Carte|Train Vapeur|Gare|Arrêt Bus|Feu Signalisation|Barrage Routier|Ancre|Avion|Hélicoptère|Canoë|Navire|Soucoupe Volante|Fusée|Satellite|Campement" },
-            "jobs": { i:"fa-briefcase", n:{ar:"وظائف", en:"Jobs", es:"Trabajos", fr:"Emplois"},
-                img: "👨‍⚕️|👩‍⚕️|👨‍🏫|👩‍🏫|👨‍⚖️|👩‍⚖️|👨‍🌾|👩‍🌾|👨‍🍳|👩‍🍳|👨‍🔧|👩‍🔧|👨‍🏭|👩‍🏭|👨‍💼|👩‍💼|👨‍🔬|👩‍🔬|👨‍💻|👩‍💻|👨‍🎤|👩‍🎤|👨‍🎨|👩‍🎨|👨‍✈️|👩‍✈️|👨‍🚀|👩‍🚀|👨‍🚒|👩‍🚒|👮|👮‍♀️|🕵️|🕵️‍♀️|💂|💂‍♀️|👷|👷‍♀️|🤴|👸|🥷|🦸|🦸‍♀️|🦹|🦹‍♀️|🧙|🧙‍♀️|🧚|🧚‍♀️|🧛|🧛‍♀️|🧜|🧜‍♀️|🧝|🧝‍♀️|🧟|🧟‍♀️|🧞|🧞‍♀️|👼",
-                ar: "طبيب|طبيبة|معلم|معلمة|قاضي|قاضية|مزارع|مزارعة|طباخ|طباخة|ميكانيكي|ميكانيكية|عامل مصنع|عاملة مصنع|موظف|موظفة|عالم|عالمة|مبرمج|مبرمجة|مغني|مغنية|رسام|رسامة|طيار|طيارة|رائد فضاء|رائدة فضاء|إطفائي|إطفائية|شرطي|شرطية|محقق|محققة|حارس|حارسة|عامل بناء|عاملة بناء|أمير|أميرة|نينجا|بطل خارق|بطلة خارقة|شرير خارق|شريرة خارقة|ساحر|ساحرة|جني|جنية|مصاص دماء|مصاصة دماء|حوري بحر|حورية بحر|قزم|قزمة|زومبي|زومبي أنثى|مارد|جنية مصباح|ملاك",
-                en: "Doctor|Female Doctor|Teacher|Female Teacher|Judge|Female Judge|Farmer|Female Farmer|Chef|Female Chef|Mechanic|Female Mechanic|Factory Worker|Female Factory Worker|Office Worker|Female Office Worker|Scientist|Female Scientist|Programmer|Female Programmer|Singer|Female Singer|Artist|Female Artist|Pilot|Female Pilot|Astronaut|Female Astronaut|Firefighter|Female Firefighter|Police|Female Police|Detective|Female Detective|Guard|Female Guard|Construction Worker|Female Construction Worker|Prince|Princess|Ninja|Superhero|Female Superhero|Supervillain|Female Supervillain|Mage|Female Mage|Fairy|Female Fairy|Vampire|Female Vampire|Merman|Mermaid|Elf|Female Elf|Zombie|Female Zombie|Genie|Female Genie|Angel",
-                es: "Médico|Médica|Profesor|Profesora|Juez|Jueza|Granjero|Granjera|Chef|Chef Mujer|Mecánico|Mecánica|Obrero|Obrera|Oficinista|Oficinista Mujer|Científico|Científica|Programador|Programadora|Cantante|Cantante Mujer|Artista|Artista Mujer|Piloto|Piloto Mujer|Astronauta|Astronauta Mujer|Bombero|Bombera|Policía|Policía Mujer|Detective|Detective Mujer|Guardia|Guardia Mujer|Albañil|Albañil Mujer|Príncipe|Princesa|Ninja|Superhéroe|Superheroína|Supervillano|Supervillana|Mago|Maga|Hada|Hada Mujer|Vampiro|Vampiresa|Sireno|Sirena|Elfo|Elfa|Zombi|Zombi Mujer|Genio|Genio Mujer|Ángel",
-                fr: "Docteur|Doctoresse|Professeur|Professeure|Juge|Juge Femme|Fermier|Fermière|Chef|Chef Femme|Mécanicien|Mécanicienne|Ouvrier|Ouvrière|Employé Bureau|Employée Bureau|Scientifique|Scientifique Femme|Programmeur|Programmeuse|Chanteur|Chanteuse|Artiste|Artiste Femme|Pilote|Pilote Femme|Astronaute|Astronaute Femme|Pompier|Pompière|Policier|Policière|Détective|Détective Femme|Garde|Garde Femme|Ouvrier Bâtiment|Ouvrière Bâtiment|Prince|Princesse|Ninja|Super-héros|Super-héroïne|Super-vilain|Super-vilaine|Mage|Mage Femme|Fée|Fée Femme|Vampire|Vampire Femme|Triton|Sirène|Elfe|Elfe Femme|Zombie|Zombie Femme|Génie|Génie Femme|Ange" },
-            "sports": { i:"fa-futbol", n:{ar:"رياضة", en:"Sports", es:"Deportes", fr:"Sports"},
-                img: "⚽|⚾|🥎|🏀|🏐|🏈|🏉|🎾|🥏|🎳|🏏|🏑|🏒|🥍|🏓|🏸|🥊|🥋|⛳|⛸️|🎣|🤿|🎿|🛷|🥌|🎯|🎱|🎮|🎰|🎲|🧩|♟️|🏄|🏄‍♀️|🏊|🏊‍♀️|🏋️|🏋️‍♀️|🚴|🚴‍♀️|🤸|🤸‍♀️|🤽|🤽‍♀️|🤾|🤾‍♀️|🤹|🤹‍♀️|🧘|🧘‍♀️|🏆|🥇|🥈|🥉|🏅|🎖️|🎫|🎟️|🎪|🎭",
-                ar: "كرة قدم|بيسبول|كرة لينة|كرة سلة|كرة طائرة|كرة قدم أمريكية|رجبي|تنس|قرص طائر|بولينج|كريكت|هوكي الميدان|هوكي الجليد|لاكروس|تنس طاولة|ريشة|ملاكمة|فنون قتالية|جولف|تزلج على الجليد|صيد سمك|غوص|تزلج|مزلقة|كيرلنج|رمي السهام|بلياردو|ألعاب فيديو|ماكينة حظ|نرد|لغز|شطرنج|راكب أمواج|راكبة أمواج|سباح|سباحة|رباع|رباعة|دراج|دراجة|لاعب جمباز|لاعبة جمباز|لاعب كرة ماء|لاعبة كرة ماء|لاعب كرة يد|لاعبة كرة يد|لاعب خفة|لاعبة خفة|يمارس اليوجا|تمارس اليوجا|كأس|ميدالية ذهبية|ميدالية فضية|ميدالية برونزية|ميدالية رياضية|وسام عسكري|تذكرة|تذكرة دخول|سيرك|أقنعة مسرح",
-                en: "Football|Baseball|Softball|Basketball|Volleyball|American Football|Rugby|Tennis|Flying Disc|Bowling|Cricket|Field Hockey|Ice Hockey|Lacrosse|Table Tennis|Badminton|Boxing|Martial Arts|Golf|Ice Skating|Fishing|Diving|Skiing|Sledding|Curling|Darts|Billiards|Video Game|Slot Machine|Dice|Puzzle|Chess|Surfer|Female Surfer|Swimmer|Female Swimmer|Weightlifter|Female Weightlifter|Cyclist|Female Cyclist|Gymnast|Female Gymnast|Water Polo|Female Water Polo|Handball Player|Female Handball|Juggler|Female Juggler|Yoga|Female Yoga|Trophy|Gold Medal|Silver Medal|Bronze Medal|Sports Medal|Military Medal|Ticket|Admission Ticket|Circus|Theater Masks",
-                es: "Fútbol|Béisbol|Sóftbol|Baloncesto|Voleibol|Fútbol Americano|Rugby|Tenis|Disco Volador|Bolos|Críquet|Hockey Hierba|Hockey Hielo|Lacrosse|Tenis de Mesa|Bádminton|Boxeo|Artes Marciales|Golf|Patinaje Hielo|Pesca|Buceo|Esquí|Trineo|Curling|Dardos|Billar|Videojuego|Tragamonedas|Dados|Rompecabezas|Ajedrez|Surfista|Surfista Mujer|Nadador|Nadadora|Halterófilo|Halterófila|Ciclista|Ciclista Mujer|Gimnasta|Gimnasta Mujer|Jugador Waterpolo|Jugadora Waterpolo|Jugador Balonmano|Jugadora Balonmano|Malabarista|Malabarista Mujer|Yoga|Yoga Mujer|Trofeo|Medalla de Oro|Medalla de Plata|Medalla de Bronce|Medalla Deportiva|Medalla Militar|Boleto|Entrada|Circo|Máscaras de Teatro",
-                fr: "Football|Baseball|Softball|Basket|Volleyball|Football Américain|Rugby|Tennis|Disque Volant|Bowling|Cricket|Hockey Gazon|Hockey Glace|Lacrosse|Tennis de Table|Badminton|Boxe|Arts Martiaux|Golf|Patinage Glace|Pêche|Plongée|Ski|Luge|Curling|Fléchettes|Billard|Jeu Vidéo|Machine à Sous|Dés|Puzzle|Échecs|Surfeur|Surfeuse|Nageur|Nageuse|Haltérophile|Haltérophile Femme|Cycliste|Cycliste Femme|Gymnaste|Gymnaste Femme|Joueur Water-polo|Joueuse Water-polo|Joueur Handball|Joueuse Handball|Jongleur|Jongleuse|Yoga|Yoga Femme|Trophée|Médaille d'Or|Médaille d'Argent|Médaille de Bronze|Médaille de Sport|Médaille Militaire|Billet|Billet d'Entrée|Cirque|Masques Théâtre" },
-            "objects": { i:"fa-box-open", n:{ar:"أشياء", en:"Objects", es:"Objetos", fr:"Objets"},
-                img: "⌚|📱|💻|⌨️|🖥️|🖨️|🖱️|📷|📸|📹|📺|📻|📞|☎️|⏱️|⏰|⌛|⏳|🔋|🔌|💡|🔦|🕯️|🧯|🛢️|💰|🪙|💳|💎|⚖️|🪜|🧰|🪛|🔧|🔨|🪚|⚙️|🧲|🔫|💣|🧨|🪓|🔪|🗡️|⚔️|🛡️|🔭|🔬|🩹|🩺|💊|💉|🧬|🦠|🧫|🧪|🌡️|🧹|🧺|🧻|🚽|🚿|🛁|🧼|🧽|🪒|🔑|🗝️|🚪|🪑|🛏️|🛋️|🛎️|🖼️|🛍️",
-                ar: "ساعة يد|هاتف|لابتوب|لوحة مفاتيح|كمبيوتر|طابعة|فأرة كمبيوتر|كاميرا|كاميرا فلاش|كاميرا فيديو|تلفزيون|راديو|هاتف محمول|هاتف أرضي|ساعة توقيت|منبه|ساعة رملية|مؤقت رملي|بطارية|قابس كهرباء|مصباح|كشاف|شمعة|طفاية حريق|برميل نفط|حقيبة مال|عملة معدنية|بطاقة ائتمان|ماسة|ميزان|سلم|صندوق أدوات|مفك|مفتاح ربط|مطرقة|منشار|ترس|مغناطيس|مسدس|قنبلة|مفرقعات|فأس|سكين|خنجر|سيفين|درع|تلسكوب|ميكروسكوب|لاصق طبي|سماعة طبيب|حبة دواء|حقنة|حمض نووي|ميكروب|طبق بتري|أنبوب اختبار|مقياس حرارة|مكنسة|سلة غسيل|ورق تواليت|مرحاض|دش|حوض استحمام|صابون|إسفنجة|شفرة حلاقة|مفتاح|مفتاح قديم|باب|كرسي|سرير|أريكة|جرس|إطار صورة|حقيبة تسوق",
-                en: "Watch|Mobile Phone|Laptop|Keyboard|Computer|Printer|Computer Mouse|Camera|Flash Camera|Video Camera|Television|Radio|Mobile|Telephone|Stopwatch|Alarm Clock|Hourglass|Sand Timer|Battery|Plug|Light Bulb|Flashlight|Candle|Fire Extinguisher|Oil Drum|Money Bag|Coin|Credit Card|Diamond|Scale|Ladder|Toolbox|Screwdriver|Wrench|Hammer|Saw|Gear|Magnet|Pistol|Bomb|Firecracker|Axe|Knife|Dagger|Crossed Swords|Shield|Telescope|Microscope|Bandage|Stethoscope|Pill|Syringe|DNA|Microbe|Petri Dish|Test Tube|Thermometer|Broom|Laundry Basket|Toilet Paper|Toilet|Shower|Bathtub|Soap|Sponge|Razor|Key|Old Key|Door|Chair|Bed|Couch|Bell|Picture Frame|Shopping Bag",
-                es: "Reloj Pulsera|Teléfono Móvil|Portátil|Teclado|Ordenador|Impresora|Ratón Ordenador|Cámara|Cámara con Flash|Cámara de Video|Televisión|Radio|Móvil|Teléfono|Cronómetro|Despertador|Reloj de Arena|Temporizador|Batería|Enchufe|Bombilla|Linterna|Vela|Extintor|Barril Petróleo|Bolsa Dinero|Moneda|Tarjeta Crédito|Diamante|Báscula|Escalera|Caja Herramientas|Destornillador|Llave Inglesa|Martillo|Sierra|Engranaje|Imán|Pistola|Bomba|Petardo|Hacha|Cuchillo|Daga|Espadas Cruzadas|Escudo|Telescopio|Microscopio|Tirita|Estetoscopio|Pastilla|Jeringa|ADN|Microbio|Placa de Petri|Tubo de Ensayo|Termómetro|Escoba|Cesta Ropa|Papel Higiénico|Inodoro|Ducha|Bañera|Jabón|Esponja|Navaja Afeitar|Llave|Llave Antigua|Puerta|Silla|Cama|Sofá|Campana|Marco Foto|Bolsa Compras",
-                fr: "Montre|Téléphone Portable|Ordinateur Portable|Clavier|Ordinateur|Imprimante|Souris Ordinateur|Caméra|Caméra Flash|Caméra Vidéo|Télévision|Radio|Mobile|Téléphone|Chronomètre|Réveil|Sablier|Minuteur|Batterie|Prise|Ampoule|Lampe de Poche|Bougie|Extincteur|Baril Pétrole|Sac d'Argent|Pièce Monnaie|Carte Crédit|Diamant|Balance|Échelle|Boîte Outils|Tournevis|Clé à Molette|Marteau|Scie|Engrenage|Aimant|Pistolet|Bombe|Pétard|Hache|Couteau|Poignard|Épées Croisées|Bouclier|Télescope|Microscope|Pansement|Stéthoscope|Pilule|Seringue|ADN|Microbe|Boîte Petri|Tube Essai|Thermomètre|Balai|Panier Linge|Papier Toilette|Toilettes|Douche|Baignoire|Savon|Éponge|Rasoir|Clé|Vieille Clé|Porte|Chaise|Lit|Canapé|Cloche|Cadre Photo|Sac de Courses" },
-            "apps": { i:"fa-mobile-screen", n:{ar:"تطبيقات", en:"Apps", es:"Apps", fr:"Applis"},
-                img: "💬|🗺️|🌐|📅|🧮|🎵|📸|🖼️|⏰|⛅|📝|⚙️|🛒|🎮|📧|📞|▶️|🛍️|💳|🛡️|✈️|❤️|📰|📚|🎙️|📽️|🔍|🔐|🗑️|📎|✂️|📉|📈|📊|📋",
-                ar: "رسائل|خرائط|متصفح|تقويم|حاسبة|موسيقى|كاميرا|صور|ساعة|طقس|ملاحظات|إعدادات|سلة تسوق|ألعاب|إيميل|هاتف|فيديو|متجر|دفع|حماية|سفر|صحة|أخبار|كتب|تسجيل صوتي|عرض سينمائي|بحث|قفل أمان|سلة مهملات|مشبك ورق|قص|مخطط تنازلي|مخطط تصاعدي|إحصائيات|لوحة نسخ",
-                en: "Messages|Maps|Browser|Calendar|Calculator|Music|Camera|Photos|Clock|Weather|Notes|Settings|Shopping Cart|Games|Email|Phone|Video|Store|Payment|Security|Travel|Health|News|Books|Voice Record|Cinema Display|Search|Security Lock|Trash|Paperclip|Cut|Downward Chart|Upward Chart|Statistics|Clipboard",
-                es: "Mensajes|Mapas|Navegador|Calendario|Calculadora|Música|Cámara|Fotos|Reloj|Clima|Notas|Ajustes|Carrito de Compras|Juegos|Correo|Teléfono|Video|Tienda|Pago|Seguridad|Viajes|Salud|Noticias|Libros|Grabación de Voz|Pantalla de Cine|Búsqueda|Cierre de Seguridad|Basura|Clip|Cortar|Gráfico Descendente|Gráfico Ascendente|Estadísticas|Portapapeles",
-                fr: "Messages|Cartes|Navigateur|Calendrier|Calculatrice|Musique|Caméra|Photos|Horloge|Météo|Notes|Paramètres|Panier d'Achat|Jeux|Email|Téléphone|Vidéo|Boutique|Paiement|Sécurité|Voyage|Santé|Actualités|Livres|Enregistrement Vocal|Affichage Cinéma|Recherche|Verrou de Sécurité|Corbeille|Trombone|Couper|Graphique Descendant|Graphique Ascendant|Statistiques|Presse-papiers" },
-            "transport": { i:"fa-car", n:{ar:"مواصلات", en:"Transport", es:"Transporte", fr:"Transport"},
-                img: "🚗|🚕|🚙|🚌|🏎️|🚓|🚑|🚒|🚐|🛻|🚚|🚛|🚜|🦽|🦼|🛴|🚲|🛵|🏍️|🛺|🚠|🚡|🚄|🚈|🚂|🚆|🚇|🚊|✈️|🚁|🛶|⛵|🚤|🛳️|⛴️|🚢|⚓|🚀|🛸|🛰️|🚏|🛣️|🛤️|⛽|🚨|🚥|🚦|🛑|🚧|🛶",
-                ar: "سيارة|تاكسي|سيارة زرقاء|حافلة|سيارة سباق|سيارة شرطة|إسعاف|سيارة إطفاء|حافلة صغيرة|شاحنة بيك أب|شاحنة توصيل|شاحنة كبيرة|جرار|كرسي متحرك|كرسي متحرك آلي|سكوتر|دراجة|دراجة نارية صغيرة|دراجة نارية|توك توك|تلفريك معلق|تلفريك|قطار سريع|قطار خفيف|قاطرة|قطار|مترو|ترام|طائرة|مروحية|زورق|قارب شراعي|قارب سريع|سفينة ركاب|عبارة|سفينة|مرساة|صاروخ|طبق طائر|قمر صناعي|موقف حافلات|طريق سريع|سكة حديد|محطة وقود|ضوء إنذار|إشارة مرور|إشارة ضوئية|علامة توقف|حاجز طريق|قارب تجديف",
-                en: "Car|Taxi|Blue Car|Bus|Racing Car|Police Car|Ambulance|Fire Engine|Minibus|Pickup Truck|Delivery Truck|Large Truck|Tractor|Wheelchair|Motorized Wheelchair|Kick Scooter|Bicycle|Motor Scooter|Motorcycle|Auto Rickshaw|Suspension Railway|Cable Car|High-Speed Train|Light Rail|Locomotive|Train|Metro|Tram|Airplane|Helicopter|Canoe|Sailboat|Speedboat|Passenger Ship|Ferry|Ship|Anchor|Rocket|Flying Saucer|Satellite|Bus Stop|Highway|Railway|Gas Station|Warning Light|Traffic Light|Traffic Signal|Stop Sign|Roadblock|Rowboat",
-                es: "Coche|Taxi|Coche Azul|Autobús|Coche de Carreras|Coche de Policía|Ambulancia|Camión de Bomberos|Minibús|Camioneta|Camión de Reparto|Camión Grande|Tractor|Silla de Ruedas|Silla Ruedas Motorizada|Patinete|Bicicleta|Vespa|Motocicleta|Motocarro|Teleférico Colgante|Teleférico|Tren Alta Velocidad|Tren Ligero|Locomotora|Tren|Metro|Tranvía|Avión|Helicóptero|Canoa|Velero|Lancha|Barco Pasajeros|Ferry|Barco|Ancla|Cohete|Platillo Volador|Satélite|Parada de Autobús|Autopista|Vía Férrea|Gasolinera|Luz Advertencia|Semáforo|Señal de Tráfico|Señal de Alto|Barricada|Bote de Remos",
-                fr: "Voiture|Taxi|Voiture Bleue|Bus|Voiture Course|Voiture Police|Ambulance|Camion Pompiers|Minibus|Pick-up|Camion Livraison|Gros Camion|Tracteur|Fauteuil Roulant|Fauteuil Motorisé|Trottinette|Vélo|Scooter|Moto|Tuk-tuk|Téléphérique Suspendu|Téléphérique|TGV|Train Léger|Locomotive|Train|Métro|Tramway|Avion|Hélicoptère|Canoë|Voilier|Hors-bord|Navire Passagers|Ferry|Navire|Ancre|Fusée|Soucoupe Volante|Satellite|Arrêt de Bus|Autoroute|Chemin de Fer|Station-service|Feu Avertissement|Feu de Signalisation|Signalisation|Panneau Stop|Barrage Routier|Barque" },
-            "nature": { i:"fa-tree", n:{ar:"طبيعة", en:"Nature", es:"Naturaleza", fr:"Nature"},
-                img: "🌲|🌳|🌴|🌵|🌿|🍀|🍁|🍂|🍄|🌍|🌙|☀️|⭐|🌟|🌠|☁️|⛅|⛈️|🌧️|🌨️|🌩️|🌪️|🌫️|🌈|☔|⚡|❄️|☃️|☄️|🔥|💧|🌊|🌬️|🌀|🌁|🍃|🌾|🌺|🌻|🌹|🌷|🌼|🌸|💐|🕸️|🪵|🪨|🌱|🪴|🎋",
-                ar: "صنوبر|شجرة|نخلة|صبار|عشب|برسيم|ورقة قيقب|ورقة خريف|فطر|كرة أرضية|قمر|شمس|نجمة|نجمة لامعة|شهاب|سحابة|غائم جزئياً|عاصفة رعدية|مطر|ثلج|برق|إعصار|ضباب|قوس قزح|مظلة ومطر|صاعقة|ندفة ثلج|رجل ثلج|مذنب|نار|قطرة ماء|موجة|رياح|دوامة|ضباب كثيف|ورقة شجر|سنابل|كركديه|دوار الشمس|وردة|توليب|أقحوان|زهرة كرز|باقة زهور|شبكة عنكبوت|جذع شجرة|صخرة|نبتة|نبتة بوعاء|خيزران",
-                en: "Pine Tree|Tree|Palm Tree|Cactus|Grass|Clover|Maple Leaf|Autumn Leaf|Mushroom|Globe|Moon|Sun|Star|Glowing Star|Shooting Star|Cloud|Partly Cloudy|Thunderstorm|Rain|Snow|Lightning|Tornado|Fog|Rainbow|Umbrella and Rain|Lightning Bolt|Snowflake|Snowman|Comet|Fire|Water Drop|Wave|Wind|Cyclone|Heavy Fog|Leaf|Sheaf of Rice|Hibiscus|Sunflower|Rose|Tulip|Daisy|Cherry Blossom|Bouquet|Spider Web|Log|Rock|Sprout|Potted Plant|Bamboo",
-                es: "Pino|Árbol|Palmera|Cactus|Hierba|Trébol|Hoja de Arce|Hoja de Otoño|Champiñón|Globo Terráqueo|Luna|Sol|Estrella|Estrella Brillante|Estrella Fugaz|Nube|Nublado|Tormenta|Lluvia|Nieve|Relámpago|Tornado|Niebla|Arcoíris|Paraguas y Lluvia|Rayo|Copo de Nieve|Muñeco Nieve|Cometa|Fuego|Gota de Agua|Ola|Viento|Ciclón|Niebla Densa|Hoja|Espiga Arroz|Hibisco|Girasol|Rosa|Tulipán|Margarita|Flor de Cerezo|Ramo|Telaraña|Tronco|Roca|Brote|Planta Maceta|Bambú",
-                fr: "Sapin|Arbre|Palmier|Cactus|Herbe|Trèfle|Feuille Érable|Feuille Automne|Champignon|Globe|Lune|Soleil|Étoile|Étoile Brillante|Étoile Filante|Nuage|Partiellement Nuageux|Orage|Pluie|Neige|Éclair|Tornade|Brouillard|Arc-en-ciel|Parapluie et Pluie|Foudre|Flocon Neige|Bonhomme Neige|Comète|Feu|Goutte Eau|Vague|Vent|Cyclone|Brouillard Épais|Feuille|Épi de Riz|Hibiscus|Tournesol|Rose|Tulipe|Marguerite|Fleur Cerisier|Bouquet|Toile Araignée|Bûche|Roche|Pousse|Plante en Pot|Bambou" },
-            "clothes": { i:"fa-shirt", n:{ar:"ملابس", en:"Clothes", es:"Ropa", fr:"Vêtements"},
-                img: "👓|🕶️|🥽|🥼|🦺|👔|👕|👖|🧣|🧤|🧥|🧦|👗|👘|🩱|🩲|🩳|👙|👚|👛|👜|🎒|👞|👟|🥾|👠|👢|👑|👒|🎩|🎓|🧢|🪖|💍|👝|💼|🧳|🌂|🧵|🧶|🧷|🪡|🥿|🩰",
-                ar: "نظارات|نظارات شمسية|نظارات واقية|معطف مختبر|سترة أمان|ربطة عنق|تيشيرت|بنطال|وشاح|قفازات|معطف|جوارب|فستان|كيمونو|ملابس سباحة|سروال سباحة|شورت|بكيني|قميص نسائي|محفظة صغيرة|حقيبة يد|حقيبة ظهر|حذاء رجالي|حذاء رياضي|حذاء تنزه|كعب عالي|حذاء طويل|تاج|قبعة نسائية|قبعة كلاسيكية|قبعة تخرج|قبعة رياضية|خوذة|خاتم|محفظة نقود|حقيبة عمل|حقيبة سفر|مظلة مغلقة|بكرة خيط|كرة صوف|مشبك أمان|إبرة|حذاء مسطح|حذاء باليه",
-                en: "Glasses|Sunglasses|Goggles|Lab Coat|Safety Vest|Necktie|T-Shirt|Pants|Scarf|Gloves|Coat|Socks|Dress|Kimono|Swimsuit|Swim Briefs|Shorts|Bikini|Women's Shirt|Small Purse|Handbag|Backpack|Men's Shoe|Running Shoe|Hiking Boot|High Heel|Boot|Crown|Women's Hat|Top Hat|Graduation Cap|Baseball Cap|Helmet|Ring|Clutch|Briefcase|Luggage|Closed Umbrella|Thread|Yarn|Safety Pin|Needle|Flat Shoe|Ballet Shoes",
-                es: "Gafas|Gafas Sol|Gafas Protectoras|Bata Laboratorio|Chaleco Seguridad|Corbata|Camiseta|Pantalones|Bufanda|Guantes|Abrigo|Calcetines|Vestido|Kimono|Traje Baño|Bañador|Pantalones Cortos|Bikini|Blusa|Monedero Pequeño|Bolso|Mochila|Zapato Hombre|Zapatilla Deportiva|Bota Montaña|Tacón Alto|Bota|Corona|Sombrero Mujer|Sombrero Copa|Birrete|Gorra|Casco|Anillo|Cartera|Maletín|Equipaje|Paraguas Cerrado|Hilo|Lana|Imperdible|Aguja|Zapato Plano|Zapatillas Ballet",
-                fr: "Lunettes|Lunettes Soleil|Lunettes Protection|Blouse Laboratoire|Gilet Sécurité|Cravate|T-shirt|Pantalon|Écharpe|Gants|Manteau|Chaussettes|Robe|Kimono|Maillot Bain|Slip de Bain|Short|Bikini|Chemisier|Petit Porte-monnaie|Sac à Main|Sac à Dos|Chaussure Homme|Chaussure Sport|Chaussure Randonnée|Talon Haut|Botte|Couronne|Chapeau Femme|Haut de Forme|Toque Diplômé|Casquette|Casque|Bague|Pochette|Attaché-case|Bagage|Parapluie Fermé|Fil|Laine|Épingle Sûreté|Aiguille|Chaussure Plate|Chaussons Danse" }
-        };
+        const aiHints = [
+            "هل حجم هذا الشيء أكبر من التلفاز؟", "هل نستخدمه أو نراه كل يوم عادة؟", "هل لونه الأساسي محدد أم يتوفر بألوان كثيرة؟",
+            "هل هو شيء نتناوله، نستخدمه، أم نذهب إليه؟", "هل سعره يعتبر غالياً بالنسبة للشخص العادي؟", "هل يمكن وضعه داخل حقيبة السفر بكل سهولة؟",
+            "هل هو مصنوع من المعدن أو البلاستيك غالباً؟", "هل يمكن أن نجده داخل غرفة النوم عادة؟", "هل نستخدمه أكثر في الصيف أم في الشتاء؟",
+            "هل يحتاج إلى كهرباء أو بطارية ليعمل؟"
+        ];
+        let availableHints = 3;
+
+        let playerNames = []; let playerScores = []; let settings = { players: 4, spies: 1, time: 5 };
+        let currentWordObj = {}; let roles = []; let playerDisplayOrder = [];
+        let currentPlayerIndex = 0; let timerInterval; let timeLeft = 0;
+        let isTimerPaused = false; let isParanoiaRound = false;
+        let askedPairs = new Set(); let lastAsker = -1; let selectedVotesForKick = []; 
+
+        window.preloadedWordImage = new Image();
+        window.preloadedSpyImage = new Image();
 
         let currentLang = 'ar';
-        let ps=4, ss=1, tm=5, names=[], scores={}, roles={}, order=[], px=0, tl=0, paused=false, interval, cw={};
+        const dict = {
+            ar: {
+                subtitle: "الإصدار الأسطوري | صور دقيقة 100%", playLocal: "لعب على جهاز واحد 📱", playOnline: "لعب جماعي أونلاين 🌐",
+                rulesBtn: "التعليمات 📖", settingsBtn: "الإعدادات ⚙️", soonBadge: "قريباً",
+                tutTitle: "تعليمات اللعبة 🕵️", tut1: "🎯 الهدف الأساسي:", tut1_desc: "اللعبة ستختار كلمة سرية وستعرض لك <strong class='text-blue-300'>صورة معبرة</strong> لها. المواطنون يعرفون الكلمة، والجاسوس لا يعرفها! اسألوا بعضكم لكشف الجاسوس.",
+                tut2: "🏆 كيف تفوز؟", tut2_desc: "المواطنون يكسبون النقاط بتصويتهم الصحيح. والجاسوس يكسب النقاط إذا خدعهم!",
+                tut3: "🤯 جنون الارتياب (Paranoia):", tut3_desc: "أحياناً اللعبة تكذب ولا تضع جاسوساً! صوتوا بـ 'لا يوجد جاسوس' للفوز.", tutGotIt: "فهمت، جاهز للعب! 👍",
+                setTitle: "الإعدادات ⚙️", setLang: "لغة اللعبة (Language)", setClose: "إغلاق",
+                setupTitle: "إعداد الجولة", setupCat: "القسم (نوع الكلمة)", setupPlayers: "عدد اللاعبين", setupSpies: "الجواسيس", setupTime: "الوقت (د)", setupStart: "التالي (إدخال الأسماء) ➡️",
+                catRandom: "🎲 عشوائي (الكل)", catPlaces: "🌍 أماكن", catFood: "🍔 أطعمة ومشروبات", catAnimals: "🦁 حيوانات", catJobs: "👨‍⚕️ وظائف ومهن", catSports: "⚽ رياضة", catObjects: "📦 أشياء وأدوات", catApps: "📱 تطبيقات ومواقع", catTransport: "🚗 وسائل مواصلات", catNature: "🌲 طبيعة وظواهر", catClothes: "👕 ملابس وأزياء",
+                namesTitle: "أسماء اللاعبين ✍️", namesBack: "عودة 🔙", namesDesc: "أدخل أسماء أصدقائك لسهولة اللعب", namesStart: "تجهيز البطاقات وبدء اللعب ✔️", player: "اللاعب",
+                tapToRevealDesc: "انقر على البطاقة لكشف هويتك سراً", tapToReveal: "اضغط للكشف", passTo: "أعطِ الهاتف إلى:",
+                investigation: "بدأ التحقيق! 🔍", endRound: "انتهى النقاش 🛑", cancelRound: "إلغاء 🔙", pause: "إيقاف ⏸️", resume: "إكمال ▶️", wheelTitle: "من سيسأل من؟", spinWheelBtn: "أدر العجلة 🎲", hintBtn: "احتاج إلى سؤال 💡",
+                voteTitle: "وقت التصويت!", voteDesc: "من تعتقدون أنه الجاسوس؟", voteParanoia: "لا يوجد جاسوس! (خدعة) 🤯",
+                resWord: "الكلمة السرية كانت:", resSpies: "الجواسيس الحقيقيون:", resHome: "تجهيز جولة جديدة ⚙️", scoreboard: "نقاط اللاعبين 🏆",
+                citizen: "مواطن", spy: "جاسوس", spyDesc: "أنت لا تعرف الكلمة!",
+                winCitizen: "فوز المواطنين! 🎉", winSpy: "فوز الجاسوس! 😈", winParanoia: "عباقرة! 🤯", failParanoia: "خسارة للجميع! 🤣",
+                hypeMsg: "قريباً جداً... استعدوا للتحدي العالمي الأكبر! 🌍🔥", voteBtn: "تحديد 👈", noSpyResult: "لا يوجد جواسيس",
+                msg_citWin: "أحسنتم! تم كشف الجاسوس.", msg_spyWin: "خطأ! تم التصويت على شخص بريء.", msg_paraWin: "صحيح! لم يكن هناك جاسوس.", msg_paraFail: "خطأ! لقد صوتتم على بريء، ولا يوجد جاسوس أساساً."
+            },
+            en: {
+                subtitle: "Legendary Edition | Exact Images 100%", playLocal: "Local Play 📱", playOnline: "Online Multiplayer 🌐",
+                rulesBtn: "Rules 📖", settingsBtn: "Settings ⚙️", soonBadge: "Soon",
+                tutTitle: "Game Rules 🕵️", tut1: "🎯 Main Goal:", tut1_desc: "The game picks a secret word and shows an <strong class='text-blue-300'>Expressive Image</strong>. Citizens know it, the Spy doesn't!",
+                tut2: "🏆 How to Win?", tut2_desc: "Citizens win by voting the spy. The spy wins by tricking them!",
+                tut3: "🤯 Paranoia Mode:", tut3_desc: "Sometimes there's NO SPY! Vote 'No Spy' to win.", tutGotIt: "Got it, let's play! 👍",
+                setTitle: "Settings ⚙️", setLang: "Game Language", setClose: "Close",
+                setupTitle: "Game Setup", setupCat: "Category", setupPlayers: "Players", setupSpies: "Spies", setupTime: "Time (m)", setupStart: "Next (Player Names) ➡️",
+                catRandom: "🎲 Random (All)", catPlaces: "🌍 Places", catFood: "🍔 Food & Drinks", catAnimals: "🦁 Animals", catJobs: "👨‍⚕️ Jobs", catSports: "⚽ Sports", catObjects: "📦 Objects", catApps: "📱 Apps & Sites", catTransport: "🚗 Transport", catNature: "🌲 Nature", catClothes: "👕 Clothes",
+                namesTitle: "Player Names ✍️", namesBack: "Back 🔙", namesDesc: "Enter names for better gameplay", namesStart: "Prepare Cards & Start ✔️", player: "Player",
+                tapToRevealDesc: "Tap the card to reveal your identity", tapToReveal: "Tap to Reveal", passTo: "Pass the phone to:",
+                investigation: "Investigation Started! 🔍", endRound: "End Discussion 🛑", cancelRound: "Cancel 🔙", pause: "Pause ⏸️", resume: "Resume ▶️", wheelTitle: "Who asks who?", spinWheelBtn: "Spin Wheel 🎲", hintBtn: "I need a question 💡",
+                voteTitle: "Voting Time!", voteDesc: "Who is the spy?", voteParanoia: "There is NO SPY! (Trick) 🤯",
+                resWord: "The Secret Word was:", resSpies: "The Real Spies:", resHome: "Setup New Round ⚙️", scoreboard: "Players Scoreboard 🏆",
+                citizen: "Citizen", spy: "Spy", spyDesc: "You don't know the word!",
+                winCitizen: "Citizens Win! 🎉", winSpy: "Spy Wins! 😈", winParanoia: "Geniuses! 🤯", failParanoia: "Everyone Loses! 🤣",
+                hypeMsg: "Coming very soon... Get ready! 🌍🔥", voteBtn: "Select 👈", noSpyResult: "No Spies",
+                msg_citWin: "Well done! The spy was caught.", msg_spyWin: "Wrong! An innocent was voted out.", msg_paraWin: "Correct! There was no spy.", msg_paraFail: "Wrong! You voted an innocent, and there was no spy."
+            }
+        };
 
-        function setLang(lang) {
+        const safeSetTxt = (id, key) => { const e = document.getElementById(id); if(e && dict[currentLang][key]) e.innerText = dict[currentLang][key]; };
+        const safeSetHtm = (id, html) => { const e = document.getElementById(id); if(e && dict[currentLang][key]) e.innerHTML = html; };
+
+        function setLanguage(lang) {
             currentLang = lang;
-            document.getElementById('html-tag').dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.getElementById('html-tag').style.fontFamily = (lang === 'ar') ? "'Cairo', sans-serif" : "'Poppins', sans-serif";
+            document.getElementById('htmlTag').dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            applyLanguage();
+        }
+
+        function getTrans(key) { return dict[currentLang][key] || dict['en'][key]; }
+
+        function applyLanguage() {
+            safeSetTxt('t_subtitle', 'subtitle'); safeSetTxt('t_playLocal', 'playLocal');
+            const po = document.getElementById('t_playOnline'); if(po) po.innerHTML = `${getTrans('playOnline')} <span class="absolute top-0 ${currentLang==='ar'?'right-0':'left-0'} bg-red-600 text-white text-xs px-2 py-1 rounded-bl-lg font-bold">${getTrans('soonBadge')}</span>`;
+            safeSetTxt('t_rulesBtn', 'rulesBtn'); safeSetTxt('t_settingsBtn', 'settingsBtn');
+            safeSetTxt('t_tutTitle', 'tutTitle'); safeSetTxt('t_tut1', 'tut1'); 
+            const td1 = document.getElementById('t_tut1_desc'); if(td1) td1.innerHTML = getTrans('tut1_desc');
+            safeSetTxt('t_tut2', 'tut2'); 
+            const td2 = document.getElementById('t_tut2_desc'); if(td2) td2.innerHTML = getTrans('tut2_desc');
+            safeSetTxt('t_tut3', 'tut3'); 
+            const td3 = document.getElementById('t_tut3_desc'); if(td3) td3.innerHTML = getTrans('tut3_desc');
+            safeSetTxt('t_tutGotIt', 'tutGotIt'); safeSetTxt('t_setTitle', 'setTitle'); safeSetTxt('t_setLang', 'setLang'); 
+            safeSetTxt('t_setClose', 'setClose'); safeSetTxt('t_setupTitle', 'setupTitle'); safeSetTxt('t_setupCat', 'setupCat');
+            safeSetTxt('opt_random', 'catRandom'); safeSetTxt('opt_places', 'catPlaces'); safeSetTxt('opt_food', 'catFood'); safeSetTxt('opt_animals', 'catAnimals');
+            safeSetTxt('opt_jobs', 'catJobs'); safeSetTxt('opt_sports', 'catSports'); safeSetTxt('opt_objects', 'catObjects'); 
+            safeSetTxt('opt_apps', 'catApps'); safeSetTxt('opt_transport', 'catTransport'); safeSetTxt('opt_nature', 'catNature'); safeSetTxt('opt_clothes', 'catClothes');
+            safeSetTxt('t_setupPlayers', 'setupPlayers'); safeSetTxt('t_setupSpies', 'setupSpies'); safeSetTxt('t_setupTime', 'setupTime'); safeSetTxt('t_setupStart', 'setupStart');
+            safeSetTxt('t_namesTitle', 'namesTitle'); safeSetTxt('t_namesBack', 'namesBack'); safeSetTxt('t_namesDesc', 'namesDesc'); safeSetTxt('t_namesStart', 'namesStart');
+            safeSetTxt('t_tapToRevealDesc', 'tapToRevealDesc'); safeSetTxt('t_tapToReveal', 'tapToReveal'); safeSetTxt('t_passTo', 'passTo');
+            safeSetTxt('t_investigation', 'investigation'); safeSetTxt('t_endRound', 'endRound'); safeSetTxt('t_cancelRound', 'cancelRound');
+            const pb = document.getElementById('pauseBtn'); if(pb) pb.innerHTML = isTimerPaused ? getTrans('resume') : getTrans('pause');
+            safeSetTxt('t_wheelTitle', 'wheelTitle'); safeSetTxt('t_spinWheelBtn', 'spinWheelBtn'); 
             
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('l-'+lang).classList.add('active');
+            const hintSpan = document.querySelector('#hintBtn span:first-child');
+            if(hintSpan) hintSpan.innerText = getTrans('hintBtn');
 
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(uiTrans[lang][key]) el.innerText = uiTrans[lang][key];
+            safeSetTxt('t_voteTitle', 'voteTitle'); safeSetTxt('t_voteDesc', 'voteDesc'); safeSetTxt('t_voteParanoia', 'voteParanoia');
+            safeSetTxt('t_resWord', 'resWord'); safeSetTxt('t_resSpies', 'resSpies'); safeSetTxt('t_resHome', 'resHome'); safeSetTxt('t_scoreboard', 'scoreboard');
+        }
+
+        window.onload = () => { 
+            applyLanguage(); 
+            if (!localStorage.getItem('spyTut_vFinal_6')) {
+                openTutorial();
+                localStorage.setItem('spyTut_vFinal_6', 'true');
+            }
+        };
+
+        function navTo(screenId) {
+            document.querySelectorAll('body > div[id]').forEach(div => {
+                if(!['aiHintModal', 'toast', 'tutorialModal', 'settingsModal', 'loadingScreen'].includes(div.id)) div.classList.add('hidden-screen');
             });
+            const screen = document.getElementById(screenId);
+            if (screen) screen.classList.remove('hidden-screen');
+        }
 
-            for(let i=0; i<ps; i++) {
-                let inp = document.getElementById('n'+i);
-                if(inp) inp.placeholder = `${uiTrans[lang].pName} ${i+1}`;
+        function openTutorial() { playClickSound(); document.getElementById('tutorialModal').classList.remove('hidden-screen'); }
+        function closeTutorial() { playClickSound(); document.getElementById('tutorialModal').classList.add('hidden-screen'); }
+        function openSettings() { playClickSound(); document.getElementById('settingsModal').classList.remove('hidden-screen'); }
+        function closeSettings() { playClickSound(); document.getElementById('settingsModal').classList.add('hidden-screen'); }
+
+        function adjust(setting, change) {
+            let newVal = settings[setting] + change;
+            if (setting === 'players' && newVal >= 3 && newVal <= 20) {
+                settings.players = newVal;
+                if(settings.spies >= Math.floor(settings.players/2)) settings.spies = Math.floor(settings.players/2);
+                if(settings.spies < 1) settings.spies = 1;
+                playerScores = Array(settings.players).fill(0);
+                playerNames = []; 
+            }
+            if (setting === 'spies' && newVal >= 1 && newVal <= Math.floor(settings.players/2)) settings.spies = newVal;
+            if (setting === 'time' && newVal >= 1 && newVal <= 15) settings.time = newVal;
+            
+            document.getElementById('playerCount').innerText = settings.players;
+            document.getElementById('spyCount').innerText = settings.spies;
+            document.getElementById('timeCount').innerText = settings.time;
+        }
+
+        // --- شاشة الأسماء ---
+        function goToNamesSetup() {
+            playClickSound();
+            navTo('namesScreen');
+            const container = document.getElementById('namesContainer');
+            container.innerHTML = '';
+            for(let i=0; i<settings.players; i++) {
+                let defaultName = `${getTrans('player')} ${i+1}`;
+                let currentSaved = playerNames[i];
+                let val = (currentSaved && currentSaved !== defaultName) ? currentSaved : "";
+                container.innerHTML += `<input type="text" id="nameInput_${i}" class="name-input" value="${val}" placeholder="${defaultName}" maxlength="15">`;
             }
         }
 
-        function toggleSettings() {
-            const mod = document.getElementById('settings-modal');
-            mod.classList.toggle('hidden');
-        }
-
-        function changeC(t,v){ 
-            if(t==='p'){ ps=Math.max(3, Math.min(20, ps+v)); if(ss>=ps) ss=ps-1; }
-            else { ss=Math.max(1, Math.min(3, ss+v)); if(ss>=ps) ss=ps-1; }
-            document.getElementById('p-val').innerText=ps; document.getElementById('s-val').innerText=ss;
-        }
-
-        function setT(m){ 
-            tm=m; 
-            [3,5,7,10].forEach(x => {
-                let btn = document.getElementById('t'+x);
-                if(x===m) btn.className = "bg-sky-600 text-white py-3 rounded-lg font-bold text-lg transition-colors";
-                else btn.className = "bg-slate-800 py-3 rounded-lg font-bold text-lg transition-colors";
-            }); 
-        }
-
-        function goNames(){
-            const l = document.getElementById('names-list'); l.innerHTML='';
-            for(let i=0; i<ps; i++) {
-                l.innerHTML+=`<input type="text" id="n${i}" placeholder="${uiTrans[currentLang].pName} ${i+1}">`;
+        function prepareGameAndImages() {
+            playClickSound();
+            playerNames = [];
+            for(let i=0; i<settings.players; i++) {
+                let defaultName = `${getTrans('player')} ${i+1}`;
+                let inpElem = document.getElementById(`nameInput_${i}`);
+                let inp = inpElem ? inpElem.value.trim() : "";
+                playerNames.push(inp === "" ? defaultName : inp);
             }
-            document.getElementById('s-setup').classList.add('hidden'); 
-            document.getElementById('s-names').classList.remove('hidden');
+            
+            if(playerScores.length !== settings.players) playerScores = Array(settings.players).fill(0);
+
+            let cat = document.getElementById('categorySelect').value;
+            let wordList = [];
+            if(cat === 'random') { for(let key in db) wordList = wordList.concat(db[key]); } else { wordList = db[cat]; }
+            
+            currentWordObj = wordList[Math.floor(Math.random() * wordList.length)];
+            isParanoiaRound = Math.random() < 0.05; 
+            
+            roles = []; playerDisplayOrder = []; askedPairs.clear(); lastAsker = -1; availableHints = 3;
+            for(let i=1; i<=settings.players; i++) { roles.push({ role: 'مواطن', id: i }); playerDisplayOrder.push(i); }
+            for (let i = playerDisplayOrder.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [playerDisplayOrder[i], playerDisplayOrder[j]] = [playerDisplayOrder[j], playerDisplayOrder[i]]; }
+
+            if (!isParanoiaRound) {
+                let spiesToAssign = settings.spies;
+                while(spiesToAssign > 0) {
+                    let randIndex = Math.floor(Math.random() * settings.players);
+                    if(roles[randIndex].role === 'مواطن') { roles[randIndex].role = 'جاسوس'; spiesToAssign--; }
+                }
+            }
+
+            // 🌟 نظام جلب الصور الخارق (تطبيقات أصلية + أيقونات ملونة) 🌟
+            let targetWordUrl = currentWordObj.domain ? 
+                `https://logo.clearbit.com/${currentWordObj.domain}?size=256` : 
+                `https://img.icons8.com/color/256/${currentWordObj.k}.png`;
+            let targetSpyUrl = `https://img.icons8.com/color/256/spy.png`;
+
+            // إظهار شاشة التحميل لفترة قصيرة جداً أثناء التجهيز بالخفاء بأمان
+            const loadingScreenElem = document.getElementById('loadingScreen');
+            if (loadingScreenElem) loadingScreenElem.classList.remove('hidden-screen');
+            navTo('loadingScreen');
+
+            window.preloadedWordImage = new Image();
+            window.preloadedSpyImage = new Image();
+            
+            let loadedCount = 0;
+            const checkDone = () => {
+                loadedCount++;
+                if(loadedCount === 2) {
+                    if (loadingScreenElem) loadingScreenElem.classList.add('hidden-screen');
+                    currentPlayerIndex = 0; resetCard(); updatePassPhoneScreen(); navTo('passPhoneScreen');
+                }
+            };
+
+            window.preloadedWordImage.onload = checkDone; window.preloadedSpyImage.onload = checkDone;
+            window.preloadedWordImage.onerror = checkDone; window.preloadedSpyImage.onerror = checkDone; 
+            
+            setTimeout(() => { 
+                if(loadedCount < 2) { 
+                    loadedCount=2; 
+                    if (loadingScreenElem) loadingScreenElem.classList.add('hidden-screen'); 
+                    currentPlayerIndex = 0; resetCard(); updatePassPhoneScreen(); navTo('passPhoneScreen'); 
+                } 
+            }, 1500);
+
+            window.preloadedWordImage.src = targetWordUrl;
+            window.preloadedSpyImage.src = targetSpyUrl;
         }
 
-        function goCats(){
-            names=[]; 
-            for(let i=0; i<ps; i++){ 
-                let val = document.getElementById('n'+i).value.trim(); 
-                let finalName = val || `${uiTrans[currentLang].pName} ${i+1}`; 
-                names.push(finalName); 
-                if(scores[finalName] === undefined) scores[finalName]=0; 
+        // --- قلب البطاقة الآمن الذي لا ينكسر أبداً ---
+        function resetCard() {
+            const card = document.getElementById('identityCard');
+            if (card) {
+                card.classList.remove('flipped'); 
+                card.style.pointerEvents = 'auto';
             }
-            const g = document.getElementById('cats-grid'); g.innerHTML='';
-            for(let c in dbRaw){
-                g.innerHTML+=`<button onclick="start('${c}')" class="category-btn hover:bg-slate-800"><i class="fa-solid ${dbRaw[c].i} text-3xl mb-2 text-sky-400"></i><span class="font-bold text-lg">${dbRaw[c].n[currentLang]}</span></button>`;
-            }
-            updateScores();
-            document.getElementById('s-names').classList.add('hidden'); 
-            document.getElementById('s-cats').classList.remove('hidden');
+            
+            const nextBtn = document.getElementById('nextPlayerBtn');
+            if(nextBtn) nextBtn.classList.add('hidden');
+            
+            const realImage = document.getElementById('realImage');
+            if(realImage) { realImage.classList.add('hidden'); realImage.className = 'real-image-frame hidden'; }
+            
+            const fallbackWrapper = document.getElementById('fallbackIconWrapper');
+            if(fallbackWrapper) fallbackWrapper.classList.add('hidden');
+            
+            const loader = document.getElementById('imageLoader');
+            if(loader) loader.classList.remove('hidden');
         }
 
-        function start(c){
-            let pool = [];
-            if(c === 'عشوائي') {
-                for(let k in dbRaw) {
-                    let imgs = dbRaw[k].img.split('|');
-                    let words = dbRaw[k][currentLang].split('|');
-                    for(let i=0; i<imgs.length; i++) pool.push({n: words[i], img: `https://emojicdn.elk.sh/${imgs[i]}?style=apple`});
+        function flipCard() {
+            const card = document.getElementById('identityCard');
+            if(!card || card.classList.contains('flipped')) return;
+
+            const actualPlayerIndex = playerDisplayOrder[currentPlayerIndex] - 1;
+            const roleObj = roles[actualPlayerIndex]; 
+            const backFace = document.getElementById('cardBackFace');
+            const realImage = document.getElementById('realImage');
+            const fallbackIconWrapper = document.getElementById('fallbackIconWrapper');
+            const fallbackIcon = document.getElementById('fallbackIcon');
+            const imageLoader = document.getElementById('imageLoader');
+            const roleWordContainer = document.getElementById('roleWordContainer');
+            const roleWord = document.getElementById('roleWord');
+            const roleTitle = document.getElementById('roleTitle');
+
+            let targetImgObj = null;
+            let faClass = ""; let colorClass = "";
+
+            if (roleObj.role === 'جاسوس') {
+                if(backFace) backFace.className = 'flip-card-back spy-card-back';
+                if(roleTitle) roleTitle.innerText = getTrans('spy');
+                targetImgObj = window.preloadedSpyImage;
+                faClass = "fa-user-secret"; colorClass = "text-rose-400";
+                
+                if(roleWord) roleWord.innerText = getTrans('spyDesc');
+                if(roleWordContainer) roleWordContainer.className = 'z-10 w-11/12 flex justify-center items-center mt-2 mb-4 bg-slate-900/90 border-x-4 border-rose-600 rounded-xl shadow-lg py-3';
+                if(roleWord) roleWord.className = 'text-2xl font-black text-rose-200 text-center';
+            } else {
+                if(backFace) backFace.className = 'flip-card-back';
+                if(roleTitle) roleTitle.innerText = getTrans('citizen');
+                targetImgObj = window.preloadedWordImage;
+                faClass = currentWordObj.i; colorClass = "text-sky-400";
+                
+                if(roleWord) roleWord.innerText = currentWordObj.w;
+                if(roleWordContainer) roleWordContainer.className = 'z-10 w-11/12 flex justify-center items-center mt-2 mb-4 bg-slate-900/80 border-l-4 border-sky-400 rounded-xl shadow-lg py-4';
+                if(roleWord) roleWord.className = 'text-4xl font-black text-sky-300 tracking-wide drop-shadow-md text-center';
+            }
+
+            if(targetImgObj && targetImgObj.complete && targetImgObj.naturalWidth > 0) {
+                if(realImage) {
+                    realImage.src = targetImgObj.src;
+                    realImage.className = currentWordObj.domain && roleObj.role !== 'جاسوس' ? 'app-logo-frame' : (roleObj.role === 'جاسوس' ? 'real-image-frame glow-red' : 'real-image-frame glow-blue');
+                    realImage.classList.remove('hidden');
+                }
+                if(imageLoader) imageLoader.classList.add('hidden');
+            } else {
+                if(fallbackIcon) fallbackIcon.className = `fa-solid ${faClass} text-[5rem] ${colorClass} drop-shadow-lg`;
+                if(imageLoader) imageLoader.classList.add('hidden');
+                if(fallbackIconWrapper) fallbackIconWrapper.classList.remove('hidden');
+            }
+
+            card.classList.add('flipped'); card.style.pointerEvents = 'none'; 
+            setTimeout(() => {
+                const nxtBtn = document.getElementById('nextPlayerBtn');
+                if(nxtBtn) nxtBtn.classList.remove('hidden');
+            }, 800);
+        }
+
+        function updatePassPhoneScreen() { 
+            const actualPlayerIndex = playerDisplayOrder[currentPlayerIndex] - 1;
+            const titleElem = document.getElementById('currentPlayerTitle');
+            if(titleElem) titleElem.innerText = playerNames[actualPlayerIndex]; 
+        }
+
+        function nextPlayer() {
+            playClickSound();
+            currentPlayerIndex++;
+            if(currentPlayerIndex < settings.players) { resetCard(); updatePassPhoneScreen(); } else { startGameTimer(); }
+        }
+
+        function startGameTimer() {
+            navTo('gameScreen'); timeLeft = settings.time * 60; isTimerPaused = false;
+            
+            const pauseBtn = document.getElementById('pauseBtn');
+            if(pauseBtn) pauseBtn.innerText = getTrans('pause'); 
+            
+            updateTimerDisplay();
+            
+            const timerAlert = document.getElementById('timerAlert');
+            if(timerAlert) timerAlert.style.opacity = '0';
+            
+            const wheelResult = document.getElementById('wheelResult');
+            if(wheelResult) wheelResult.innerText = "...";
+            
+            const hintsLeft = document.getElementById('hintsLeft');
+            if(hintsLeft) hintsLeft.innerText = `${availableHints}`;
+            
+            const hintBtn = document.getElementById('hintBtn');
+            if(hintBtn) {
+                hintBtn.disabled = false;
+                hintBtn.className = "w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl border border-amber-400 shadow-lg flex justify-between px-4 items-center";
+            }
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if(!isTimerPaused) {
+                    timeLeft--; updateTimerDisplay();
+                    
+                    if (timeLeft <= 30 && timeLeft > 0) {
+                        const tAlert = document.getElementById('timerAlert');
+                        if(tAlert) tAlert.style.opacity = timeLeft % 2 === 0 ? '1' : '0';
+                        playTick(timeLeft % 2 === 0); 
+                    }
+
+                    if (timeLeft <= 0) { clearInterval(timerInterval); goToVoting(); }
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60).toString().padStart(2, '0'); let s = (timeLeft % 60).toString().padStart(2, '0');
+            const display = document.getElementById('timerDisplay'); 
+            if(display) {
+                display.innerText = `${m}:${s}`;
+                display.className = timeLeft <= 30 ? "text-5xl font-black font-mono tracking-wider text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]" : "text-5xl font-black font-mono tracking-wider text-blue-400";
+            }
+        }
+
+        function toggleTimer() {
+            playClickSound(); isTimerPaused = !isTimerPaused;
+            const btn = document.getElementById('pauseBtn'); 
+            if(btn) {
+                btn.innerText = isTimerPaused ? getTrans('resume') : getTrans('pause');
+                if(isTimerPaused) btn.classList.replace('bg-slate-700', 'bg-blue-600'); else btn.classList.replace('bg-blue-600', 'bg-slate-700');
+            }
+        }
+
+        function cancelRound() { playClickSound(); clearInterval(timerInterval); navTo('setupScreen'); }
+
+        let isSpinning = false;
+        function runWheel() {
+            if(isSpinning) return;
+            isSpinning = true;
+            playClickSound();
+            const wheel = document.getElementById('wheelResult'); 
+            if(wheel) wheel.className = "slot-text text-white";
+            let spins = 0; const totalSpins = 20; 
+            
+            let finalP1, finalP2, pairStr;
+            let attempts = 0;
+            do {
+                finalP1 = Math.floor(Math.random() * settings.players) + 1;
+                finalP2 = Math.floor(Math.random() * settings.players) + 1;
+                pairStr = `${finalP1}-${finalP2}`;
+                attempts++;
+                if(attempts > 50) { askedPairs.clear(); lastAsker = -1; } 
+            } while (finalP1 === finalP2 || finalP1 === lastAsker || askedPairs.has(pairStr));
+
+            let spinInterval = setInterval(() => {
+                let p1 = Math.floor(Math.random() * settings.players) + 1; let p2 = Math.floor(Math.random() * settings.players) + 1;
+                while(p1 === p2) p2 = Math.floor(Math.random() * settings.players) + 1;
+                if(wheel) wheel.innerText = currentLang === 'ar' ? `${playerNames[p1-1]} 🗣️ يسأل 👈 ${playerNames[p2-1]}` : `${playerNames[p1-1]} 🗣️ asks 👈 ${playerNames[p2-1]}`;
+                
+                spins++;
+                if(spins >= totalSpins) {
+                    clearInterval(spinInterval);
+                    if(wheel) {
+                        wheel.innerText = currentLang === 'ar' ? `${playerNames[finalP1-1]} 🗣️ يسأل 👈 ${playerNames[finalP2-1]}` : `${playerNames[finalP1-1]} 🗣️ asks 👈 ${playerNames[finalP2-1]}`;
+                        wheel.className = "slot-stopped"; 
+                    }
+                    askedPairs.add(pairStr);
+                    lastAsker = finalP1; 
+                    isSpinning = false;
+                }
+            }, 80); 
+        }
+
+        function getAIHint() {
+            if(availableHints <= 0) return;
+            availableHints--;
+            
+            let randomHint = aiHints[Math.floor(Math.random() * aiHints.length)];
+            const aiHintText = document.getElementById('aiHintText');
+            if(aiHintText) aiHintText.innerText = randomHint;
+            
+            document.getElementById('aiHintModal').classList.remove('hidden-screen');
+            
+            const hintsLeft = document.getElementById('hintsLeft');
+            if(hintsLeft) hintsLeft.innerText = `${availableHints}`;
+            
+            if(availableHints === 0) {
+                const hintBtn = document.getElementById('hintBtn');
+                if(hintBtn) {
+                    hintBtn.disabled = true;
+                    hintBtn.classList.replace('bg-amber-600', 'bg-slate-700');
+                    hintBtn.classList.replace('hover:bg-amber-500', 'hover:bg-slate-600');
+                    hintBtn.classList.replace('border-amber-400', 'border-slate-600');
+                }
+            }
+        }
+        function closeHint() { document.getElementById('aiHintModal').classList.add('hidden-screen'); }
+
+        function goToVoting() {
+            playClickSound(); clearInterval(timerInterval); navTo('votingScreen');
+            selectedVotesForKick = [];
+            const container = document.getElementById('votingButtons'); 
+            if(container) container.innerHTML = '';
+            
+            const instructions = document.getElementById('votingInstructions');
+            if(instructions) instructions.innerText = currentLang === 'ar' ? `اختاروا المشتبه بهم (مطلوب اختيار ${settings.spies} لاعبين لطردهم)` : `Select Suspects (Must pick ${settings.spies})`;
+            
+            const confirmBtn = document.getElementById('confirmVoteBtn');
+            if(confirmBtn) confirmBtn.classList.add('hidden');
+
+            for(let i=1; i<=settings.players; i++) {
+                const btn = document.createElement('button');
+                btn.id = `voteBtn-${i}`;
+                btn.className = "w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-4 rounded-xl border border-slate-600 transition-all active:scale-95 text-lg flex justify-between px-6 items-center";
+                btn.innerHTML = `<span>${playerNames[i-1]}</span> <span class="text-rose-400 text-sm border border-rose-500/50 px-3 py-1 rounded-lg">${getTrans('voteBtn')}</span>`;
+                btn.onclick = () => { toggleVoteSelection(i); }; 
+                if(container) container.appendChild(btn);
+            }
+        }
+
+        function toggleVoteSelection(playerId) {
+            playClickSound();
+            const btn = document.getElementById(`voteBtn-${playerId}`);
+            const idx = selectedVotesForKick.indexOf(playerId);
+            const selectTxt = currentLang === 'ar' ? 'تحديد 👈' : 'Select 👈';
+            const selectedTxt = currentLang === 'ar' ? 'تم التحديد ✔️' : 'Selected ✔️';
+            
+            if(idx > -1) {
+                selectedVotesForKick.splice(idx, 1);
+                if(btn) {
+                    btn.classList.remove('ring-4', 'ring-rose-500', 'bg-slate-700');
+                    btn.innerHTML = `<span>${playerNames[playerId-1]}</span> <span class="text-rose-400 text-sm border border-rose-500/50 px-3 py-1 rounded-lg">${selectTxt}</span>`;
                 }
             } else {
-                let imgs = dbRaw[c].img.split('|');
-                let words = dbRaw[c][currentLang].split('|');
-                for(let i=0; i<imgs.length; i++) pool.push({n: words[i], img: `https://emojicdn.elk.sh/${imgs[i]}?style=apple`});
+                if(selectedVotesForKick.length < settings.spies) {
+                    selectedVotesForKick.push(playerId);
+                    if(btn) {
+                        btn.classList.add('ring-4', 'ring-rose-500', 'bg-slate-700');
+                        btn.innerHTML = `<span>${playerNames[playerId-1]}</span> <span class="text-white text-sm bg-rose-600 px-3 py-1 rounded-lg">${selectedTxt}</span>`;
+                    }
+                }
+            }
+
+            const confirmBtn = document.getElementById('confirmVoteBtn');
+            if(confirmBtn) {
+                if(selectedVotesForKick.length === settings.spies) {
+                    confirmBtn.classList.remove('hidden');
+                } else {
+                    confirmBtn.classList.add('hidden');
+                }
+            }
+        }
+
+        function castParanoiaVote() {
+            playClickSound();
+            if (isParanoiaRound) { 
+                showFinalResult(getTrans('winParanoia'), getTrans('msg_paraWin'), true, true); 
+            } else { 
+                showFinalResult(getTrans('failParanoia'), getTrans('msg_paraFail'), false, false); 
+            }
+        }
+
+        function confirmMultipleVotes() {
+            playClickSound();
+            if(isParanoiaRound) {
+                showFinalResult(getTrans('failParanoia'), getTrans('msg_paraFail'), false, false);
+                return;
+            }
+
+            let correctKicks = 0;
+            selectedVotesForKick.forEach(pid => {
+                if (roles[pid - 1].role === 'جاسوس') correctKicks++;
+            });
+
+            if(correctKicks === settings.spies) {
+                showFinalResult(getTrans('winCitizen'), getTrans('msg_citWin'), true, false);
+            } else if (correctKicks > 0) {
+                showFinalResult(currentLang==='ar'?"تعادل نسبي ⚖️":"Partial Win ⚖️", currentLang==='ar'?`تم كشف ${correctKicks} جواسيس فقط، ولكن نجا آخرون!`:`Only ${correctKicks} spies caught!`, true, false, correctKicks);
+            } else {
+                showFinalResult(getTrans('winSpy'), getTrans('msg_spyWin'), false, false);
+            }
+        }
+
+        function showFinalResult(title, subTitle, citizensWon, isParanoiaWin, partialKicks = 0) {
+            navTo('resultScreen');
+            const rTitle = document.getElementById('resultTitle');
+            if(rTitle) {
+                rTitle.innerText = title;
+                rTitle.className = (title.includes('فوز الجاسوس') || title.includes('خسارة') || title.includes('Loses') || title.includes('Spy Wins')) ? "text-4xl font-black mb-1 text-red-500 drop-shadow-lg" : "text-4xl font-black mb-1 text-green-400 drop-shadow-lg";
+                if(title.includes('تعادل') || title.includes('Partial')) rTitle.className = "text-4xl font-black mb-1 text-yellow-400 drop-shadow-lg";
             }
             
-            cw = pool[Math.floor(Math.random()*pool.length)];
-            let r = Array(ps).fill('مواطن'); 
-            for(let i=0; i<ss; i++) r[i]='جاسوس'; 
-            r.sort(()=>Math.random()-0.5);
-            order = [...names].sort(()=>Math.random()-0.5);
-            roles={}; 
-            for(let i=0; i<ps; i++) roles[order[i]]=r[i];
-            px=0; 
-            updatePass();
-            document.getElementById('s-cats').classList.add('hidden'); 
-            document.getElementById('s-pass').classList.remove('hidden');
-            document.getElementById('s-pass').style.display = 'flex';
-        }
+            const rSub = document.getElementById('resultSubTitle');
+            if(rSub) rSub.innerText = subTitle;
+            
+            const resImg = document.getElementById('resImage');
+            const resFallbackWrapper = document.getElementById('resFallbackWrapper');
+            const resFallbackIcon = document.getElementById('resFallbackIcon');
+            
+            if(resImg) resImg.classList.add('hidden'); 
+            if(resFallbackWrapper) resFallbackWrapper.classList.add('hidden');
 
-        function updatePass(){ document.getElementById('p-name').innerText = order[px]; }
-
-        function showCard(){
-            const box = document.getElementById('card-box');
-            if(roles[order[px]]==='جاسوس'){
-                box.innerHTML = `
-                <div class="spy-avatar-container">
-                    <div class="spy-glow"></div>
-                    <i class="fa-solid fa-user-secret spy-icon-solid"></i>
-                </div>
-                <h2 class="text-4xl sm:text-5xl font-black text-red-500 mb-3">${uiTrans[currentLang].youAreSpy}</h2>
-                <p class="text-lg sm:text-xl text-slate-300 font-bold">${uiTrans[currentLang].spyDesc}</p>`;
+            if (window.preloadedWordImage.complete && window.preloadedWordImage.naturalWidth > 0) {
+                if(resImg) {
+                    resImg.src = window.preloadedWordImage.src;
+                    resImg.classList.remove('hidden');
+                    resImg.className = currentWordObj.domain ? 'w-24 h-24 object-contain drop-shadow-lg mb-2 rounded-2xl' : 'w-24 h-24 object-contain drop-shadow-lg mb-2';
+                }
             } else {
-                box.innerHTML = `<img src="${cw.img}" class="clear-image" alt="${cw.n}">
-                <p class="text-lg sm:text-xl text-slate-400 font-bold mb-3">${uiTrans[currentLang].missionIs}</p>
-                <h2 class="text-5xl sm:text-6xl font-black text-sky-400">${cw.n}</h2>`;
+                if(resFallbackIcon) resFallbackIcon.className = `fa-solid ${currentWordObj.i} text-5xl text-sky-400 drop-shadow-lg`;
+                if(resFallbackWrapper) resFallbackWrapper.classList.remove('hidden');
             }
-            document.getElementById('s-pass').classList.add('hidden'); 
-            document.getElementById('s-pass').style.display = '';
-            document.getElementById('s-card').classList.remove('hidden');
-        }
-
-        function nextP(){
-            px++; 
-            if(px < ps){ 
-                updatePass(); 
-                document.getElementById('s-card').classList.add('hidden'); 
-                document.getElementById('s-pass').classList.remove('hidden');
-                document.getElementById('s-pass').style.display = 'flex';
+            
+            const rWord = document.getElementById('resultWord');
+            if(rWord) rWord.innerText = currentWordObj.w;
+            
+            const list = document.getElementById('spiesList'); 
+            if(list) list.innerHTML = '';
+            
+            if (isParanoiaRound) { 
+                if(list) list.innerHTML = `<span class="bg-slate-700 text-gray-300 px-4 py-2 rounded-xl text-lg font-bold">${getTrans('noSpyResult')}</span>`; 
+                if(isParanoiaWin) { for(let i=0; i<settings.players; i++) playerScores[i] += 1; }
+                else { roles.forEach((r, idx) => { if(r.role === 'جاسوس') playerScores[idx] += 2; }); } 
+            } else { 
+                roles.forEach((r, idx) => { 
+                    if (r.role === 'جاسوس') { 
+                        let s = document.createElement('span'); s.className = "bg-red-900/50 text-red-300 border border-red-700 px-4 py-1 rounded-xl text-md font-bold"; s.innerText = `${playerNames[idx]}`; 
+                        if(list) list.appendChild(s); 
+                        if(!selectedVotesForKick.includes(idx + 1)) { playerScores[idx] += 2; }
+                    } else {
+                        if(citizensWon) {
+                            if(partialKicks > 0) playerScores[idx] += partialKicks;
+                            else playerScores[idx] += settings.spies;
+                        }
+                    }
+                }); 
             }
-            else { 
-                document.getElementById('starter').innerText = names[Math.floor(Math.random()*ps)];
-                tl = tm*60; paused=false; updateTimer();
-                document.getElementById('pause-btn').innerHTML = uiTrans[currentLang].pause;
-                interval = setInterval(tick, 1000);
-                document.getElementById('s-card').classList.add('hidden'); 
-                document.getElementById('s-play').classList.remove('hidden');
-            }
-        }
 
-        function tick(){ if(!paused){ tl--; updateTimer(); if(tl<=0) goVote(); } }
-        function updateTimer(){ let m=Math.floor(tl/60).toString().padStart(2, '0'); let s=(tl%60).toString().padStart(2, '0'); document.getElementById('timer').innerText=`${m}:${s}`; }
-        function toggleP(){ paused=!paused; document.getElementById('pause-btn').innerHTML = paused ? uiTrans[currentLang].resume : uiTrans[currentLang].pause; }
-
-        function goVote(){
-            clearInterval(interval);
-            const g = document.getElementById('vote-grid'); g.innerHTML='';
-            names.forEach(n => { g.innerHTML+=`<button onclick="check('${n}')" class="bg-slate-800 p-4 rounded-xl font-bold border border-slate-700 hover:border-red-500 active:bg-red-900 transition-colors text-white shadow-md text-lg">${n}</button>`; });
-            document.getElementById('s-play').classList.add('hidden'); 
-            document.getElementById('s-vote').classList.remove('hidden');
+            const scoreList = document.getElementById('scoreboardList'); 
+            if(scoreList) scoreList.innerHTML = '';
+            
+            playerScores.forEach((score, idx) => {
+                let div = document.createElement('div'); div.className = "flex justify-between items-center bg-slate-800 p-2 rounded-lg border border-slate-700";
+                div.innerHTML = `<span class="font-bold text-gray-300">${playerNames[idx]}</span> <span class="bg-blue-600 px-3 py-1 rounded-md font-black text-white">${score}</span>`; 
+                if(scoreList) scoreList.appendChild(div);
+            });
         }
-
-        function check(n){
-            const win = roles[n]==='جاسوس';
-            const icon = document.getElementById('res-icon'); const title = document.getElementById('res-title');
-            if(win){
-                icon.innerHTML='<i class="fa-solid fa-check-circle text-8xl text-sky-400 drop-shadow-[0_0_15px_rgba(14,165,233,0.5)]"></i>'; 
-                title.className="text-4xl sm:text-5xl font-black mb-5 text-sky-400";
-                title.innerText= uiTrans[currentLang].citWin;
-                names.forEach(x=> { if(roles[x]!=='جاسوس') scores[x]++; });
-            } else {
-                icon.innerHTML=`<div class="spy-avatar-container scale-75 mb-0"><div class="spy-glow"></div><i class="fa-solid fa-user-secret spy-icon-solid"></i></div>`; 
-                title.className="text-4xl sm:text-5xl font-black mb-5 text-red-500";
-                title.innerText= uiTrans[currentLang].spyWin;
-                names.forEach(x=> { if(roles[x]==='جاسوس') scores[x]+=2; });
-            }
-            document.getElementById('res-word-img-container').innerHTML = `<img src="${cw.img}" class="w-32 h-32 object-contain filter drop-shadow-xl">`;
-            document.getElementById('res-word-text').innerText = cw.n;
-            updateScores();
-            document.getElementById('s-vote').classList.add('hidden'); 
-            document.getElementById('s-res').classList.remove('hidden');
-        }
-
-        function updateScores(){
-            const b = document.getElementById('score-board'); b.innerHTML='';
-            for(let n in scores) b.innerHTML+=`<div class="bg-slate-800 px-4 py-2 rounded-xl border border-slate-700 shadow-sm"><span class="text-sky-400 text-lg">${n}:</span> <span class="text-white text-lg">${scores[n]}</span></div>`;
-        }
-
-        function newRound() {
-            document.getElementById('s-res').classList.add('hidden');
-            document.getElementById('s-cats').classList.remove('hidden');
-        }
-        
-        setLang('ar');
     </script>
 </body>
 </html>
