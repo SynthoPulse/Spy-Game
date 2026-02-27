@@ -3,6 +3,6 @@
   "target": {
     "namespace": "android_app",
     "package_name": "io.github.hamdmnswr06_rgb.twa",
-    "sha256_cert_fingerprints": ["39:EF:59:59:C0:FB:2D:EC:E1:9B:5E:4C:0D:30:89:C7:7C:6C:1F:20:AB:0A:15:C0:53:AC:2B:F8:F0:A1:7A:66"]
+    "sha256_cert_fingerprints": ["77:D5:A8:87:3E:92:2D:65:E5:F3:48:E9:10:43:29:B0:D2:AE:7D:41:61:0A:C8:31:27:BA:A4:7D:7A:6A:1E:08"]
   }
 }]
