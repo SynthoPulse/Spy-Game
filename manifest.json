@@ -1,13 +1,14 @@
 {
   "name": "Deception",
   "short_name": "Deception",
-  "description": "لعبة خادع ومخدوع الذكية - الإصدار العالمي",
+  "description": "لعبة خادع ومخدوع الذكية - الإصدار العالمي الفخم",
   "id": "/Spy-Game/",
   "start_url": "./index.html",
-  "display": "fullscreen",
+  "display": "standalone",
   "background_color": "#020617",
   "theme_color": "#020617",
   "orientation": "portrait",
+  "categories": ["games", "entertainment"],
   "icons": [
     {
       "src": "icon.png",
