@@ -8,8 +8,15 @@
   "background_color": "#020617",
   "theme_color": "#020617",
   "orientation": "portrait",
-  "categories": ["games", "entertainment"],
   "lang": "ar",
+  "dir": "rtl",
+  "related_applications": [
+    {
+      "platform": "play",
+      "url": "https://hamdmnswr06-rgb.github.io/Spy-Game/manifest.json",
+      "id": "io.github.hamdmnswr06_rgb.twa"
+    }
+  ],
   "icons": [
     {
       "src": "icon512.png",
@@ -21,13 +28,13 @@
       "src": "icon512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     },
     {
       "src": "icon.png",
       "sizes": "256x256",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }
