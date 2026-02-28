@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Deception - خادع ومخدوع</title>
     
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#020617">
-    <link rel="apple-touch-icon" href="icon512.png">
+    <link rel="apple-touch-icon" href="./icon512.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,7 +35,6 @@
         .hidden-screen { display: none !important; }
         ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-thumb { background: #334155; border-radius: 5px; }
 
-        /* إطار الصور والأيقونات الأصلية */
         .image-container { width: 160px; height: 160px; border-radius: 24px; position: relative; display: flex; justify-content: center; align-items: center; margin-bottom: 1rem; }
         
         .app-logo-frame { width: 85%; height: 85%; object-fit: contain; border-radius: 20px; position: absolute; z-index: 10; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.4)); animation: float-img 3s ease-in-out infinite; }
@@ -48,18 +47,15 @@
         .spinner { width: 50px; height: 50px; border: 5px solid rgba(255, 255, 255, 0.1); border-top: 5px solid #38bdf8; border-radius: 50%; animation: spin 1s linear infinite; position: absolute; z-index: 5; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* عجلة الحظ */
         .slot-machine { background: #0f172a; border: 2px solid #38bdf8; border-radius: 12px; padding: 10px; font-size: 1.3rem; font-weight: 900; text-align: center; overflow: hidden; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }
         .slot-text { animation: blur-spin 0.08s linear infinite; }
         .slot-stopped { animation: none; text-shadow: 0 0 10px #38bdf8; color: #38bdf8; transform: scale(1.05); transition: 0.3s; }
         @keyframes blur-spin { 0% { filter: blur(2px); transform: translateY(-5px); opacity: 0.5;} 50% { filter: blur(4px); transform: translateY(0); opacity: 1;} 100% { filter: blur(2px); transform: translateY(5px); opacity: 0.5;} }
 
-        /* مدخل الأسماء */
         .name-input { width: 100%; background: #1e293b; border: 1px solid #334155; color: white; padding: 12px; border-radius: 12px; font-weight: bold; outline: none; transition: 0.3s; text-align: center;}
         .name-input:focus { border-color: #38bdf8; box-shadow: 0 0 10px rgba(56,189,248,0.5); }
         .name-input::placeholder { color: #64748b; font-weight: normal; }
         
-        /* شاشة التحميل المسبق */
         #loadingScreen { position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(3,7,18,0.95); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
     </style>
 </head>
@@ -69,7 +65,6 @@
     <div class="grid-overlay"></div>
     <div class="glow-orb"></div>
 
-    <!-- شاشة التحميل السريعة -->
     <div id="loadingScreen" class="hidden-screen">
         <div class="spinner w-16 h-16 border-t-sky-400 mb-6"></div>
         <h2 class="text-3xl font-black text-sky-400 animate-pulse">جاري تجهيز الصورة...</h2>
@@ -80,7 +75,7 @@
         <h1 class="text-6xl font-black mb-1 tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-500 text-center drop-shadow-2xl">
             Deception
         </h1>
-        <p class="text-sky-400 text-sm mb-6 font-bold">الإصدار المكتمل | أيقونات أصلية وسرعة فائقة</p>
+        <p class="text-sky-400 text-sm mb-6 font-bold">الإصدار المكتمل | صور دقيقة وحماية</p>
 
         <button onclick="navTo('setupScreen'); playClickSound();" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 px-6 rounded-2xl text-xl shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all transform hover:scale-105 active:scale-95">
             لعب على جهاز واحد 📱
@@ -107,17 +102,13 @@
                     <p id="t_tut1_desc">اللعبة ستختار كلمة سرية وستعرض لك <strong>صورة دقيقة</strong> لها. المواطنون يعرفون الكلمة، والجاسوس لا يعرفها! اسألوا بعضكم لكشف الجاسوس.</p>
                 </div>
                 <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700">
-                    <h3 class="font-bold text-yellow-400 mb-2 text-lg">⭐ الإضافات الجديدة:</h3>
+                    <h3 class="font-bold text-yellow-400 mb-2 text-lg">⭐ الإضافات:</h3>
                     <ul class="list-disc list-inside space-y-1">
-                        <li>أقسام شاملة ومتنوعة (أيقونات ملونة وتطبيقات أصلية).</li>
-                        <li>عجلة حظ ذكية لا تكرر الشخص السائل لتضمن العدل.</li>
+                        <li>أقسام شاملة ومتنوعة وصور أكثر دقة.</li>
+                        <li>عجلة حظ ذكية لا تكرر الشخص السائل.</li>
                         <li>زر "احتاج إلى سؤال" للمساعدة.</li>
                         <li>التصويت المتعدد لطرد أكثر من جاسوس.</li>
                     </ul>
-                </div>
-                <div class="bg-purple-900/30 border border-purple-800/50 p-4 rounded-xl">
-                    <h3 id="t_tut3" class="font-bold text-purple-400 mb-2 text-lg">🤯 جنون الارتياب (Paranoia):</h3>
-                    <p id="t_tut3_desc">أحياناً اللعبة تكذب ولا تضع جاسوساً! صوتوا بـ "لا يوجد جاسوس" للفوز معاً.</p>
                 </div>
             </div>
             <button onclick="closeTutorial()" id="t_tutGotIt" class="mt-6 w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl shadow-lg">فهمت، جاهز للعب! 👍</button>
@@ -155,7 +146,7 @@
                 <option value="jobs">👨‍⚕️ وظائف ومهن</option>
                 <option value="sports">⚽ رياضة</option>
                 <option value="objects">📦 أشياء وأدوات</option>
-                <option value="apps">📱 تطبيقات ومواقع</option>
+                <option value="apps">📱 تطبيقات (مشهورة)</option>
                 <option value="transport">🚗 وسائل مواصلات</option>
                 <option value="nature">🌲 طبيعة وظواهر</option>
                 <option value="clothes">👕 ملابس وأزياء</option>
@@ -198,14 +189,12 @@
         </div>
         <p id="t_namesDesc" class="text-gray-400 text-sm mb-2 text-center">أدخل أسماء أصدقائك لسهولة اللعب</p>
         
-        <div id="namesContainer" class="flex flex-col gap-3">
-            <!-- سيتم توليد حقول الأسماء هنا -->
-        </div>
+        <div id="namesContainer" class="flex flex-col gap-3"></div>
 
         <button onclick="prepareGameAndImages()" id="t_namesStart" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-2xl text-xl mt-4 transition-all active:scale-95 shadow-[0_0_15px_rgba(22,163,74,0.5)]">تجهيز البطاقات وبدء اللعب ✔️</button>
     </div>
 
-    <!-- 5. شاشة البطاقة مع نظام التحميل السريع جداً (الصور الملونة) -->
+    <!-- 5. شاشة البطاقة -->
     <div id="passPhoneScreen" class="hidden-screen w-full max-w-md flex flex-col items-center gap-4 z-10">
         <h2 id="t_passTo" class="text-lg font-bold text-gray-300 mb-[-5px]">أعطِ الهاتف إلى:</h2>
         <h2 id="currentPlayerTitle" class="text-4xl font-black text-white bg-blue-900/50 px-8 py-2 rounded-full border border-blue-500 shadow-lg">اللاعب 1</h2>
@@ -225,11 +214,8 @@
                 <div class="flip-card-back relative" id="cardBackFace">
                     <div class="image-container mt-6">
                         <div id="imageLoader" class="spinner hidden"></div>
-                        
-                        <!-- الصورة الأصلية أو الأيقونة الملونة -->
                         <img id="realImage" src="" class="real-image-frame hidden" alt="Icon">
-                        
-                        <!-- أيقونة بديلة للحماية في حال انقطاع النت (FontAwesome) -->
+                        <!-- أيقونة بديلة للحماية -->
                         <div id="fallbackIconWrapper" class="hidden absolute inset-0 flex items-center justify-center bg-slate-800 rounded-3xl border-2 border-slate-600 shadow-inner">
                             <i id="fallbackIcon" class="fa-solid fa-star text-[5rem] drop-shadow-lg text-sky-400"></i>
                         </div>
@@ -246,7 +232,7 @@
         <button id="nextPlayerBtn" onclick="nextPlayer()" class="w-full bg-green-600 hover:bg-green-500 text-white font-black py-4 rounded-2xl text-xl transition-all active:scale-95 hidden mt-2 shadow-[0_0_15px_rgba(22,163,74,0.5)]">التالي 📱</button>
     </div>
 
-    <!-- 6. اللعب (عجلة الحظ والمساعدة) -->
+    <!-- 6. اللعب -->
     <div id="gameScreen" class="hidden-screen w-full max-w-md flex flex-col items-center gap-5 z-10">
         
         <div class="w-full bg-slate-800/80 p-4 rounded-2xl border border-slate-700 shadow-lg mb-1">
@@ -260,7 +246,7 @@
             <div id="timerAlert" class="absolute inset-0 rounded-full border-8 border-red-500 opacity-0 pointer-events-none transition-opacity duration-200"></div>
         </div>
 
-        <!-- زر المساعدة البسيط -->
+        <!-- زر المساعدة -->
         <button onclick="getAIHint()" id="hintBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl border border-amber-400 shadow-lg flex justify-between px-4 items-center transition-all active:scale-95">
             <span id="t_hintBtn">احتاج إلى سؤال 💡</span>
             <span id="hintsLeft" class="bg-amber-900 px-2 py-1 rounded text-sm font-mono">3</span>
@@ -306,7 +292,7 @@
             
             <div class="relative w-28 h-28 mb-3 flex items-center justify-center">
                 <img id="resImageFinal" src="" class="w-full h-full object-contain drop-shadow-lg hidden" alt="">
-                <div id="resFallbackWrapper" class="hidden absolute inset-0 flex items-center justify-center bg-slate-700 rounded-3xl border-4 border-sky-400 shadow-lg">
+                <div id="resFallbackWrapperFinal" class="hidden absolute inset-0 flex items-center justify-center bg-slate-700 rounded-3xl border-4 border-sky-400 shadow-lg">
                     <i id="resFallbackIcon" class="fa-solid fa-star text-4xl text-white"></i>
                 </div>
             </div>
@@ -323,17 +309,15 @@
         <button onclick="navTo('setupScreen')" id="t_resHome" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-4 rounded-2xl text-xl mt-4 transition-all active:scale-95">تجهيز جولة جديدة ⚙️</button>
     </div>
 
-    <!-- الإشعارات -->
+    <!-- الإشعارات محمية من الأخطاء -->
     <div id="toast" class="fixed bottom-10 bg-slate-800 text-white px-6 py-3 rounded-full opacity-0 pointer-events-none border border-slate-600 z-50 font-bold text-center transition-opacity duration-300 shadow-2xl"></div>
 
     <script>
-        // دالة عرض الإشعارات مع التأكد من وجود العنصر
         function showToast(msg) {
             const toast = document.getElementById('toast');
             if (toast) { toast.innerText = msg; toast.style.opacity = '1'; setTimeout(() => toast.style.opacity = '0', 3000); }
         }
 
-        // --- 🎵 أصوات النقر وتيك توك فقط 🎵 ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx;
         function initAudio() { if(!audioCtx) audioCtx = new AudioContext(); if(audioCtx.state === 'suspended') audioCtx.resume(); }
@@ -360,46 +344,45 @@
 
         document.addEventListener('click', function(e) { initAudio(); if(e.target.closest('button') || e.target.closest('.flip-card') || e.target.closest('.slot-machine')) playClickSound(); });
 
-        // --- تسجيل خدمة PWA لدعم موقع PWABuilder ---
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(() => {});
-            });
+            window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
         }
 
-        // --- 📚 قاعدة البيانات (الصور الملونة 3D + أيقونات التطبيقات الأصلية) ---
-        // k = اسم الأيقونة في موقع Icons8 (Fluency Colored)
-        // domain = رابط الموقع الرسمي للحصول على اللوجو الأصلي
-        // i = أيقونة بديلة (FontAwesome) للحماية
+        // --- 📚 قاعدة البيانات الدقيقة جداً لحل التداخل (Bing Search Keywords) ---
         const db = {
             places: [
-                {w:"مستشفى", k:"hospital", i:"fa-hospital"},{w:"مطار", k:"airport", i:"fa-plane"},{w:"مدرسة", k:"school", i:"fa-school"},{w:"جامعة", k:"university", i:"fa-building-columns"},{w:"بنك", k:"bank", i:"fa-building-columns"},{w:"مطعم", k:"restaurant", i:"fa-utensils"},{w:"مقهى", k:"cafe", i:"fa-mug-hot"},{w:"فندق", k:"hotel", i:"fa-hotel"},{w:"شاطئ", k:"beach", i:"fa-umbrella-beach"},{w:"حديقة عامة", k:"park", i:"fa-tree"},{w:"سينما", k:"cinema", i:"fa-film"},{w:"مسرح", k:"theater", i:"fa-masks-theater"},{w:"ملعب", k:"stadium", i:"fa-futbol"},{w:"صالة رياضية", k:"gym", i:"fa-dumbbell"},{w:"سوبر ماركت", k:"supermarket", i:"fa-cart-shopping"},{w:"مخبز", k:"bakery", i:"fa-bread-slice"},{w:"صيدلية", k:"pharmacy", i:"fa-pills"},{w:"مكتبة", k:"library", i:"fa-book"},{w:"متحف", k:"museum", i:"fa-building-columns"},{w:"معرض فنون", k:"art-gallery", i:"fa-image"},{w:"سجن", k:"prison", i:"fa-border-all"},{w:"مركز شرطة", k:"police-station", i:"fa-building-shield"},{w:"محطة إطفاء", k:"fire-station", i:"fa-fire-extinguisher"},{w:"محطة قطار", k:"train-station", i:"fa-train"},{w:"محطة وقود", k:"gas-station", i:"fa-gas-pump"},{w:"قاعدة عسكرية", k:"military-base", i:"fa-shield-halved"},{w:"سفينة", k:"ship", i:"fa-ship"},{w:"مصنع", k:"factory", i:"fa-industry"},{w:"مزرعة", k:"farm", i:"fa-tractor"},{w:"حديقة حيوان", k:"zoo", i:"fa-paw"},{w:"مدينة ملاهي", k:"amusement-park", i:"fa-roller-coaster"},{w:"سيرك", k:"circus", i:"fa-tent"},{w:"مسجد", k:"mosque", i:"fa-mosque"},{w:"كنيسة", k:"church", i:"fa-church"},{w:"صالون حلاقة", k:"barbershop", i:"fa-scissors"},{w:"عيادة أسنان", k:"dentist", i:"fa-tooth"},{w:"مستشفى بيطري", k:"veterinary", i:"fa-cat"},{w:"سفارة", k:"embassy", i:"fa-passport"},{w:"محكمة", k:"courthouse", i:"fa-scale-balanced"},{w:"قصر", k:"palace", i:"fa-chess-rook"},{w:"ناطحة سحاب", k:"skyscraper", i:"fa-city"},{w:"مختبر", k:"laboratory", i:"fa-flask"},{w:"مرصد فلكي", k:"observatory", i:"fa-telescope"},{w:"منجم", k:"mine-cart", i:"fa-gem"},{w:"قارب", k:"boat", i:"fa-sailboat"},{w:"خيمة", k:"tent", i:"fa-campground"},{w:"كهف", k:"cave", i:"fa-mountain"},{w:"جزيرة", k:"island", i:"fa-umbrella-beach"},{w:"برج", k:"tower", i:"fa-tower-observation"},{w:"ملعب جولف", k:"golf", i:"fa-golf-ball-tee"},{w:"مسبح", k:"swimming-pool", i:"fa-water"},{w:"سوق", k:"marketplace", i:"fa-shop"},{w:"محطة فضاء", k:"space-station", i:"fa-rocket"},{w:"ميناء", k:"port", i:"fa-anchor"},{w:"منارة", k:"lighthouse", i:"fa-tower-broadcast"},{w:"قلعة", k:"castle", i:"fa-chess-rook"},{w:"مكتب بريد", k:"post-office", i:"fa-envelope"},{w:"دار أيتام", k:"orphanage", i:"fa-child-reaching"},{w:"ملعب تنس", k:"tennis-court", i:"fa-table-tennis-paddle-ball"},{w:"مقر شركة", k:"office-building", i:"fa-building"},{w:"مخيم", k:"camping", i:"fa-fire"},{w:"صالة بولينج", k:"bowling", i:"fa-bowling-ball"}
+                {w:"مستشفى", k:"hospital building", i:"fa-hospital"},{w:"مطار", k:"airport terminal", i:"fa-plane"},{w:"مدرسة", k:"school building", i:"fa-school"},{w:"جامعة", k:"university campus", i:"fa-building-columns"},{w:"بنك", k:"bank building", i:"fa-building-columns"},{w:"مطعم", k:"restaurant interior", i:"fa-utensils"},{w:"مقهى", k:"coffee shop interior", i:"fa-mug-hot"},{w:"فندق", k:"luxury hotel building", i:"fa-hotel"},{w:"شاطئ", k:"beautiful sandy beach", i:"fa-umbrella-beach"},{w:"حديقة عامة", k:"green city park", i:"fa-tree"},{w:"سينما", k:"movie theater screen", i:"fa-film"},{w:"مسرح", k:"theater stage", i:"fa-masks-theater"},{w:"ملعب", k:"soccer stadium", i:"fa-futbol"},{w:"صالة رياضية", k:"gym workout equipment", i:"fa-dumbbell"},{w:"سوبر ماركت", k:"supermarket aisle", i:"fa-cart-shopping"},{w:"مخبز", k:"bakery fresh bread", i:"fa-bread-slice"},{w:"صيدلية", k:"pharmacy store", i:"fa-pills"},{w:"مكتبة", k:"library books", i:"fa-book"},{w:"متحف", k:"museum exhibition", i:"fa-building-columns"},{w:"معرض فنون", k:"art gallery paintings", i:"fa-image"},{w:"سجن", k:"prison cells", i:"fa-border-all"},{w:"مركز شرطة", k:"police station building", i:"fa-building-shield"},{w:"محطة إطفاء", k:"fire station building", i:"fa-fire-extinguisher"},{w:"محطة قطار", k:"train station platform", i:"fa-train"},{w:"محطة وقود", k:"gas station", i:"fa-gas-pump"},{w:"قاعدة عسكرية", k:"military base", i:"fa-shield-halved"},{w:"سفينة", k:"large cruise ship", i:"fa-ship"},{w:"مصنع", k:"industrial factory", i:"fa-industry"},{w:"مزرعة", k:"green farm field", i:"fa-tractor"},{w:"حديقة حيوان", k:"zoo animals", i:"fa-paw"},{w:"مدينة ملاهي", k:"amusement park roller coaster", i:"fa-roller-coaster"},{w:"سيرك", k:"circus tent", i:"fa-tent"},{w:"مسجد", k:"beautiful mosque", i:"fa-mosque"},{w:"كنيسة", k:"church building", i:"fa-church"},{w:"صالون حلاقة", k:"barber shop interior", i:"fa-scissors"},{w:"عيادة أسنان", k:"dentist clinic", i:"fa-tooth"},{w:"مستشفى بيطري", k:"veterinary clinic", i:"fa-cat"},{w:"سفارة", k:"embassy building", i:"fa-passport"},{w:"محكمة", k:"courtroom interior", i:"fa-scale-balanced"},{w:"قصر", k:"royal palace", i:"fa-chess-rook"},{w:"ناطحة سحاب", k:"tall skyscraper", i:"fa-city"},{w:"مختبر", k:"science laboratory", i:"fa-flask"},{w:"مرصد فلكي", k:"astronomical observatory", i:"fa-telescope"},{w:"منجم", k:"underground mine", i:"fa-gem"},{w:"قارب", k:"small boat on water", i:"fa-sailboat"},{w:"خيمة", k:"camping tent", i:"fa-campground"},{w:"كهف", k:"dark cave", i:"fa-mountain"},{w:"جزيرة", k:"tropical island", i:"fa-umbrella-beach"},{w:"برج", k:"tall communication tower", i:"fa-tower-observation"},{w:"ملعب جولف", k:"golf course", i:"fa-golf-ball-tee"},{w:"مسبح", k:"swimming pool", i:"fa-water"},{w:"سوق", k:"marketplace", i:"fa-shop"},{w:"محطة فضاء", k:"space station", i:"fa-rocket"},{w:"ميناء", k:"ship port", i:"fa-anchor"},{w:"منارة", k:"lighthouse", i:"fa-tower-broadcast"},{w:"قلعة", k:"castle", i:"fa-chess-rook"}
             ],
             food: [
-                {w:"بيتزا", k:"pizza", i:"fa-pizza-slice"},{w:"برجر", k:"hamburger", i:"fa-burger"},{w:"شاورما", k:"kebab", i:"fa-hotdog"},{w:"سوشي", k:"sushi", i:"fa-fish"},{w:"مكرونة", k:"spaghetti", i:"fa-bowl-food"},{w:"بطاطس مقلية", k:"french-fries", i:"fa-fries"},{w:"دجاج مقلي", k:"fried-chicken", i:"fa-drumstick-bite"},{w:"ستيك لحم", k:"steak", i:"fa-meat"},{w:"سمك مشوي", k:"fish-food", i:"fa-fish"},{w:"أرز", k:"rice-bowl", i:"fa-bowl-rice"},{w:"سلطة", k:"salad", i:"fa-leaf"},{w:"شوربة", k:"soup-plate", i:"fa-bowl-food"},{w:"بيض مقلي", k:"fried-egg", i:"fa-egg"},{w:"خبز", k:"bread", i:"fa-bread-slice"},{w:"جبنة", k:"cheese", i:"fa-cheese"},{w:"تفاح", k:"apple", i:"fa-apple-whole"},{w:"موز", k:"banana", i:"fa-lemon"},{w:"برتقال", k:"orange", i:"fa-orange"},{w:"عنب", k:"grapes", i:"fa-circle-nodes"},{w:"بطيخ", k:"watermelon", i:"fa-watermelon"},{w:"فراولة", k:"strawberry", i:"fa-strawberry"},{w:"كرز", k:"cherry", i:"fa-cherry"},{w:"مانجو", k:"mango", i:"fa-lemon"},{w:"أناناس", k:"pineapple", i:"fa-apple-whole"},{w:"جزر", k:"carrot", i:"fa-carrot"},{w:"طماطم", k:"tomato", i:"fa-apple-whole"},{w:"خيار", k:"cucumber", i:"fa-carrot"},{w:"بصل", k:"onion", i:"fa-circle"},{w:"ثوم", k:"garlic", i:"fa-garlic"},{w:"فلفل حار", k:"chili-pepper", i:"fa-pepper-hot"},{w:"شوكولاتة", k:"chocolate-bar", i:"fa-cookie"},{w:"آيس كريم", k:"ice-cream-cone", i:"fa-ice-cream"},{w:"كيك", k:"cake", i:"fa-cake-candles"},{w:"دونات", k:"doughnut", i:"fa-circle-notch"},{w:"بسكويت", k:"cookie", i:"fa-cookie-bite"},{w:"قهوة", k:"cafe", i:"fa-mug-hot"},{w:"شاي", k:"tea", i:"fa-mug-hot"},{w:"عصير", k:"orange-juice", i:"fa-glass-water"},{w:"حليب", k:"milk", i:"fa-bottle-water"},{w:"عسل", k:"honey", i:"fa-jar"},{w:"زيتون", k:"olive", i:"fa-circle"},{w:"فلافل", k:"falafel", i:"fa-circle"},{w:"حمص", k:"hummus", i:"fa-bowl-food"},{w:"كبسة", k:"rice-bowl", i:"fa-bowl-rice"},{w:"برياني", k:"rice-bowl", i:"fa-bowl-rice"},{w:"فطيرة", k:"pie", i:"fa-chart-pie"},{w:"كرواسون", k:"croissant", i:"fa-bread-slice"},{w:"بان كيك", k:"pancake", i:"fa-pancakes"},{w:"وافل", k:"waffle", i:"fa-border-all"},{w:"نقانق", k:"sausage", i:"fa-hotdog"},{w:"تاكو", k:"taco", i:"fa-burger"},{w:"بوريتو", k:"burrito", i:"fa-hotdog"},{w:"باذنجان", k:"eggplant", i:"fa-leaf"},{w:"بروكلي", k:"broccoli", i:"fa-tree"},{w:"ذرة", k:"corn", i:"fa-seedling"},{w:"أفوكادو", k:"avocado", i:"fa-circle"},{w:"كيوي", k:"kiwi", i:"fa-circle"},{w:"رمان", k:"pomegranate", i:"fa-apple-whole"},{w:"ليمون", k:"lemon", i:"fa-lemon"},{w:"مكسرات", k:"peanuts", i:"fa-seedling"},{w:"فشار", k:"popcorn", i:"fa-film"},{w:"جمبري", k:"shrimp", i:"fa-shrimp"}
+                {w:"بيتزا", k:"delicious pizza slice", i:"fa-pizza-slice"},{w:"برجر", k:"juicy beef burger", i:"fa-burger"},{w:"شاورما", k:"shawarma wrap", i:"fa-hotdog"},{w:"سوشي", k:"fresh sushi rolls", i:"fa-fish"},{w:"مكرونة", k:"pasta plate", i:"fa-bowl-food"},{w:"بطاطس مقلية", k:"french fries", i:"fa-fries"},{w:"دجاج مقلي", k:"crispy fried chicken", i:"fa-drumstick-bite"},{w:"ستيك لحم", k:"grilled meat steak", i:"fa-meat"},{w:"سمك مشوي", k:"grilled fish food", i:"fa-fish"},{w:"أرز", k:"bowl of white rice", i:"fa-bowl-rice"},{w:"سلطة", k:"fresh green salad", i:"fa-leaf"},{w:"شوربة", k:"hot soup bowl", i:"fa-bowl-food"},{w:"بيض مقلي", k:"fried egg", i:"fa-egg"},{w:"خبز", k:"fresh baked bread", i:"fa-bread-slice"},{w:"جبنة", k:"piece of cheese", i:"fa-cheese"},{w:"تفاح", k:"fresh red apple", i:"fa-apple-whole"},{w:"موز", k:"ripe banana", i:"fa-lemon"},{w:"برتقال", k:"fresh orange fruit", i:"fa-orange"},{w:"عنب", k:"bunch of grapes", i:"fa-circle-nodes"},{w:"بطيخ", k:"sliced watermelon", i:"fa-watermelon"},{w:"فراولة", k:"fresh strawberries", i:"fa-strawberry"},{w:"كرز", k:"red cherries", i:"fa-cherry"},{w:"مانجو", k:"ripe mango", i:"fa-lemon"},{w:"أناناس", k:"pineapple fruit", i:"fa-apple-whole"},{w:"جزر", k:"fresh carrots", i:"fa-carrot"},{w:"طماطم", k:"red tomatoes", i:"fa-apple-whole"},{w:"خيار", k:"green cucumber", i:"fa-carrot"},{w:"بصل", k:"fresh onions", i:"fa-circle"},{w:"ثوم", k:"garlic cloves", i:"fa-garlic"},{w:"فلفل حار", k:"red chili pepper", i:"fa-pepper-hot"},{w:"شوكولاتة", k:"chocolate bar", i:"fa-cookie"},{w:"آيس كريم", k:"ice cream cone", i:"fa-ice-cream"},{w:"كيك", k:"delicious birthday cake", i:"fa-cake-candles"},{w:"دونات", k:"sweet donut", i:"fa-circle-notch"},{w:"بسكويت", k:"chocolate chip cookies", i:"fa-cookie-bite"},{w:"قهوة", k:"cup of hot coffee", i:"fa-mug-hot"},{w:"شاي", k:"cup of hot tea", i:"fa-mug-hot"},{w:"عصير", k:"glass of fresh juice", i:"fa-glass-water"},{w:"حليب", k:"glass of milk", i:"fa-bottle-water"},{w:"عسل", k:"jar of sweet honey", i:"fa-jar"},{w:"زيتون", k:"green olives", i:"fa-circle"},{w:"فلافل", k:"falafel balls", i:"fa-circle"},{w:"حمص", k:"hummus plate", i:"fa-bowl-food"},{w:"كبسة", k:"kabsa rice dish", i:"fa-bowl-rice"},{w:"فطيرة", k:"baked pie", i:"fa-chart-pie"},{w:"كرواسون", k:"fresh croissant", i:"fa-bread-slice"},{w:"بان كيك", k:"pancakes with syrup", i:"fa-pancakes"},{w:"وافل", k:"sweet waffle", i:"fa-border-all"},{w:"نقانق", k:"cooked sausages", i:"fa-hotdog"},{w:"تاكو", k:"mexican taco", i:"fa-burger"},{w:"باذنجان", k:"eggplant vegetable", i:"fa-leaf"},{w:"بروكلي", k:"green broccoli", i:"fa-tree"},{w:"ذرة", k:"sweet corn", i:"fa-seedling"},{w:"أفوكادو", k:"avocado fruit", i:"fa-circle"},{w:"كيوي", k:"kiwi fruit", i:"fa-circle"},{w:"رمان", k:"pomegranate fruit", i:"fa-apple-whole"},{w:"ليمون", k:"yellow lemon", i:"fa-lemon"},{w:"مكسرات", k:"mixed nuts peanuts", i:"fa-seedling"},{w:"فشار", k:"popcorn bucket", i:"fa-film"},{w:"جمبري", k:"cooked shrimp", i:"fa-shrimp"}
             ],
             animals: [
-                {w:"أسد", k:"lion", i:"fa-paw"},{w:"نمر", k:"tiger", i:"fa-paw"},{w:"فهد", k:"leopard", i:"fa-paw"},{w:"فيل", k:"elephant", i:"fa-paw"},{w:"زرافة", k:"giraffe", i:"fa-paw"},{w:"حمار وحشي", k:"zebra", i:"fa-paw"},{w:"قرد", k:"monkey", i:"fa-paw"},{w:"غوريلا", k:"gorilla", i:"fa-paw"},{w:"دب", k:"bear", i:"fa-paw"},{w:"دب قطبي", k:"polar-bear", i:"fa-paw"},{w:"ذئب", k:"wolf", i:"fa-paw"},{w:"ثعلب", k:"fox", i:"fa-paw"},{w:"كلب", k:"dog", i:"fa-dog"},{w:"قطة", k:"cat", i:"fa-cat"},{w:"أرنب", k:"rabbit", i:"fa-paw"},{w:"حصان", k:"horse", i:"fa-horse"},{w:"بقرة", k:"cow", i:"fa-cow"},{w:"خروف", k:"sheep", i:"fa-paw"},{w:"ماعز", k:"goat", i:"fa-paw"},{w:"خنزير", k:"pig", i:"fa-paw"},{w:"غزال", k:"deer", i:"fa-paw"},{w:"جمل", k:"camel", i:"fa-paw"},{w:"فأر", k:"mouse", i:"fa-paw"},{w:"خفاش", k:"bat", i:"fa-paw"},{w:"نسر", k:"eagle", i:"fa-crow"},{w:"بومة", k:"owl", i:"fa-crow"},{w:"ببغاء", k:"parrot", i:"fa-crow"},{w:"طاووس", k:"peacock", i:"fa-crow"},{w:"نعامة", k:"ostrich", i:"fa-crow"},{w:"تمساح", k:"crocodile", i:"fa-staff-snake"},{w:"ثعبان", k:"snake", i:"fa-staff-snake"},{w:"سلحفاة", k:"turtle", i:"fa-paw"},{w:"ضفدع", k:"frog", i:"fa-frog"},{w:"قرش", k:"shark", i:"fa-fish-fins"},{w:"حوت", k:"whale", i:"fa-fish-fins"},{w:"دلفين", k:"dolphin", i:"fa-fish-fins"},{w:"أخطبوط", k:"octopus", i:"fa-spaghetti"},{w:"سلطعون", k:"crab", i:"fa-spider"},{w:"عنكبوت", k:"spider", i:"fa-spider"},{w:"عقرب", k:"scorpion", i:"fa-spider"},{w:"نملة", k:"ant", i:"fa-bug"},{w:"نحلة", k:"bee", i:"fa-bug"},{w:"فراشة", k:"butterfly", i:"fa-bug"},{w:"خنفساء", k:"ladybird", i:"fa-bug"},{w:"ذبابة", k:"fly-insect", i:"fa-bug"},{w:"دودة", k:"worm", i:"fa-worm"},{w:"حلزون", k:"snail", i:"fa-bug"},{w:"بطريق", k:"penguin", i:"fa-paw"},{w:"فقمة", k:"seal", i:"fa-paw"},{w:"فرس النهر", k:"hippopotamus", i:"fa-paw"},{w:"وحيد القرن", k:"rhinoceros", i:"fa-paw"},{w:"كنغر", k:"kangaroo", i:"fa-paw"},{w:"كوالا", k:"koala", i:"fa-paw"},{w:"سنجاب", k:"squirrel", i:"fa-paw"},{w:"قنفذ", k:"hedgehog", i:"fa-paw"},{w:"ديناصور", k:"dinosaur", i:"fa-dragon"},{w:"تنين", k:"dragon", i:"fa-dragon"},{w:"حمامة", k:"dove", i:"fa-dove"},{w:"دجاجة", k:"chicken", i:"fa-crow"},{w:"بطة", k:"duck", i:"fa-crow"},{w:"قنديل البحر", k:"jellyfish", i:"fa-water"}
+                {w:"أسد", k:"male lion animal", i:"fa-paw"},{w:"نمر", k:"tiger animal", i:"fa-paw"},{w:"فهد", k:"cheetah animal", i:"fa-paw"},{w:"فيل", k:"elephant animal", i:"fa-paw"},{w:"زرافة", k:"giraffe animal", i:"fa-paw"},{w:"حمار وحشي", k:"zebra animal", i:"fa-paw"},{w:"قرد", k:"monkey animal", i:"fa-paw"},{w:"غوريلا", k:"gorilla animal", i:"fa-paw"},{w:"دب", k:"brown bear animal", i:"fa-paw"},{w:"دب قطبي", k:"polar bear animal", i:"fa-paw"},{w:"ذئب", k:"wolf animal", i:"fa-paw"},{w:"ثعلب", k:"fox animal", i:"fa-paw"},{w:"كلب", k:"cute dog", i:"fa-dog"},{w:"قطة", k:"cute cat", i:"fa-cat"},{w:"أرنب", k:"cute rabbit", i:"fa-paw"},{w:"حصان", k:"beautiful horse", i:"fa-horse"},{w:"بقرة", k:"cow animal", i:"fa-cow"},{w:"خروف", k:"sheep animal", i:"fa-paw"},{w:"ماعز", k:"goat animal", i:"fa-paw"},{w:"خنزير", k:"pig animal", i:"fa-paw"},{w:"غزال", k:"deer animal", i:"fa-paw"},{w:"جمل", k:"camel animal", i:"fa-paw"},{w:"فأر", k:"mouse animal", i:"fa-paw"},{w:"خفاش", k:"bat animal", i:"fa-paw"},{w:"نسر", k:"eagle bird", i:"fa-crow"},{w:"بومة", k:"owl bird", i:"fa-crow"},{w:"ببغاء", k:"parrot bird", i:"fa-crow"},{w:"طاووس", k:"peacock bird", i:"fa-crow"},{w:"نعامة", k:"ostrich bird", i:"fa-crow"},{w:"تمساح", k:"crocodile animal", i:"fa-staff-snake"},{w:"ثعبان", k:"snake animal", i:"fa-staff-snake"},{w:"سلحفاة", k:"turtle animal", i:"fa-paw"},{w:"ضفدع", k:"frog animal", i:"fa-frog"},{w:"قرش", k:"shark fish", i:"fa-fish-fins"},{w:"حوت", k:"whale ocean", i:"fa-fish-fins"},{w:"دلفين", k:"dolphin ocean", i:"fa-fish-fins"},{w:"أخطبوط", k:"octopus ocean", i:"fa-spaghetti"},{w:"سلطعون", k:"crab animal", i:"fa-spider"},{w:"عنكبوت", k:"spider insect", i:"fa-spider"},{w:"عقرب", k:"scorpion insect", i:"fa-spider"},{w:"نملة", k:"ant insect", i:"fa-bug"},{w:"نحلة", k:"bee insect", i:"fa-bug"},{w:"فراشة", k:"butterfly insect", i:"fa-bug"},{w:"خنفساء", k:"ladybug insect", i:"fa-bug"},{w:"ذبابة", k:"housefly insect", i:"fa-bug"},{w:"دودة", k:"worm animal", i:"fa-worm"},{w:"حلزون", k:"snail animal", i:"fa-bug"},{w:"بطريق", k:"penguin animal", i:"fa-paw"},{w:"فقمة", k:"seal animal", i:"fa-paw"},{w:"فرس النهر", k:"hippopotamus animal", i:"fa-paw"},{w:"وحيد القرن", k:"rhinoceros animal", i:"fa-paw"},{w:"كنغر", k:"kangaroo animal", i:"fa-paw"},{w:"كوالا", k:"koala animal", i:"fa-paw"},{w:"سنجاب", k:"squirrel animal", i:"fa-paw"},{w:"قنفذ", k:"hedgehog animal", i:"fa-paw"},{w:"ديناصور", k:"dinosaur animal", i:"fa-dragon"},{w:"تنين", k:"dragon fantasy", i:"fa-dragon"},{w:"حمامة", k:"dove bird", i:"fa-dove"},{w:"دجاجة", k:"chicken bird", i:"fa-crow"},{w:"بطة", k:"duck bird", i:"fa-crow"},{w:"قنديل البحر", k:"jellyfish ocean", i:"fa-water"}
             ],
             jobs: [
-                {w:"طبيب", k:"medical-doctor", i:"fa-user-doctor"},{w:"ممرض", k:"nurse", i:"fa-user-nurse"},{w:"مهندس", k:"engineer", i:"fa-helmet-safety"},{w:"معلم", k:"teacher", i:"fa-chalkboard-user"},{w:"طيار", k:"pilot", i:"fa-plane"},{w:"شرطي", k:"police-officer", i:"fa-user-shield"},{w:"إطفائي", k:"firefighter", i:"fa-fire-extinguisher"},{w:"محامي", k:"lawyer", i:"fa-scale-balanced"},{w:"قاضي", k:"judge", i:"fa-gavel"},{w:"طباخ", k:"chef", i:"fa-kitchen-set"},{w:"خباز", k:"baker", i:"fa-bread-slice"},{w:"نجار", k:"carpenter", i:"fa-hammer"},{w:"حداد", k:"blacksmith", i:"fa-hammer"},{w:"مزارع", k:"farmer", i:"fa-tractor"},{w:"صياد سمك", k:"fisherman", i:"fa-fish"},{w:"رائد فضاء", k:"astronaut", i:"fa-user-astronaut"},{w:"عالم", k:"scientist", i:"fa-microscope"},{w:"مبرمج", k:"programmer", i:"fa-laptop-code"},{w:"رسام", k:"painter", i:"fa-palette"},{w:"مغني", k:"singer", i:"fa-microphone"},{w:"ممثل", k:"actor", i:"fa-masks-theater"},{w:"مخرج", k:"director", i:"fa-clapperboard"},{w:"مصور", k:"photographer", i:"fa-camera"},{w:"صحفي", k:"journalist", i:"fa-newspaper"},{w:"مذيع", k:"news-reporter", i:"fa-tv"},{w:"رياضي", k:"athlete", i:"fa-person-running"},{w:"لاعب كرة قدم", k:"soccer-player", i:"fa-futbol"},{w:"جندي", k:"soldier", i:"fa-person-military-rifle"},{w:"بحار", k:"sailor", i:"fa-anchor"},{w:"سائق", k:"driver", i:"fa-car"},{w:"حلاق", k:"barber", i:"fa-scissors"},{w:"خياط", k:"tailor", i:"fa-shirt"},{w:"عامل نظافة", k:"cleaner", i:"fa-broom"},{w:"سباك", k:"plumber", i:"fa-wrench"},{w:"كهربائي", k:"electrician", i:"fa-bolt"},{w:"محاسب", k:"accountant", i:"fa-calculator"},{w:"رجل أعمال", k:"businessman", i:"fa-user-tie"},{w:"سياسي", k:"politician", i:"fa-podium"},{w:"ساعي بريد", k:"postman", i:"fa-envelope"},{w:"حارس أمن", k:"security-guard", i:"fa-shield-halved"},{w:"جراح", k:"surgeon", i:"fa-scalpel"},{w:"طبيب أسنان", k:"dentist", i:"fa-tooth"},{w:"طبيب بيطري", k:"veterinarian", i:"fa-dog"},{w:"صيدلي", k:"pharmacist", i:"fa-pills"},{w:"ميكانيكي", k:"mechanic", i:"fa-wrench"},{w:"جزار", k:"butcher", i:"fa-meat"},{w:"صائغ", k:"jeweler", i:"fa-gem"},{w:"عالم فلك", k:"astronomer", i:"fa-telescope"},{w:"كابتن سفينة", k:"ship-captain", i:"fa-ship"},{w:"مضيفة طيران", k:"flight-attendant", i:"fa-plane-up"},{w:"مترجم", k:"translator", i:"fa-language"},{w:"كاتب", k:"writer", i:"fa-pen"},{w:"مرشد سياحي", k:"tour-guide", i:"fa-map"},{w:"عامل منجم", k:"miner", i:"fa-helmet-safety"},{w:"مفتش", k:"inspector", i:"fa-magnifying-glass"},{w:"محقق", k:"detective", i:"fa-user-secret"},{w:"حارس شخصي", k:"bodyguard", i:"fa-user-shield"},{w:"مزارع نحل", k:"beekeeper", i:"fa-bug"},{w:"عالم آثار", k:"archaeologist", i:"fa-skull"},{w:"موسيقي", k:"musician", i:"fa-guitar"}
+                {w:"طبيب", k:"doctor in hospital working", i:"fa-user-doctor"},{w:"ممرض", k:"nurse working", i:"fa-user-nurse"},{w:"مهندس", k:"engineer wearing helmet", i:"fa-helmet-safety"},{w:"معلم", k:"teacher in classroom", i:"fa-chalkboard-user"},{w:"طيار", k:"airline pilot uniform", i:"fa-plane"},{w:"شرطي", k:"police officer uniform", i:"fa-user-shield"},{w:"إطفائي", k:"firefighter uniform", i:"fa-fire-extinguisher"},{w:"محامي", k:"lawyer in court", i:"fa-scale-balanced"},{w:"قاضي", k:"judge in courtroom", i:"fa-gavel"},{w:"طباخ", k:"chef cooking food", i:"fa-kitchen-set"},{w:"خباز", k:"baker baking bread", i:"fa-bread-slice"},{w:"نجار", k:"carpenter working wood", i:"fa-hammer"},{w:"حداد", k:"blacksmith working metal", i:"fa-hammer"},{w:"مزارع", k:"farmer in field", i:"fa-tractor"},{w:"صياد سمك", k:"fisherman fishing", i:"fa-fish"},{w:"رائد فضاء", k:"astronaut in space", i:"fa-user-astronaut"},{w:"عالم", k:"scientist in lab", i:"fa-microscope"},{w:"مبرمج", k:"programmer coding computer", i:"fa-laptop-code"},{w:"رسام", k:"artist painting canvas", i:"fa-palette"},{w:"مغني", k:"singer with microphone", i:"fa-microphone"},{w:"ممثل", k:"actor performing stage", i:"fa-masks-theater"},{w:"مخرج", k:"movie director on set", i:"fa-clapperboard"},{w:"مصور", k:"photographer taking photo", i:"fa-camera"},{w:"صحفي", k:"journalist reporter", i:"fa-newspaper"},{w:"مذيع", k:"news anchor studio", i:"fa-tv"},{w:"رياضي", k:"athlete running", i:"fa-person-running"},{w:"لاعب كرة قدم", k:"soccer player playing", i:"fa-futbol"},{w:"جندي", k:"soldier in uniform", i:"fa-person-military-rifle"},{w:"بحار", k:"sailor on ship", i:"fa-anchor"},{w:"سائق", k:"taxi driver", i:"fa-car"},{w:"حلاق", k:"barber cutting hair", i:"fa-scissors"},{w:"خياط", k:"tailor sewing clothes", i:"fa-shirt"},{w:"عامل نظافة", k:"cleaner working", i:"fa-broom"},{w:"سباك", k:"plumber working", i:"fa-wrench"},{w:"كهربائي", k:"electrician working", i:"fa-bolt"},{w:"محاسب", k:"accountant working", i:"fa-calculator"},{w:"رجل أعمال", k:"businessman in suit", i:"fa-user-tie"},{w:"سياسي", k:"politician speech", i:"fa-podium"},{w:"ساعي بريد", k:"postman delivering mail", i:"fa-envelope"},{w:"حارس أمن", k:"security guard uniform", i:"fa-shield-halved"},{w:"جراح", k:"surgeon operating hospital", i:"fa-scalpel"},{w:"طبيب أسنان", k:"dentist working clinic", i:"fa-tooth"},{w:"طبيب بيطري", k:"veterinarian with dog", i:"fa-dog"},{w:"صيدلي", k:"pharmacist in pharmacy", i:"fa-pills"},{w:"ميكانيكي", k:"car mechanic working", i:"fa-wrench"},{w:"جزار", k:"butcher cutting meat", i:"fa-meat"},{w:"صائغ", k:"jeweler working rings", i:"fa-gem"},{w:"عالم فلك", k:"astronomer looking through telescope", i:"fa-telescope"},{w:"كابتن سفينة", k:"ship captain uniform", i:"fa-ship"},{w:"مضيفة طيران", k:"flight attendant inside airplane", i:"fa-plane-up"},{w:"مترجم", k:"translator working language", i:"fa-language"},{w:"كاتب", k:"writer writing book", i:"fa-pen"},{w:"مرشد سياحي", k:"tour guide showing map", i:"fa-map"},{w:"عامل منجم", k:"miner working underground", i:"fa-helmet-safety"},{w:"مفتش", k:"inspector investigating", i:"fa-magnifying-glass"},{w:"محقق", k:"detective investigating scene", i:"fa-user-secret"},{w:"حارس شخصي", k:"bodyguard in suit", i:"fa-user-shield"}
             ],
             sports: [
-                {w:"كرة قدم", k:"soccer", i:"fa-futbol"},{w:"كرة سلة", k:"basketball", i:"fa-basketball"},{w:"تنس", k:"tennis", i:"fa-table-tennis-paddle-ball"},{w:"كرة طائرة", k:"volleyball", i:"fa-volleyball"},{w:"بيسبول", k:"baseball", i:"fa-baseball"},{w:"جولف", k:"golf", i:"fa-golf-ball-tee"},{w:"ملاكمة", k:"boxing", i:"fa-hand-back-fist"},{w:"كاراتيه", k:"karate", i:"fa-user-ninja"},{w:"سباحة", k:"swimming", i:"fa-person-swimming"},{w:"غوص", k:"scuba-diving", i:"fa-mask"},{w:"تزلج", k:"skiing", i:"fa-person-skiing"},{w:"تزلج على الجليد", k:"ice-skating", i:"fa-person-skating"},{w:"تزلج على اللوح", k:"skateboarding", i:"fa-person-snowboarding"},{w:"ركوب الدراجات", k:"cycling", i:"fa-person-biking"},{w:"ركوب الخيل", k:"horseback-riding", i:"fa-horse"},{w:"جودو", k:"judo", i:"fa-user-ninja"},{w:"مصارعة", k:"wrestling", i:"fa-user-ninja"},{w:"رفع أثقال", k:"weightlifting", i:"fa-dumbbell"},{w:"جمباز", k:"gymnastics", i:"fa-person-running"},{w:"ركض", k:"running", i:"fa-person-running"},{w:"ماراثون", k:"marathon", i:"fa-person-running"},{w:"رماية", k:"archery", i:"fa-bullseye"},{w:"مبارزة", k:"fencing", i:"fa-khanda"},{w:"بولينج", k:"bowling", i:"fa-bowling-ball"},{w:"بلياردو", k:"billiards", i:"fa-circle"},{w:"تنس طاولة", k:"ping-pong", i:"fa-table-tennis-paddle-ball"},{w:"تنس الريشة", k:"badminton", i:"fa-table-tennis-paddle-ball"},{w:"كريكت", k:"cricket", i:"fa-baseball"},{w:"رجبي", k:"rugby", i:"fa-football"},{w:"كرة يد", k:"handball", i:"fa-baseball"},{w:"تزلج مائي", k:"water-skiing", i:"fa-water"},{w:"إبحار", k:"sailing", i:"fa-sailboat"},{w:"تسلق الجبال", k:"climbing", i:"fa-mountain"},{w:"قفز مظلي", k:"skydiving", i:"fa-parachute-box"},{w:"شطرنج", k:"chess", i:"fa-chess"},{w:"يوغا", k:"yoga", i:"fa-spa"},{w:"بيلاتس", k:"pilates", i:"fa-spa"},{w:"زومبا", k:"zumba", i:"fa-music"},{w:"كمال أجسام", k:"bodybuilding", i:"fa-dumbbell"},{w:"تايكوندو", k:"taekwondo", i:"fa-user-ninja"},{w:"كونغ فو", k:"kung-fu", i:"fa-user-ninja"},{w:"سومو", k:"sumo", i:"fa-user-ninja"},{w:"ركوب الأمواج", k:"surfing", i:"fa-water"},{w:"تزلج بعجلات", k:"roller-skates", i:"fa-shoe-prints"},{w:"وثب طويل", k:"long-jump", i:"fa-person-running"},{w:"وثب عالي", k:"high-jump", i:"fa-person-running"},{w:"رمي الرمح", k:"javelin-throw", i:"fa-arrow-up"},{w:"رمي القرص", k:"discus-throw", i:"fa-circle"},{w:"رمي الجلة", k:"shot-put", i:"fa-circle"},{w:"سباق تتابع", k:"relay-race", i:"fa-person-running"},{w:"كرة الماء", k:"water-polo", i:"fa-water"},{w:"سباحة إيقاعية", k:"synchronized-swimming", i:"fa-water"},{w:"تزلج فني", k:"figure-skating", i:"fa-person-skating"},{w:"هوكي الجليد", k:"ice-hockey", i:"fa-hockey-puck"},{w:"هوكي الحقل", k:"field-hockey", i:"fa-hockey-puck"},{w:"كروس فيت", k:"crossfit", i:"fa-dumbbell"},{w:"باركور", k:"parkour", i:"fa-person-running"},{w:"تجديف", k:"rowing", i:"fa-sailboat"},{w:"صيد سمك", k:"fishing", i:"fa-fish"},{w:"سكواش", k:"squash", i:"fa-baseball"},{w:"ترياتلون", k:"triathlon", i:"fa-person-swimming"}
+                {w:"كرة قدم", k:"soccer ball on grass", i:"fa-futbol"},{w:"كرة سلة", k:"basketball hoop game", i:"fa-basketball"},{w:"تنس", k:"tennis racket ball", i:"fa-table-tennis-paddle-ball"},{w:"كرة طائرة", k:"volleyball game", i:"fa-volleyball"},{w:"بيسبول", k:"baseball bat ball", i:"fa-baseball"},{w:"جولف", k:"golf ball grass", i:"fa-golf-ball-tee"},{w:"ملاكمة", k:"boxing gloves", i:"fa-hand-back-fist"},{w:"كاراتيه", k:"karate martial arts", i:"fa-user-ninja"},{w:"سباحة", k:"swimming pool sport", i:"fa-person-swimming"},{w:"غوص", k:"scuba diving underwater", i:"fa-mask"},{w:"تزلج", k:"snow skiing mountain", i:"fa-person-skiing"},{w:"تزلج على الجليد", k:"ice skating rink", i:"fa-person-skating"},{w:"تزلج على اللوح", k:"skateboarding trick", i:"fa-person-snowboarding"},{w:"ركوب الدراجات", k:"cycling bicycle race", i:"fa-person-biking"},{w:"ركوب الخيل", k:"horse riding sport", i:"fa-horse"},{w:"جودو", k:"judo martial arts", i:"fa-user-ninja"},{w:"مصارعة", k:"wrestling sport", i:"fa-user-ninja"},{w:"رفع أثقال", k:"weightlifting sport", i:"fa-dumbbell"},{w:"جمباز", k:"gymnastics sport", i:"fa-person-running"},{w:"ركض", k:"running sport track", i:"fa-person-running"},{w:"ماراثون", k:"marathon race running", i:"fa-person-running"},{w:"رماية", k:"archery bow arrow", i:"fa-bullseye"},{w:"مبارزة", k:"fencing sport sword", i:"fa-khanda"},{w:"بولينج", k:"bowling pins ball", i:"fa-bowling-ball"},{w:"بلياردو", k:"billiards pool table", i:"fa-circle"},{w:"تنس طاولة", k:"table tennis ping pong", i:"fa-table-tennis-paddle-ball"},{w:"تنس الريشة", k:"badminton sport", i:"fa-table-tennis-paddle-ball"},{w:"كريكت", k:"cricket sport", i:"fa-baseball"},{w:"رجبي", k:"rugby sport", i:"fa-football"},{w:"كرة يد", k:"handball sport", i:"fa-baseball"},{w:"تزلج مائي", k:"surfing ocean waves", i:"fa-water"},{w:"إبحار", k:"sailing boat ocean", i:"fa-sailboat"},{w:"تسلق الجبال", k:"mountain climbing sport", i:"fa-mountain"},{w:"قفز مظلي", k:"skydiving parachuting", i:"fa-parachute-box"},{w:"شطرنج", k:"chess board game", i:"fa-chess"},{w:"يوغا", k:"yoga meditation sport", i:"fa-spa"},{w:"بيلاتس", k:"pilates exercise", i:"fa-spa"},{w:"زومبا", k:"zumba dance exercise", i:"fa-music"},{w:"كمال أجسام", k:"bodybuilding muscles", i:"fa-dumbbell"},{w:"تايكوندو", k:"taekwondo martial arts", i:"fa-user-ninja"},{w:"كونغ فو", k:"kung fu martial arts", i:"fa-user-ninja"}
             ],
             objects: [
-                {w:"كرسي", k:"chair", i:"fa-chair"},{w:"طاولة", k:"table", i:"fa-table"},{w:"سرير", k:"bed", i:"fa-bed"},{w:"أريكة", k:"sofa", i:"fa-couch"},{w:"باب", k:"door", i:"fa-door-closed"},{w:"نافذة", k:"window", i:"fa-border-all"},{w:"تلفزيون", k:"tv", i:"fa-tv"},{w:"ثلاجة", k:"fridge", i:"fa-snowflake"},{w:"غسالة", k:"washing-machine", i:"fa-shirt"},{w:"مكواة", k:"iron", i:"fa-shirt"},{w:"مكنسة", k:"broom", i:"fa-broom"},{w:"مصباح", k:"light-bulb", i:"fa-lightbulb"},{w:"ساعة", k:"clock", i:"fa-clock"},{w:"هاتف", k:"smartphone", i:"fa-mobile-screen"},{w:"كمبيوتر", k:"computer", i:"fa-desktop"},{w:"كاميرا", k:"camera", i:"fa-camera"},{w:"كتاب", k:"book", i:"fa-book"},{w:"دفتر", k:"notebook", i:"fa-book-open"},{w:"قلم", k:"pen", i:"fa-pen"},{w:"حقيبة", k:"backpack", i:"fa-briefcase"},{w:"نظارة", k:"glasses", i:"fa-glasses"},{w:"مفتاح", k:"key", i:"fa-key"},{w:"قفل", k:"padlock", i:"fa-lock"},{w:"مقص", k:"scissors", i:"fa-scissors"},{w:"سكين", k:"knife", i:"fa-utensils"},{w:"شوكة", k:"fork", i:"fa-utensils"},{w:"ملعقة", k:"spoon", i:"fa-utensils"},{w:"صحن", k:"plate", i:"fa-circle"},{w:"كوب", k:"cup", i:"fa-mug-hot"},{w:"إبريق", k:"teapot", i:"fa-mug-hot"},{w:"زجاجة", k:"bottle", i:"fa-bottle-water"},{w:"مرآة", k:"mirror", i:"fa-border-all"},{w:"مشط", k:"comb", i:"fa-bars"},{w:"فرشاة أسنان", k:"toothbrush", i:"fa-tooth"},{w:"صابون", k:"soap", i:"fa-soap"},{w:"منشفة", k:"towel", i:"fa-scroll"},{w:"مظلة", k:"umbrella", i:"fa-umbrella"},{w:"سلة مهملات", k:"trash-can", i:"fa-trash"},{w:"سجادة", k:"carpet", i:"fa-scroll"},{w:"ستارة", k:"curtain", i:"fa-person-booth"},{w:"وسادة", k:"pillow", i:"fa-bed"},{w:"بطانية", k:"blanket", i:"fa-bed"},{w:"خزانة", k:"wardrobe", i:"fa-box"},{w:"مروحة", k:"fan", i:"fa-fan"},{w:"مكيف", k:"air-conditioner", i:"fa-snowflake"},{w:"مدفأة", k:"fireplace", i:"fa-fire"},{w:"شمعة", k:"candle", i:"fa-fire-flame-simple"},{w:"ولاعة", k:"lighter", i:"fa-fire"},{w:"بطارية", k:"battery", i:"fa-battery-full"},{w:"شاحن", k:"charger", i:"fa-plug"},{w:"سماعات", k:"headphones", i:"fa-headphones"},{w:"ميكروفون", k:"microphone", i:"fa-microphone"},{w:"راديو", k:"radio", i:"fa-radio"},{w:"لوحة", k:"painting", i:"fa-image"},{w:"مزهرية", k:"vase", i:"fa-seedling"},{w:"صندوق", k:"box", i:"fa-box"},{w:"هدية", k:"gift", i:"fa-gift"},{w:"بالون", k:"balloon", i:"fa-circle"},{w:"لعبة", k:"teddy-bear", i:"fa-puzzle-piece"},{w:"دمية", k:"doll", i:"fa-child"},{w:"دراجة", k:"bicycle", i:"fa-bicycle"}
+                {w:"كرسي", k:"wooden chair furniture", i:"fa-chair"},{w:"طاولة", k:"wooden table furniture", i:"fa-table"},{w:"سرير", k:"comfortable bed bedroom", i:"fa-bed"},{w:"أريكة", k:"sofa couch living room", i:"fa-couch"},{w:"باب", k:"wooden door", i:"fa-door-closed"},{w:"نافذة", k:"glass window", i:"fa-border-all"},{w:"تلفزيون", k:"modern flat screen tv", i:"fa-tv"},{w:"ثلاجة", k:"kitchen fridge refrigerator", i:"fa-snowflake"},{w:"غسالة", k:"washing machine laundry", i:"fa-shirt"},{w:"مكواة", k:"clothes iron", i:"fa-shirt"},{w:"مكنسة", k:"sweeping broom", i:"fa-broom"},{w:"مصباح", k:"glowing light bulb", i:"fa-lightbulb"},{w:"ساعة", k:"wall clock", i:"fa-clock"},{w:"هاتف", k:"modern smartphone", i:"fa-mobile-screen"},{w:"كمبيوتر", k:"desktop computer monitor", i:"fa-desktop"},{w:"كاميرا", k:"photography digital camera", i:"fa-camera"},{w:"كتاب", k:"thick reading book", i:"fa-book"},{w:"دفتر", k:"writing notebook", i:"fa-book-open"},{w:"قلم", k:"writing pen", i:"fa-pen"},{w:"حقيبة", k:"travel backpack bag", i:"fa-briefcase"},{w:"نظارة", k:"reading eyeglasses", i:"fa-glasses"},{w:"مفتاح", k:"metal door key", i:"fa-key"},{w:"قفل", k:"metal padlock", i:"fa-lock"},{w:"مقص", k:"cutting scissors", i:"fa-scissors"},{w:"سكين", k:"kitchen knife", i:"fa-utensils"},{w:"شوكة", k:"metal fork", i:"fa-utensils"},{w:"ملعقة", k:"metal spoon", i:"fa-utensils"},{w:"صحن", k:"empty dining plate", i:"fa-circle"},{w:"كوب", k:"drinking cup mug", i:"fa-mug-hot"},{w:"إبريق", k:"tea teapot", i:"fa-mug-hot"},{w:"زجاجة", k:"glass bottle", i:"fa-bottle-water"},{w:"مرآة", k:"wall mirror", i:"fa-border-all"},{w:"مشط", k:"hair comb", i:"fa-bars"},{w:"فرشاة أسنان", k:"toothbrush", i:"fa-tooth"},{w:"صابون", k:"bar of soap", i:"fa-soap"},{w:"منشفة", k:"bath towel", i:"fa-scroll"},{w:"مظلة", k:"rain umbrella", i:"fa-umbrella"},{w:"سلة مهملات", k:"trash can bin", i:"fa-trash"},{w:"سجادة", k:"floor carpet rug", i:"fa-scroll"},{w:"ستارة", k:"window curtain", i:"fa-person-booth"},{w:"وسادة", k:"sleeping pillow", i:"fa-bed"},{w:"بطانية", k:"warm blanket", i:"fa-bed"},{w:"خزانة", k:"wooden wardrobe closet", i:"fa-box"},{w:"مروحة", k:"electric fan cooling", i:"fa-fan"},{w:"مكيف", k:"air conditioner unit", i:"fa-snowflake"},{w:"مدفأة", k:"home fireplace", i:"fa-fire"},{w:"شمعة", k:"burning wax candle", i:"fa-fire-flame-simple"},{w:"ولاعة", k:"cigarette lighter", i:"fa-fire"},{w:"بطارية", k:"aa battery energy", i:"fa-battery-full"},{w:"شاحن", k:"phone battery charger", i:"fa-plug"},{w:"سماعات", k:"audio headphones", i:"fa-headphones"},{w:"ميكروفون", k:"studio microphone", i:"fa-microphone"},{w:"راديو", k:"vintage radio", i:"fa-radio"},{w:"لوحة", k:"wall painting art", i:"fa-image"},{w:"مزهرية", k:"flower vase", i:"fa-seedling"},{w:"صندوق", k:"cardboard box", i:"fa-box"},{w:"هدية", k:"wrapped gift box", i:"fa-gift"},{w:"بالون", k:"party balloon", i:"fa-circle"},{w:"لعبة", k:"teddy bear toy", i:"fa-puzzle-piece"},{w:"دمية", k:"baby doll toy", i:"fa-child"},{w:"فأرة كمبيوتر", k:"computer mouse device", i:"fa-desktop"}
             ],
             apps: [
-                {w:"واتساب", domain:"whatsapp.com", k:"whatsapp", i:"fa-whatsapp"},{w:"فيسبوك", domain:"facebook.com", k:"facebook", i:"fa-facebook"},{w:"إنستغرام", domain:"instagram.com", k:"instagram", i:"fa-instagram"},{w:"تيك توك", domain:"tiktok.com", k:"tiktok", i:"fa-tiktok"},{w:"يوتيوب", domain:"youtube.com", k:"youtube", i:"fa-youtube"},{w:"تويتر", domain:"x.com", k:"twitter", i:"fa-twitter"},{w:"سناب شات", domain:"snapchat.com", k:"snapchat", i:"fa-snapchat"},{w:"تليجرام", domain:"telegram.org", k:"telegram", i:"fa-telegram"},{w:"ماسنجر", domain:"messenger.com", k:"facebook-messenger", i:"fa-facebook-messenger"},{w:"لينكد إن", domain:"linkedin.com", k:"linkedin", i:"fa-linkedin"},{w:"ديسكورد", domain:"discord.com", k:"discord", i:"fa-discord"},{w:"زوم", domain:"zoom.us", k:"zoom", i:"fa-video"},{w:"سكايب", domain:"skype.com", k:"skype", i:"fa-skype"},{w:"نتفليكس", domain:"netflix.com", k:"netflix", i:"fa-film"},{w:"سبوتيفاي", domain:"spotify.com", k:"spotify", i:"fa-spotify"},{w:"أبل ميوزك", domain:"apple.com", k:"apple-music", i:"fa-music"},{w:"جوجل ماب", domain:"google.com", k:"google-maps", i:"fa-map-location-dot"},{w:"أوبر", domain:"uber.com", k:"uber", i:"fa-taxi"},{w:"أمازون", domain:"amazon.com", k:"amazon", i:"fa-amazon"},{w:"جوجل كروم", domain:"google.com", k:"chrome", i:"fa-chrome"},{w:"سفاري", domain:"apple.com", k:"safari", i:"fa-safari"},{w:"جيميل", domain:"gmail.com", k:"gmail", i:"fa-envelope"},{w:"جوجل درايف", domain:"drive.google.com", k:"google-drive", i:"fa-google-drive"},{w:"دروب بوكس", domain:"dropbox.com", k:"dropbox", i:"fa-dropbox"},{w:"بينتريست", domain:"pinterest.com", k:"pinterest", i:"fa-pinterest"},{w:"ريديت", domain:"reddit.com", k:"reddit", i:"fa-reddit"},{w:"تويتش", domain:"twitch.tv", k:"twitch", i:"fa-twitch"},{w:"ويكيبيديا", domain:"wikipedia.org", k:"wikipedia", i:"fa-wikipedia-w"},{w:"باي بال", domain:"paypal.com", k:"paypal", i:"fa-paypal"},{w:"دوولينجو", domain:"duolingo.com", k:"duolingo", i:"fa-language"},{w:"ببجي", domain:"pubg.com", k:"pubg", i:"fa-gamepad"},{w:"فورتنايت", domain:"epicgames.com", k:"fortnite", i:"fa-gamepad"},{w:"ماين كرافت", domain:"minecraft.net", k:"minecraft", i:"fa-cube"},{w:"روبلوكس", domain:"roblox.com", k:"roblox", i:"fa-gamepad"},{w:"كاب كات", domain:"capcut.com", k:"capcut", i:"fa-video"},{w:"كانفا", domain:"canva.com", k:"canva", i:"fa-palette"}
+                {w:"واتساب", k:"whatsapp logo", i:"fa-whatsapp"},{w:"فيسبوك", k:"facebook logo", i:"fa-facebook"},{w:"إنستغرام", k:"instagram logo", i:"fa-instagram"},{w:"تيك توك", k:"tiktok logo", i:"fa-tiktok"},{w:"يوتيوب", k:"youtube logo", i:"fa-youtube"},{w:"تويتر", k:"twitter logo", i:"fa-twitter"},{w:"سناب شات", k:"snapchat logo", i:"fa-snapchat"},{w:"تليجرام", k:"telegram logo", i:"fa-telegram"},{w:"ديسكورد", k:"discord logo", i:"fa-discord"},{w:"زوم", k:"zoom logo", i:"fa-video"},{w:"سكايب", k:"skype logo", i:"fa-skype"},{w:"نتفليكس", k:"netflix logo", i:"fa-film"},{w:"سبوتيفاي", k:"spotify logo", i:"fa-spotify"},{w:"ببجي", k:"pubg mobile logo", i:"fa-gamepad"},{w:"روبلوكس", k:"roblox logo", i:"fa-gamepad"},{w:"ماين كرافت", k:"minecraft logo", i:"fa-cube"},{w:"كاندي كراش", k:"candy crush logo", i:"fa-candy-cane"},{w:"صب واي", k:"subway surfers logo", i:"fa-person-running"},{w:"تطبيق الخرائط", k:"map navigation app icon", i:"fa-map-location-dot"},{w:"تطبيق الطقس", k:"weather forecast app icon", i:"fa-cloud-sun"},{w:"تطبيق البنك", k:"mobile banking app icon", i:"fa-building-columns"},{w:"تطبيق الكاميرا", k:"camera app icon", i:"fa-camera"},{w:"متجر التطبيقات", k:"app store icon", i:"fa-shop"},{w:"الآلة الحاسبة", k:"calculator app icon", i:"fa-calculator"},{w:"تطبيق الملاحظات", k:"notes app icon", i:"fa-note-sticky"},{w:"تطبيق الساعة", k:"clock alarm app icon", i:"fa-clock"},{w:"تطبيق الموسيقى", k:"music player app icon", i:"fa-music"},{w:"تطبيق التقويم", k:"calendar app icon", i:"fa-calendar"},{w:"جيميل", k:"gmail logo", i:"fa-envelope"}
             ],
             transport: [
-                {w:"سيارة", k:"car", i:"fa-car"},{w:"تاكسي", k:"taxi", i:"fa-taxi"},{w:"باص", k:"bus", i:"fa-bus"},{w:"شاحنة", k:"truck", i:"fa-truck"},{w:"عربة نقل", k:"van", i:"fa-truck-fast"},{w:"سيارة إسعاف", k:"ambulance", i:"fa-truck-medical"},{w:"سيارة شرطة", k:"police-car", i:"fa-car-on"},{w:"سيارة إطفاء", k:"fire-truck", i:"fa-truck"},{w:"دراجة هوائية", k:"bicycle", i:"fa-bicycle"},{w:"دراجة نارية", k:"motorcycle", i:"fa-motorcycle"},{w:"سكوتر", k:"scooter", i:"fa-motorcycle"},{w:"قطار", k:"train", i:"fa-train"},{w:"مترو أنفاق", k:"subway", i:"fa-train-subway"},{w:"ترام", k:"tram", i:"fa-train-tram"},{w:"طائرة", k:"airplane", i:"fa-plane"},{w:"طائرة مروحية", k:"helicopter", i:"fa-helicopter"},{w:"طائرة شراعية", k:"glider", i:"fa-plane"},{w:"منطاد", k:"air-balloon", i:"fa-earth-americas"},{w:"سفينة", k:"ship", i:"fa-ship"},{w:"قارب", k:"boat", i:"fa-sailboat"},{w:"يخت", k:"yacht", i:"fa-ship"},{w:"غواصة", k:"submarine", i:"fa-ship"},{w:"عبارة", k:"ferry", i:"fa-ship"},{w:"جرار", k:"tractor", i:"fa-tractor"},{w:"رافعة", k:"crane", i:"fa-truck"},{w:"جرافة", k:"bulldozer", i:"fa-truck"},{w:"عربة حصان", k:"carriage", i:"fa-horse"},{w:"جمل", k:"camel", i:"fa-paw"},{w:"حافلة مدرسية", k:"school-bus", i:"fa-bus"},{w:"سيارة سباق", k:"race-car", i:"fa-car"},{w:"دبابة", k:"tank", i:"fa-truck"},{w:"عربة تسوق", k:"shopping-cart", i:"fa-cart-shopping"},{w:"كرسي متحرك", k:"wheelchair", i:"fa-wheelchair"},{w:"عربة أطفال", k:"stroller", i:"fa-baby-carriage"},{w:"زلاجة", k:"sled", i:"fa-snowflake"},{w:"تلفريك", k:"cable-car", i:"fa-cable-car"},{w:"مكوك فضاء", k:"space-shuttle", i:"fa-shuttle-space"},{w:"قمر صناعي", k:"satellite", i:"fa-satellite"},{w:"لوح تزلج", k:"skateboard", i:"fa-person-snowboarding"},{w:"حوامة", k:"hovercraft", i:"fa-ship"},{w:"سيارة كلاسيكية", k:"classic-car", i:"fa-car"},{w:"سيارة كهربائية", k:"electric-car", i:"fa-car-battery"},{w:"قطار سريع", k:"bullet-train", i:"fa-train"},{w:"قطار بضائع", k:"freight-train", i:"fa-train"},{w:"زورق", k:"canoe", i:"fa-sailboat"},{w:"كاسحة جليد", k:"icebreaker", i:"fa-ship"},{w:"سفينة حربية", k:"battleship", i:"fa-ship"},{w:"سفينة قراصنة", k:"pirate-ship", i:"fa-skull-crossbones"},{w:"طائرة حربية", k:"fighter-jet", i:"fa-fighter-jet"},{w:"طائرة بدون طيار", k:"drone", i:"fa-helicopter"},{w:"عربة جولف", k:"golf-cart", i:"fa-car"},{w:"عربة ثلج", k:"snowmobile", i:"fa-snowflake"},{w:"عربة ريكشا", k:"rickshaw", i:"fa-motorcycle"},{w:"سيارة جيب", k:"jeep", i:"fa-car"},{w:"سيارة ليموزين", k:"limousine", i:"fa-car"},{w:"شاحنة قمامة", k:"garbage-truck", i:"fa-trash"},{w:"خلاط اسمنت", k:"cement-mixer", i:"fa-truck"},{w:"شاحنة تبريد", k:"refrigerated-truck", i:"fa-truck"},{w:"قطار ملاهي", k:"roller-coaster", i:"fa-train"},{w:"سيارة تصادمية", k:"bumper-car", i:"fa-car"}
+                {w:"سيارة", k:"modern car vehicle", i:"fa-car"},{w:"تاكسي", k:"yellow taxi cab", i:"fa-taxi"},{w:"باص", k:"city bus vehicle", i:"fa-bus"},{w:"شاحنة", k:"large transport truck", i:"fa-truck"},{w:"عربة نقل", k:"transport van", i:"fa-truck-fast"},{w:"سيارة إسعاف", k:"ambulance vehicle", i:"fa-truck-medical"},{w:"سيارة شرطة", k:"police car vehicle", i:"fa-car-on"},{w:"سيارة إطفاء", k:"fire truck vehicle", i:"fa-truck"},{w:"دراجة هوائية", k:"bicycle transport", i:"fa-bicycle"},{w:"دراجة نارية", k:"motorcycle transport", i:"fa-motorcycle"},{w:"سكوتر", k:"kick scooter", i:"fa-motorcycle"},{w:"قطار", k:"fast passenger train", i:"fa-train"},{w:"مترو أنفاق", k:"subway train underground", i:"fa-train-subway"},{w:"ترام", k:"tram train city", i:"fa-train-tram"},{w:"طائرة", k:"commercial airplane flying", i:"fa-plane"},{w:"طائرة مروحية", k:"helicopter flying", i:"fa-helicopter"},{w:"منطاد", k:"hot air balloon", i:"fa-earth-americas"},{w:"سفينة", k:"large ship ocean", i:"fa-ship"},{w:"قارب", k:"small boat water", i:"fa-sailboat"},{w:"يخت", k:"luxury yacht boat", i:"fa-ship"},{w:"غواصة", k:"submarine underwater", i:"fa-ship"},{w:"جرار", k:"farm tractor", i:"fa-tractor"},{w:"رافعة", k:"construction crane", i:"fa-truck"},{w:"عربة حصان", k:"horse carriage", i:"fa-horse"},{w:"حافلة مدرسية", k:"yellow school bus", i:"fa-bus"},{w:"سيارة سباق", k:"fast race car", i:"fa-car"},{w:"دبابة", k:"military tank", i:"fa-truck"},{w:"كرسي متحرك", k:"medical wheelchair", i:"fa-wheelchair"},{w:"عربة أطفال", k:"baby stroller", i:"fa-baby-carriage"},{w:"زلاجة", k:"snow sled", i:"fa-snowflake"},{w:"تلفريك", k:"cable car mountain", i:"fa-cable-car"},{w:"مكوك فضاء", k:"space shuttle launching", i:"fa-shuttle-space"},{w:"قمر صناعي", k:"space satellite", i:"fa-satellite"},{w:"لوح تزلج", k:"skateboard", i:"fa-person-snowboarding"}
             ],
             nature: [
-                {w:"شجرة", k:"tree", i:"fa-tree"},{w:"جبل", k:"mountain", i:"fa-mountain"},{w:"بركان", k:"volcano", i:"fa-volcano"},{w:"بحر", k:"ocean", i:"fa-water"},{w:"شمس", k:"sun", i:"fa-sun"},{w:"قمر", k:"moon", i:"fa-moon"},{w:"مطر", k:"rain", i:"fa-cloud-rain"},{w:"نار", k:"fire", i:"fa-fire"}
+                {w:"شجرة", k:"large green tree", i:"fa-tree"},{w:"جبل", k:"high mountain peak", i:"fa-mountain"},{w:"بركان", k:"erupting volcano lava", i:"fa-volcano"},{w:"بحر", k:"blue ocean water", i:"fa-water"},{w:"شمس", k:"bright sun sky", i:"fa-sun"},{w:"قمر", k:"full moon night", i:"fa-moon"},{w:"مطر", k:"rain falling water", i:"fa-cloud-rain"},{w:"نار", k:"burning fire flames", i:"fa-fire"},{w:"نجمة", k:"bright star night", i:"fa-star"},{w:"غابة", k:"green forest trees", i:"fa-tree"},{w:"صحراء", k:"sand desert dunes", i:"fa-sun"},{w:"شلال", k:"beautiful waterfall", i:"fa-water"},{w:"جليد", k:"ice blocks", i:"fa-icicles"}
             ]
         };
+
+        // دالة جلب الصور من Bing مع تأكيد 3D
+        function getBingImageUrl(query) {
+            return `https://tse2.mm.bing.net/th?q=${encodeURIComponent(query + " 3d icon illustration plain background")}&w=400&h=400&c=7`;
+        }
 
         const aiHints = [
             "هل حجم هذا الشيء أكبر من التلفاز؟", "هل نستخدمه أو نراه كل يوم عادة؟", "هل لونه الأساسي محدد أم يتوفر بألوان كثيرة؟",
@@ -415,15 +398,12 @@
         let isTimerPaused = false; let isParanoiaRound = false;
         let askedPairs = new Set(); let lastAsker = -1; let selectedVotesForKick = []; 
 
-        window.preloadedWordImage = new Image();
-        window.preloadedSpyImage = new Image();
-
         let currentLang = 'ar';
         const dict = {
             ar: {
-                subtitle: "الإصدار الأسطوري | صور ملونة وتطبيقات أصلية", playLocal: "لعب على جهاز واحد 📱", playOnline: "لعب جماعي أونلاين 🌐",
+                subtitle: "الإصدار الأسطوري | صور مضمونة وسريعة", playLocal: "لعب على جهاز واحد 📱", playOnline: "لعب جماعي أونلاين 🌐",
                 rulesBtn: "التعليمات 📖", settingsBtn: "الإعدادات ⚙️", soonBadge: "قريباً",
-                tutTitle: "تعليمات اللعبة 🕵️", tut1: "🎯 الهدف الأساسي:", tut1_desc: "اللعبة ستختار كلمة سرية وستعرض لك <strong class='text-blue-300'>صورة ملونة</strong> لها. المواطنون يعرفون الكلمة، والجاسوس لا يعرفها!",
+                tutTitle: "تعليمات اللعبة 🕵️", tut1: "🎯 الهدف الأساسي:", tut1_desc: "اللعبة ستختار كلمة سرية وستعرض لك <strong class='text-blue-300'>صورة معبرة</strong> لها. المواطنون يعرفون الكلمة، والجاسوس لا يعرفها!",
                 tut2: "🏆 كيف تفوز؟", tut2_desc: "المواطنون يكسبون النقاط بتصويتهم الصحيح. والجاسوس يكسب النقاط إذا خدعهم!",
                 tut3: "🤯 جنون الارتياب (Paranoia):", tut3_desc: "أحياناً اللعبة تكذب ولا تضع جاسوساً! صوتوا بـ 'لا يوجد جاسوس' للفوز.", tutGotIt: "فهمت، جاهز للعب! 👍",
                 setTitle: "الإعدادات ⚙️", setLang: "لغة اللعبة (Language)", setClose: "إغلاق",
@@ -440,7 +420,7 @@
                 msg_citWin: "أحسنتم! تم كشف الجاسوس.", msg_spyWin: "خطأ! تم التصويت على شخص بريء.", msg_paraWin: "صحيح! لم يكن هناك جاسوس.", msg_paraFail: "خطأ! لقد صوتتم على بريء، ولا يوجد جاسوس أساساً."
             },
             en: {
-                subtitle: "Legendary Edition | Colored Icons & App Logos", playLocal: "Local Play 📱", playOnline: "Online Multiplayer 🌐",
+                subtitle: "Legendary Edition | Guaranteed Fast Images", playLocal: "Local Play 📱", playOnline: "Online Multiplayer 🌐",
                 rulesBtn: "Rules 📖", settingsBtn: "Settings ⚙️", soonBadge: "Soon",
                 tutTitle: "Game Rules 🕵️", tut1: "🎯 Main Goal:", tut1_desc: "The game picks a secret word and shows an <strong class='text-blue-300'>Expressive Image</strong>. Citizens know it, the Spy doesn't!",
                 tut2: "🏆 How to Win?", tut2_desc: "Citizens win by voting the spy. The spy wins by tricking them!",
@@ -502,24 +482,26 @@
 
         window.onload = () => { 
             applyLanguage(); 
-            if (!localStorage.getItem('spyTut_vFinal_8')) {
+            if (!localStorage.getItem('spyTut_vFinal_11')) {
                 openTutorial();
-                localStorage.setItem('spyTut_vFinal_8', 'true');
+                localStorage.setItem('spyTut_vFinal_11', 'true');
             }
         };
 
         function navTo(screenId) {
             document.querySelectorAll('body > div[id]').forEach(div => {
-                if(!['aiHintModal', 'toast', 'tutorialModal', 'settingsModal', 'loadingScreen'].includes(div.id)) div.classList.add('hidden-screen');
+                if(!['aiHintModal', 'toast', 'tutorialModal', 'settingsModal', 'loadingScreen'].includes(div.id)) {
+                    div?.classList?.add('hidden-screen');
+                }
             });
             const screen = document.getElementById(screenId);
-            if (screen) screen.classList.remove('hidden-screen');
+            if (screen) screen.classList?.remove('hidden-screen');
         }
 
-        function openTutorial() { playClickSound(); document.getElementById('tutorialModal').classList.remove('hidden-screen'); }
-        function closeTutorial() { playClickSound(); document.getElementById('tutorialModal').classList.add('hidden-screen'); }
-        function openSettings() { playClickSound(); document.getElementById('settingsModal').classList.remove('hidden-screen'); }
-        function closeSettings() { playClickSound(); document.getElementById('settingsModal').classList.add('hidden-screen'); }
+        function openTutorial() { playClickSound(); document.getElementById('tutorialModal')?.classList?.remove('hidden-screen'); }
+        function closeTutorial() { playClickSound(); document.getElementById('tutorialModal')?.classList?.add('hidden-screen'); }
+        function openSettings() { playClickSound(); document.getElementById('settingsModal')?.classList?.remove('hidden-screen'); }
+        function closeSettings() { playClickSound(); document.getElementById('settingsModal')?.classList?.add('hidden-screen'); }
 
         function adjust(setting, change) {
             let newVal = settings[setting] + change;
@@ -533,21 +515,21 @@
             if (setting === 'spies' && newVal >= 1 && newVal <= Math.floor(settings.players/2)) settings.spies = newVal;
             if (setting === 'time' && newVal >= 1 && newVal <= 15) settings.time = newVal;
             
-            document.getElementById('playerCount').innerText = settings.players;
-            document.getElementById('spyCount').innerText = settings.spies;
-            document.getElementById('timeCount').innerText = settings.time;
+            const pCount = document.getElementById('playerCount'); if(pCount) pCount.innerText = settings.players;
+            const sCount = document.getElementById('spyCount'); if(sCount) sCount.innerText = settings.spies;
+            const tCount = document.getElementById('timeCount'); if(tCount) tCount.innerText = settings.time;
         }
 
         function goToNamesSetup() {
             playClickSound();
             navTo('namesScreen');
             const container = document.getElementById('namesContainer');
-            container.innerHTML = '';
+            if(container) container.innerHTML = '';
             for(let i=0; i<settings.players; i++) {
                 let defaultName = `${getTrans('player')} ${i+1}`;
                 let currentSaved = playerNames[i];
                 let val = (currentSaved && currentSaved !== defaultName) ? currentSaved : "";
-                container.innerHTML += `<input type="text" id="nameInput_${i}" class="name-input" value="${val}" placeholder="${defaultName}" maxlength="15">`;
+                if(container) container.innerHTML += `<input type="text" id="nameInput_${i}" class="name-input" value="${val}" placeholder="${defaultName}" maxlength="15">`;
             }
         }
 
@@ -582,14 +564,11 @@
                 }
             }
 
-            // نظام جلب الصور الخارق (تطبيقات أصلية + أيقونات ملونة)
-            let targetWordUrl = currentWordObj.domain ? 
-                `https://logo.clearbit.com/${currentWordObj.domain}?size=256` : 
-                `https://img.icons8.com/fluency/256/${currentWordObj.k}.png`;
-            let targetSpyUrl = `https://img.icons8.com/fluency/256/spy.png`;
+            let targetWordUrl = getBingImageUrl(currentWordObj.k);
+            let targetSpyUrl = getBingImageUrl("top secret spy agent black hat red background");
 
             const loadingScreenElem = document.getElementById('loadingScreen');
-            if (loadingScreenElem) loadingScreenElem.classList.remove('hidden-screen');
+            if (loadingScreenElem) loadingScreenElem.classList?.remove('hidden-screen');
             navTo('loadingScreen');
 
             window.preloadedWordImage = new Image();
@@ -599,7 +578,7 @@
             const checkDone = () => {
                 loadedCount++;
                 if(loadedCount === 2) {
-                    if (loadingScreenElem) loadingScreenElem.classList.add('hidden-screen');
+                    if (loadingScreenElem) loadingScreenElem.classList?.add('hidden-screen');
                     currentPlayerIndex = 0; resetCard(); updatePassPhoneScreen(); navTo('passPhoneScreen');
                 }
             };
@@ -610,7 +589,7 @@
             setTimeout(() => { 
                 if(loadedCount < 2) { 
                     loadedCount=2; 
-                    if (loadingScreenElem) loadingScreenElem.classList.add('hidden-screen'); 
+                    if (loadingScreenElem) loadingScreenElem.classList?.add('hidden-screen'); 
                     currentPlayerIndex = 0; resetCard(); updatePassPhoneScreen(); navTo('passPhoneScreen'); 
                 } 
             }, 1500);
@@ -619,50 +598,41 @@
             window.preloadedSpyImage.src = targetSpyUrl;
         }
 
-        // --- قلب البطاقة الآمن الذي لا ينكسر أبداً ---
+        // --- قلب البطاقة المحمي كلياً من الخطأ ClassList ---
         function resetCard() {
             const card = document.getElementById('identityCard');
             if (card) {
-                card.classList.remove('flipped'); 
+                card.classList?.remove('flipped'); 
                 card.style.pointerEvents = 'auto';
             }
             
-            const nextBtn = document.getElementById('nextPlayerBtn');
-            if(nextBtn) nextBtn.classList.add('hidden');
+            document.getElementById('nextPlayerBtn')?.classList?.add('hidden');
             
             const realImage = document.getElementById('realImage');
-            if(realImage) { realImage.classList.add('hidden'); realImage.className = 'real-image-frame hidden'; }
+            if(realImage) { realImage.classList?.add('hidden'); realImage.className = 'real-image-frame hidden'; }
             
-            const fallbackWrapper = document.getElementById('fallbackIconWrapper');
-            if(fallbackWrapper) fallbackWrapper.classList.add('hidden');
-            
-            const loader = document.getElementById('imageLoader');
-            if(loader) loader.classList.remove('hidden');
+            document.getElementById('imageLoader')?.classList?.remove('hidden');
         }
 
         function flipCard() {
             const card = document.getElementById('identityCard');
-            if(!card || card.classList.contains('flipped')) return;
+            if(!card || card.classList?.contains('flipped')) return;
 
             const actualPlayerIndex = playerDisplayOrder[currentPlayerIndex] - 1;
             const roleObj = roles[actualPlayerIndex]; 
             const backFace = document.getElementById('cardBackFace');
             const realImage = document.getElementById('realImage');
-            const fallbackIconWrapper = document.getElementById('fallbackIconWrapper');
-            const fallbackIcon = document.getElementById('fallbackIcon');
             const imageLoader = document.getElementById('imageLoader');
             const roleWordContainer = document.getElementById('roleWordContainer');
             const roleWord = document.getElementById('roleWord');
             const roleTitle = document.getElementById('roleTitle');
 
             let targetImgObj = null;
-            let faClass = ""; let colorClass = "";
 
             if (roleObj.role === 'جاسوس') {
                 if(backFace) backFace.className = 'flip-card-back spy-card-back';
                 if(roleTitle) roleTitle.innerText = getTrans('spy');
                 targetImgObj = window.preloadedSpyImage;
-                faClass = "fa-user-secret"; colorClass = "text-rose-400";
                 
                 if(roleWord) roleWord.innerText = getTrans('spyDesc');
                 if(roleWordContainer) roleWordContainer.className = 'z-10 w-11/12 flex justify-center items-center mt-2 mb-4 bg-slate-900/90 border-x-4 border-rose-600 rounded-xl shadow-lg py-3';
@@ -671,30 +641,22 @@
                 if(backFace) backFace.className = 'flip-card-back';
                 if(roleTitle) roleTitle.innerText = getTrans('citizen');
                 targetImgObj = window.preloadedWordImage;
-                faClass = currentWordObj.i; colorClass = "text-sky-400";
                 
                 if(roleWord) roleWord.innerText = currentWordObj.w;
                 if(roleWordContainer) roleWordContainer.className = 'z-10 w-11/12 flex justify-center items-center mt-2 mb-4 bg-slate-900/80 border-l-4 border-sky-400 rounded-xl shadow-lg py-4';
                 if(roleWord) roleWord.className = 'text-4xl font-black text-sky-300 tracking-wide drop-shadow-md text-center';
             }
 
-            if(targetImgObj && targetImgObj.complete && targetImgObj.naturalWidth > 0) {
-                if(realImage) {
-                    realImage.src = targetImgObj.src;
-                    realImage.className = currentWordObj.domain && roleObj.role !== 'جاسوس' ? 'app-logo-frame' : (roleObj.role === 'جاسوس' ? 'real-image-frame glow-red' : 'real-image-frame glow-blue');
-                    realImage.classList.remove('hidden');
-                }
-                if(imageLoader) imageLoader.classList.add('hidden');
-            } else {
-                if(fallbackIcon) fallbackIcon.className = `fa-solid ${faClass} text-[5rem] ${colorClass} drop-shadow-lg`;
-                if(imageLoader) imageLoader.classList.add('hidden');
-                if(fallbackIconWrapper) fallbackIconWrapper.classList.remove('hidden');
+            if(realImage && targetImgObj) {
+                realImage.src = targetImgObj.src;
+                realImage.className = roleObj.role === 'جاسوس' ? 'real-image-frame glow-red' : 'real-image-frame glow-blue';
+                realImage.classList?.remove('hidden');
             }
+            if(imageLoader) imageLoader.classList?.add('hidden');
 
-            card.classList.add('flipped'); card.style.pointerEvents = 'none'; 
+            card.classList?.add('flipped'); card.style.pointerEvents = 'none'; 
             setTimeout(() => {
-                const nxtBtn = document.getElementById('nextPlayerBtn');
-                if(nxtBtn) nxtBtn.classList.remove('hidden');
+                document.getElementById('nextPlayerBtn')?.classList?.remove('hidden');
             }, 800);
         }
 
@@ -815,7 +777,7 @@
             const aiHintText = document.getElementById('aiHintText');
             if(aiHintText) aiHintText.innerText = randomHint;
             
-            document.getElementById('aiHintModal').classList.remove('hidden-screen');
+            document.getElementById('aiHintModal')?.classList?.remove('hidden-screen');
             
             const hintsLeft = document.getElementById('hintsLeft');
             if(hintsLeft) hintsLeft.innerText = `${availableHints}`;
@@ -830,7 +792,7 @@
                 }
             }
         }
-        function closeHint() { document.getElementById('aiHintModal').classList.add('hidden-screen'); }
+        function closeHint() { document.getElementById('aiHintModal')?.classList?.add('hidden-screen'); }
 
         function goToVoting() {
             playClickSound(); clearInterval(timerInterval); navTo('votingScreen');
@@ -930,21 +892,14 @@
             if(rSub) rSub.innerText = subTitle;
             
             const resImg = document.getElementById('resImageFinal');
-            const resFallbackWrapper = document.getElementById('resFallbackWrapper');
-            const resFallbackIcon = document.getElementById('resFallbackIcon');
             
-            if(resImg) resImg.classList.add('hidden'); 
-            if(resFallbackWrapper) resFallbackWrapper.classList.add('hidden');
-
-            if (window.preloadedWordImage && window.preloadedWordImage.complete && window.preloadedWordImage.naturalWidth > 0) {
-                if(resImg) {
+            if(resImg) {
+                resImg.classList.add('hidden'); 
+                if (window.preloadedWordImage && window.preloadedWordImage.src) {
                     resImg.src = window.preloadedWordImage.src;
                     resImg.classList.remove('hidden');
-                    resImg.className = currentWordObj.domain ? 'w-24 h-24 object-contain drop-shadow-lg mb-2 rounded-2xl' : 'w-24 h-24 object-contain drop-shadow-lg mb-2';
+                    resImg.className = 'w-24 h-24 object-contain drop-shadow-lg mb-2 rounded-2xl';
                 }
-            } else {
-                if(resFallbackIcon) resFallbackIcon.className = `fa-solid ${currentWordObj.i} text-5xl text-sky-400 drop-shadow-lg`;
-                if(resFallbackWrapper) resFallbackWrapper.classList.remove('hidden');
             }
             
             const rWord = document.getElementById('resultWord');
