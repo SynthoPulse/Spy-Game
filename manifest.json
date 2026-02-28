@@ -11,17 +11,24 @@
   "orientation": "portrait",
   "lang": "ar",
   "dir": "rtl",
+  "prefer_related_applications": false,
   "related_applications": [
     {
       "platform": "play",
-      "url": "https://hamdmnswr06-rgb.github.io/Spy-Game/manifest.json",
+      "url": "https://play.google.com/store/apps/details?id=io.github.hamdmnswr06_rgb.twa",
       "id": "io.github.hamdmnswr06_rgb.twa"
     }
   ],
   "icons": [
     {
+      "src": "icon.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
       "src": "icon512.png",
-      "sizes": "192x192",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
@@ -30,12 +37,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "icon.png",
-      "sizes": "256x256",
-      "type": "image/png",
-      "purpose": "any maskable"
     }
   ]
 }
