@@ -2,7 +2,7 @@
   "name": "Deception",
   "short_name": "Deception",
   "description": "لعبة خادع ومخدوع الذكية - الإصدار العالمي الفخم",
-  "id": "io.github.hamdmnswr06_rgb.twa",
+  "id": "io.github.synthopulse.twa",
   "start_url": "/Spy-Game/index.html",
   "scope": "/Spy-Game/",
   "display": "standalone",
@@ -15,8 +15,8 @@
   "related_applications": [
     {
       "platform": "play",
-      "url": "https://play.google.com/store/apps/details?id=io.github.hamdmnswr06_rgb.twa",
-      "id": "io.github.hamdmnswr06_rgb.twa"
+      "url": "https://play.google.com/store/apps/details?id=io.github.synthopulse.twa",
+      "id": "io.github.synthopulse.twa"
     }
   ],
   "icons": [
