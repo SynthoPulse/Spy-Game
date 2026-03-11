@@ -1,8 +1,12 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "io.github.synthopulse.twa",
-    "sha256_cert_fingerprints": ["69:FF:CD:1A:CB:79:4F:91:47:11:C0:4E:E7:C4:33:3D:82:C0:B9:64:3D:6F:FC:59:B6:3D:FC:B9:57:2F:D6:56"]
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.synthopulse.twa",
+      "sha256_cert_fingerprints": [
+        "14:45:6F:34:12:A8:9B:C0:D5:E7:F2:68:91:03:24:5A:83:42:1F:09:BC:7D:6E:55:A1:32:88:4C:B9:02:D6:10"
+      ]
+    }
   }
-}]
+]
