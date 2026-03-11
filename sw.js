@@ -1,7 +1,21 @@
-const CACHE_NAME = 'spygame-v3';
+const CACHE_NAME = 'spygame-v-final-fix'; // تم تغيير الإصدار لفرض التحديث
+
+const ASSETS = [
+  './',
+  './index.html',
+  './manifest.json',
+  './icon.png',
+  './icon512.png'
+];
 
 self.addEventListener('install', (e) => {
-    self.skipWaiting(); // يجبر المشغل الجديد على العمل فوراً
+    // نقوم بتخزين الملفات الأساسية فوراً
+    e.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+            return cache.addAll(ASSETS);
+        })
+    );
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
@@ -10,7 +24,7 @@ self.addEventListener('activate', (e) => {
             return Promise.all(
                 cacheNames.map((cache) => {
                     if (cache !== CACHE_NAME) {
-                        return caches.delete(cache); // يمسح أي تصميم قديم
+                        return caches.delete(cache);
                     }
                 })
             );
@@ -19,8 +33,11 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-    // جلب البيانات من الإنترنت دائماً لتجنب تعليق التحديثات
+    // الاستراتيجية الجديدة: الملفات المحلية أولاً (Cache First)
+    // هذا يمنع مشكلة الشاشة البيضاء عند فصل الإنترنت
     e.respondWith(
-        fetch(e.request).catch(() => caches.match(e.request)) 
+        caches.match(e.request).then((response) => {
+            return response || fetch(e.request);
+        })
     );
 });
